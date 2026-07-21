@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
-<!-- Firebase SDK -->
+<!-- Firebase SDK Compat -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
@@ -20,6 +20,7 @@
     --amber:#F5A623;
     --amber-dark:#D6860C;
     --coral:#E8543E;
+    --coral-dark:#C13F2C;
     --mint:#3FB68B;
     --mint-dark:#2C8F6B;
     --ink:#26241E;
@@ -46,7 +47,7 @@
     width: 100%;
     background: linear-gradient(135deg, var(--navy), var(--navy-2));
     color: #fff;
-    padding: 16px 28px;
+    padding: 14px 28px;
     box-shadow: var(--shadow);
     border-bottom: 4px solid var(--amber);
     display: flex;
@@ -59,320 +60,227 @@
     z-index: 100;
   }
 
-  .admin-brand {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
+  .admin-brand { display: flex; align-items: center; gap: 14px; }
 
   .admin-logo-box {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 6px 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255, 255, 255, 0.1); padding: 6px 12px;
+    border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  .admin-logo-img {
-    height: 38px;
-    width: auto;
-    object-fit: contain;
-  }
+  .admin-logo-img { height: 36px; width: auto; object-fit: contain; }
 
   .admin-title h1 {
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 22px;
-    font-weight: 800;
-    margin: 0;
-    line-height: 1.1;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-family: 'Baloo 2', sans-serif; font-size: 20px; font-weight: 800;
+    margin: 0; line-height: 1.1; color: #fff; display: flex; align-items: center; gap: 8px;
   }
 
-  .admin-title span {
-    font-size: 12px;
-    color: #D9D6C8;
-    font-weight: 600;
+  .admin-title span { font-size: 11.5px; color: #D9D6C8; font-weight: 600; }
+
+  /* TAB NAVIGASI HEADER */
+  .header-nav {
+    display: flex; gap: 8px; background: rgba(0, 0, 0, 0.25);
+    padding: 5px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.15);
   }
 
-  .admin-badge-tag {
-    background: var(--coral);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 800;
-    padding: 2px 8px;
-    border-radius: 6px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+  .nav-tab-btn {
+    background: transparent; border: none; color: #D9D6C8;
+    font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 14px;
+    padding: 8px 18px; border-radius: 10px; cursor: pointer;
+    transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;
   }
 
-  .admin-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+  .nav-tab-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+  .nav-tab-btn.active { background: var(--amber); color: var(--navy); box-shadow: 0 4px 10px rgba(245,166,35,0.3); }
 
-  .live-status {
-    background: rgba(63, 182, 139, 0.15);
-    border: 1.5px solid var(--mint);
-    color: #BFE9D6;
-    padding: 6px 14px;
-    border-radius: 999px;
-    font-size: 12.5px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+  .admin-actions { display: flex; align-items: center; gap: 12px; }
 
-  .status-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--mint);
-    border-radius: 50%;
-    box-shadow: 0 0 8px var(--mint);
-    animation: blink 1.5s infinite alternate;
+  .btn-header-reset {
+    background: var(--coral); color: #fff; border: none;
+    font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 13px;
+    padding: 7px 14px; border-radius: 10px; cursor: pointer;
+    transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 4px 10px rgba(232, 84, 62, 0.3);
   }
-
-  @keyframes blink {
-    from { opacity: 0.4; }
-    to { opacity: 1; }
-  }
+  .btn-header-reset:hover { background: var(--coral-dark); transform: translateY(-2px); }
 
   .btn-header-logout {
-    background: var(--paper);
-    color: var(--navy);
-    border: 2px solid var(--amber);
-    font-family: 'Baloo 2', sans-serif;
-    font-weight: 700;
-    font-size: 13.5px;
-    padding: 7px 16px;
-    border-radius: 12px;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    background: var(--paper); color: var(--navy); border: 2px solid var(--amber);
+    font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 13px;
+    padding: 6px 14px; border-radius: 10px; text-decoration: none;
+    transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;
+  }
+  .btn-header-logout:hover { background: var(--amber); color: var(--navy); }
+
+  /* ============================================================
+     CONTAINER PANEL
+     ============================================================ */
+  .main-container { max-width: 1050px; margin: 28px auto; padding: 0 16px; }
+
+  .card-panel {
+    background: var(--paper); border: 2px solid var(--line);
+    border-radius: 24px; padding: 28px; box-shadow: var(--shadow);
   }
 
-  .btn-header-logout:hover {
-    background: var(--amber);
-    color: var(--navy);
-    transform: translateY(-2px);
+  .panel-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px; border-bottom: 2px dashed var(--line);
+    padding-bottom: 16px; flex-wrap: wrap; gap: 10px;
+  }
+  .panel-header h2 {
+    font-family: 'Baloo 2', sans-serif; margin: 0; font-size: 24px; color: var(--navy);
   }
 
   /* ============================================================
-     CONTAINER LEADERBOARD & ANIMATED CHART
+     1. TAB BAR CHART (EFEK NAIK/TURUN)
      ============================================================ */
-  .main-container {
-    max-width: 1000px;
-    margin: 30px auto;
-    padding: 0 16px;
-  }
-
-  .chart-card {
-    background: var(--paper);
-    border: 2px solid var(--line);
-    border-radius: 24px;
-    padding: 28px;
-    box-shadow: var(--shadow);
-  }
-
-  .chart-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-    border-bottom: 2px dashed var(--line);
-    padding-bottom: 16px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .chart-header h2 {
-    font-family: 'Baloo 2', sans-serif;
-    margin: 0;
-    font-size: 24px;
-    color: var(--navy);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  /* WADAH LIST DENGAN ANIMASI URUTAN NAIK/TURUN */
   .leaderboard-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    position: relative;
+    position: relative; 
+    transition: height 0.4s ease;
+    min-height: 100px;
   }
 
   .group-row {
     background: #fff;
     border: 2px solid var(--line);
     border-radius: 18px;
-    padding: 16px 20px;
+    padding: 0 20px;
     display: flex;
     align-items: center;
     gap: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease;
+    position: absolute;
+    left: 0; right: 0;
+    height: 76px;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
   }
 
   .rank-badge {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: var(--navy);
-    color: #fff;
-    font-family: 'Baloo 2', sans-serif;
-    font-weight: 800;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    width: 38px; height: 38px; border-radius: 50%; background: var(--navy);
+    color: #fff; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 16px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    transition: background 0.3s ease, border 0.3s ease;
   }
 
   .rank-1 .rank-badge { background: var(--amber); color: var(--navy); border: 2px solid var(--amber-dark); font-size: 18px; }
-  .rank-2 .rank-badge { background: #C0C0C0; color: #333; }
-  .rank-3 .rank-badge { background: #CD7F32; color: #fff; }
+  .rank-2 .rank-badge { background: #C0C0C0; color: #333; border: 2px solid #A9A9A9; }
+  .rank-3 .rank-badge { background: #CD7F32; color: #fff; border: 2px solid #8B4513; }
 
-  .group-info {
-    width: 180px;
-    flex-shrink: 0;
-  }
+  .group-info { width: 180px; flex-shrink: 0; }
+  .group-name { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 17px; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .group-status-badge { font-size: 11.5px; color: #7a7060; font-weight: 600; }
 
-  .group-name {
-    font-family: 'Baloo 2', sans-serif;
-    font-weight: 800;
-    font-size: 17px;
-    color: var(--navy);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .group-status {
-    font-size: 11.5px;
-    color: #7a7060;
-    font-weight: 600;
-  }
-
-  /* BAR GRAFIK DENGAN ANIMASI PANJANG */
   .bar-wrapper {
-    flex: 1;
-    background: #F1EFE4;
-    height: 26px;
-    border-radius: 999px;
-    overflow: hidden;
-    position: relative;
-    border: 1px solid var(--line);
+    flex: 1; background: #F1EFE4; height: 26px; border-radius: 999px;
+    overflow: hidden; border: 1px solid var(--line);
   }
-
   .bar-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--navy-2), var(--navy));
-    border-radius: 999px;
-    transition: width 0.8s ease-in-out, background 0.4s ease;
-    position: relative;
+    height: 100%; width: 0%; background: linear-gradient(90deg, var(--navy-2), var(--navy));
+    border-radius: 999px; transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.4s ease;
   }
-
-  .rank-1 .bar-fill {
-    background: linear-gradient(90deg, var(--amber), var(--amber-dark));
-  }
+  .rank-1 .bar-fill { background: linear-gradient(90deg, var(--amber), var(--amber-dark)); }
 
   .score-text {
-    font-family: 'Baloo 2', sans-serif;
-    font-weight: 800;
-    font-size: 20px;
-    color: var(--navy);
-    width: 90px;
-    text-align: right;
-    flex-shrink: 0;
-    transition: transform 0.2s ease;
+    font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 20px; color: var(--navy);
+    width: 90px; text-align: right; flex-shrink: 0; transition: transform 0.2s ease, color 0.2s;
   }
 
-  /* ANIMASI KETIKA SKOR BERUBAH/MENINGKAT */
-  .score-bump {
-    animation: bump 0.4s ease-out;
-  }
-
+  .score-bump { animation: bump 0.5s ease-out forwards; }
   @keyframes bump {
     0% { transform: scale(1); }
-    50% { transform: scale(1.3); color: var(--mint-dark); }
-    100% { transform: scale(1); }
+    40% { transform: scale(1.25) translateY(-2px); color: var(--mint-dark); }
+    100% { transform: scale(1); color: var(--navy); }
   }
 
-  @media (max-width: 680px) {
-    .admin-header { padding: 14px 18px; }
-    .admin-title h1 { font-size: 18px; }
+  .empty-state { text-align: center; padding: 40px 20px; color: #8a7f68; font-weight: 700; }
+
+  /* ============================================================
+     2. TAB DETAIL PERMAINAN (TABEL GAYA ASLI)
+     ============================================================ */
+  .table-responsive { width: 100%; overflow-x: auto; }
+  .detail-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); }
+  .detail-table th { background: var(--navy); color: #fff; font-family: 'Baloo 2', sans-serif; font-size: 15px; font-weight: 700; padding: 14px 16px; text-align: left; }
+  .detail-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: 14px; transition: background 0.3s; }
+  .detail-table tr:hover td { background: #FDFDF8; }
+  .detail-table tr:last-child td { border-bottom: none; }
+  
+  .rank { font-weight: bold; text-align: center; color: var(--navy); }
+  .score { font-weight: 800; font-size: 16px; color: var(--navy); }
+  .status { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #E8F5E9; color: var(--mint-dark); border: 1px solid var(--mint); }
+
+  @media (max-width: 768px) {
+    .admin-header { flex-direction: column; align-items: stretch; }
+    .header-nav { justify-content: center; }
     .group-info { width: 120px; }
-    .group-name { font-size: 15px; }
-    .score-text { font-size: 16px; width: 70px; }
   }
 </style>
 </head>
 <body>
 
-  <!-- ============================================================
-       HEADER CONTROL PANEL ADMIN
-       ============================================================ -->
   <header class="admin-header">
     <div class="admin-brand">
       <div class="admin-logo-box">
         <img src="asset/Logo Branding UNAIR (Biru).png" alt="Logo UNAIR" class="admin-logo-img">
         <img src="asset/logobbk.jpeg" alt="Maskot GaruDA" class="admin-logo-img">
       </div>
-
       <div class="admin-title">
-        <h1>
-          Panel Kontrol Admin <span class="admin-badge-tag">Live</span>
-        </h1>
-        <span>Debugging Game: Code Detective · KKN SDN Caruban 1</span>
+        <h1>Panel Admin</h1>
+        <span>Detektif Kode · KKN SDN Caruban 1</span>
       </div>
     </div>
 
-    <div class="admin-actions">
-      <div class="live-status">
-        <span class="status-dot"></span>
-        <span>Firebase Realtime</span>
-      </div>
+    <nav class="header-nav">
+      <button class="nav-tab-btn active" id="tabBtnChart" onclick="switchTab('chart')">📊 Bar Chart Skor</button>
+      <button class="nav-tab-btn" id="tabBtnDetail" onclick="switchTab('detail')">📋 Detail Permainan</button>
+    </nav>
 
-      <a href="index.html" class="btn-header-logout">
-        🏠 Keluar ke Game
-      </a>
+    <div class="admin-actions">
+      <button class="btn-header-reset" id="btnDeleteAllData">🗑️ Reset Semua Data</button>
+      <a href="index.html" class="btn-header-logout">🏠 Game</a>
     </div>
   </header>
 
-  <!-- ============================================================
-       MAIN CONTENT: ANIMATED CHART 4 KELOMPOK
-       ============================================================ -->
   <main class="main-container">
-    <div class="chart-card">
-      <div class="chart-header">
-        <h2>📊 Papan Skor & Peringkat Kelompok</h2>
-        <span style="font-size: 13px; color: #8a7f68; font-weight: 600;">
-          Peringkat otomatis memperbarui posisi saat poin saling mengejar
-        </span>
-      </div>
 
-      <!-- LIST BAR CHART KELOMPOK -->
-      <div class="leaderboard-list" id="leaderboardList">
-        <!-- BARIS KELOMPOK DILOAD OTOMATIS DENGAN JAVASCRIPT -->
+    <!-- TAB 1: BAR CHART SKOR -->
+    <div class="card-panel" id="panelChart">
+      <div class="panel-header">
+        <h2>📊 Grafik Skor & Peringkat Kelompok</h2>
+        <span style="font-size: 13px; color: #8a7f68; font-weight: 600;">Animasi peringkat akan bergeser naik turun jika posisi mengejar!</span>
+      </div>
+      <div class="leaderboard-list" id="leaderboardList"></div>
+    </div>
+
+    <!-- TAB 2: DETAIL PERMAINAN (MENGGUNAKAN STRUKTUR DOKUMEN/TABEL ASLI) -->
+    <div class="card-panel" id="panelDetail" style="display: none;">
+      <div class="panel-header">
+        <h2>📋 Rincian Permainan Live</h2>
+        <span style="font-size: 13px; color: #8a7f68; font-weight: 600;">Pantau sisa menit/detik dari layar pemain secara akurat</span>
+      </div>
+      <div class="table-responsive">
+        <table class="detail-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nama Kelompok</th>
+              <th>Ronde</th>
+              <th>Soal</th>
+              <th>Sisa Waktu</th>
+              <th>Total Skor</th>
+              <th>Status</th>
+              <th>Update Terakhir</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
       </div>
     </div>
+
   </main>
 
 <script>
   /* ============================================================
-     1. KONFIGURASI FIREBASE REALTIME DATABASE
+     1. KONFIGURASI FIREBASE
      ============================================================ */
   const firebaseConfig = {
     apiKey: "AIzaSy...",
@@ -383,81 +291,178 @@
     messagingSenderId: "123456789...",
     appId: "1:123456789...:web:abcde..."
   };
-
   firebase.initializeApp(firebaseConfig);
   const database = firebase.database();
 
-  /* DATA AWAL 4 KELOMPOK DEFAULT (JIKA BELUM ADA DATA KELOMPOK DARI GAME) */
-  let groupsData = {
-    "Kelompok_1": { groupName: "Kelompok 1", totalScore: 0, round: 1, caseNumber: 1, status: "Menunggu" },
-    "Kelompok_2": { groupName: "Kelompok 2", totalScore: 0, round: 1, caseNumber: 1, status: "Menunggu" },
-    "Kelompok_3": { groupName: "Kelompok 3", totalScore: 0, round: 1, caseNumber: 1, status: "Menunggu" },
-    "Kelompok_4": { groupName: "Kelompok 4", totalScore: 0, round: 1, caseNumber: 1, status: "Menunggu" }
-  };
-
-  const leaderboardList = document.getElementById('leaderboardList');
+  const ROW_HEIGHT = 76; 
+  const GAP_HEIGHT = 16; 
 
   /* ============================================================
-     2. SYNC MEMBACA DATA REALTIME DARI FIREBASE
+     2. SYNC REALTIME FIREBASE (MENGGUNAKAN STRUKTUR DATA ASLI)
      ============================================================ */
   database.ref('game_scores').on('value', (snapshot) => {
-    const firebaseVal = snapshot.val();
+    const data = snapshot.val();
+    let list = [];
     
-    if (firebaseVal) {
-      // Gabungkan data firebase ke dalam list
-      Object.keys(firebaseVal).forEach(key => {
-        groupsData[key] = firebaseVal[key];
-      });
+    if (data) {
+      list = Object.values(data);
     }
 
-    renderChart();
+    // Urutkan berdasarkan Skor Tertinggi (Support properti `item.score` atau `item.totalScore`)
+    list.sort((a, b) => {
+      const scoreA = (a.score !== undefined) ? a.score : (a.totalScore || 0);
+      const scoreB = (b.score !== undefined) ? b.score : (b.totalScore || 0);
+      return scoreB - scoreA;
+    });
+
+    renderChart(list);
+    renderTable(list);
   });
 
   /* ============================================================
-     3. RENDER CHART & EFEK ANIMASI NAIK/TURUN
+     3. RENDER TABEL DETAIL (100% STRUKTUR DATA DOKUMEN ASLI)
      ============================================================ */
-  function renderChart() {
-    // Ubah object ke Array lalu Urutkan berdasarkan Skor Tertinggi (Descending)
-    let sortedGroups = Object.values(groupsData).sort((a, b) => (b.totalScore || 0) - (a.totalScore || 0));
+  function renderTable(list) {
+    const tbody = document.getElementById('tbody');
+    
+    if (list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px; color:#8a7f68;">Belum ada data kelompok.</td></tr>`;
+      return;
+    }
 
-    // Batasi maksimum tampilan ke 4 Kelompok Utama
-    sortedGroups = sortedGroups.slice(0, 4);
+    tbody.innerHTML = list.map((item, idx) => {
+      // Mendukung kunci data asli (item.score, item.question, item.caseNumber)
+      const currentScore = (item.score !== undefined) ? item.score : (item.totalScore || 0);
+      const questionNum = (item.question !== undefined) ? item.question : (item.caseNumber || 1);
+      const timeLeft = item.timeLeft || 0;
 
-    // Cari skor tertinggi untuk acuan persentase lebar bar (100%)
-    const maxScore = Math.max(...sortedGroups.map(g => g.totalScore || 0), 100);
+      const min = Math.floor(timeLeft / 60);
+      const sec = timeLeft % 60;
+      const formattedTime = `${min}:${sec < 10 ? '0' : ''}${sec}`;
 
-    leaderboardList.innerHTML = "";
-
-    sortedGroups.forEach((group, index) => {
-      const rank = index + 1;
-      const score = group.totalScore || 0;
-      const percentage = Math.min(100, Math.max(8, (score / maxScore) * 100));
-
-      const row = document.createElement('div');
-      row.className = `group-row rank-${rank}`;
-      row.dataset.id = group.groupName;
-
-      row.innerHTML = `
-        <div class="rank-badge">${rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank}</div>
-        
-        <div class="group-info">
-          <div class="group-name" title="${group.groupName}">${group.groupName}</div>
-          <div class="group-status">Ronde ${group.round || 1} · ${group.status || 'Bermain'}</div>
-        </div>
-
-        <div class="bar-wrapper">
-          <div class="bar-fill" style="width: ${percentage}%;"></div>
-        </div>
-
-        <div class="score-text" id="scoreText_${group.groupName.replace(/\s+/g, '_')}">${score} Pts</div>
+      return `
+        <tr>
+          <td class="rank">#${idx + 1}</td>
+          <td style="font-weight:bold; font-size:16px; color:var(--navy);">${item.groupName}</td>
+          <td>Ronde ${item.round || 1}</td>
+          <td>Soal ${questionNum}</td>
+          <td style="font-family:monospace; font-weight:800; color:var(--amber-dark);">${formattedTime}</td>
+          <td class="score">${currentScore} Pts</td>
+          <td><span class="status">${item.status || 'Bermain'}</span></td>
+          <td style="color:#7a7060; font-size:12px;">${item.lastUpdate || '-'}</td>
+        </tr>
       `;
+    }).join('');
+  }
 
-      leaderboardList.appendChild(row);
+  /* ============================================================
+     4. RENDER ANIMASI BAR CHART (SLIDING POSISI)
+     ============================================================ */
+  function renderChart(list) {
+    const leaderboardList = document.getElementById('leaderboardList');
+
+    if (list.length === 0) {
+      leaderboardList.style.height = "auto";
+      leaderboardList.innerHTML = `<div class="empty-state">📭 Belum ada data kelompok yang bermain.</div>`;
+      return;
+    } else {
+      const emptyState = leaderboardList.querySelector('.empty-state');
+      if (emptyState) emptyState.remove();
+    }
+
+    leaderboardList.style.height = `${list.length * (ROW_HEIGHT + GAP_HEIGHT)}px`;
+
+    const maxScore = Math.max(...list.map(g => (g.score !== undefined ? g.score : g.totalScore) || 0), 100);
+    const activeGroupIds = list.map(g => "group_" + g.groupName.replace(/[\.\#\$\[\]\s]+/g, '_'));
+
+    Array.from(leaderboardList.children).forEach(child => {
+      if (child.id && !activeGroupIds.includes(child.id)) {
+        leaderboardList.removeChild(child);
+      }
+    });
+
+    list.forEach((item, index) => {
+      const rank = index + 1;
+      const currentScore = (item.score !== undefined) ? item.score : (item.totalScore || 0);
+      const questionNum = (item.question !== undefined) ? item.question : (item.caseNumber || 1);
+      
+      const percentage = Math.min(100, Math.max(5, (currentScore / maxScore) * 100));
+      const targetY = index * (ROW_HEIGHT + GAP_HEIGHT);
+      const groupId = "group_" + item.groupName.replace(/[\.\#\$\[\]\s]+/g, '_');
+      
+      let row = document.getElementById(groupId);
+
+      if (!row) {
+        row = document.createElement('div');
+        row.id = groupId;
+        row.className = `group-row rank-${rank}`;
+        row.innerHTML = `
+          <div class="rank-badge"></div>
+          <div class="group-info">
+            <div class="group-name"></div>
+            <div class="group-status-badge"></div>
+          </div>
+          <div class="bar-wrapper"><div class="bar-fill"></div></div>
+          <div class="score-text"></div>
+        `;
+        row.style.transform = `translateY(${targetY}px)`;
+        row.style.opacity = "0";
+        leaderboardList.appendChild(row);
+        
+        setTimeout(() => row.style.opacity = "1", 50);
+      }
+
+      row.className = `group-row rank-${rank}`;
+      row.style.transform = `translateY(${targetY}px)`;
+
+      row.querySelector('.rank-badge').textContent = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+      row.querySelector('.group-name').textContent = item.groupName;
+      row.querySelector('.group-status-badge').textContent = `Ronde ${item.round || 1} · Soal ${questionNum}`;
+      row.querySelector('.bar-fill').style.width = `${percentage}%`;
+
+      const scoreEl = row.querySelector('.score-text');
+      const currentScoreText = `${currentScore} Pts`;
+      if (scoreEl.textContent !== currentScoreText && scoreEl.textContent !== '') {
+         scoreEl.classList.remove('score-bump');
+         void scoreEl.offsetWidth;
+         scoreEl.classList.add('score-bump');
+      }
+      scoreEl.textContent = currentScoreText;
     });
   }
 
-  // Initial Render
-  renderChart();
+  /* ============================================================
+     5. FUNGSI HAPUS DATA FIREBASE
+     ============================================================ */
+  document.getElementById('btnDeleteAllData').addEventListener('click', () => {
+    if (confirm("⚠️ APAKAH ANDA YAKIN?\n\nSemua data skor kelompok yang tersimpan di database Firebase akan DIHAPUS PERMANEN.")) {
+      database.ref('game_scores').remove()
+        .then(() => alert("✅ Berhasil! Seluruh data kelompok sebelumnya telah dibersihkan."))
+        .catch((err) => alert("❌ Gagal menghapus: " + err.message));
+    }
+  });
+
+  /* ============================================================
+     6. SWITCH TAB NAVIGASI
+     ============================================================ */
+  function switchTab(tabName) {
+    const panelChart = document.getElementById('panelChart');
+    const panelDetail = document.getElementById('panelDetail');
+    const btnChart = document.getElementById('tabBtnChart');
+    const btnDetail = document.getElementById('tabBtnDetail');
+
+    if (tabName === 'chart') {
+      panelChart.style.display = 'block';
+      panelDetail.style.display = 'none';
+      btnChart.classList.add('active');
+      btnDetail.classList.remove('active');
+    } else {
+      panelChart.style.display = 'none';
+      panelDetail.style.display = 'block';
+      btnDetail.classList.add('active');
+      btnChart.classList.remove('active');
+    }
+  }
 </script>
 </body>
 </html>

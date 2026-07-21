@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
-<!-- Firebase SDK -->
+<!-- Firebase SDK Compat -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
@@ -31,7 +31,6 @@
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   
-  /* BACKGROUND HALAMAN UTAMA GAME */
   body{
     min-height:100vh;
     background:
@@ -54,7 +53,6 @@
     outline-offset:3px;
   }
 
-  /* LOGO HEADER LAYAR UTAMA & MODAL */
   .logo-container {
     display: flex;
     align-items: center;
@@ -130,7 +128,6 @@
   }
   .icon-btn:hover{transform:translateY(-2px);}
 
-  /* TIMER & SCORE CHIP */
   .timer-box{
     background:var(--paper);
     border:2px solid var(--coral);
@@ -171,7 +168,6 @@
     box-shadow: var(--shadow);
   }
 
-  /* ROLE SELECTION CARDS STYLE */
   .role-card-grid {
     display: flex;
     gap: 16px;
@@ -600,7 +596,7 @@
   </div>
 </div>
 
-<!-- LAYAR 2: PILIH ROLE (USER ATAU ADMIN) -->
+<!-- LAYAR 2: PILIH ROLE -->
 <div class="overlay" id="roleOverlay" hidden>
   <div class="modal">
     <div class="big-emoji">🎭</div>
@@ -608,14 +604,12 @@
     <p>Silakan pilih peran untuk melanjutkan ke sistem.</p>
 
     <div class="role-card-grid">
-      <!-- OPSI 1: PEMAIN / USER -->
       <div class="role-card" id="btnRoleUser">
         <div class="role-icon">🎮</div>
         <div class="role-title">Pemain / Siswa</div>
         <p class="role-desc">Masuk sebagai kelompok untuk bermain dan memecahkan kasus debugging.</p>
       </div>
 
-      <!-- OPSI 2: ADMIN / FASILITATOR -->
       <div class="role-card" id="btnRoleAdmin">
         <div class="role-icon">👨‍💻</div>
         <div class="role-title">Admin / KKN</div>
@@ -625,7 +619,7 @@
   </div>
 </div>
 
-<!-- LAYAR MODAL LOGIN ADMIN (VERIFIKASI PASSWORD) -->
+<!-- LAYAR LOGIN ADMIN -->
 <div class="overlay" id="adminLoginOverlay" hidden>
   <div class="modal" style="max-width:420px;">
     <div class="big-emoji">🔒</div>
@@ -642,17 +636,13 @@
 
     <br>
     <div style="display:flex; gap:10px;">
-      <button class="btn btn-ghost" id="btnCancelAdminLogin" style="flex:1; justify-content:center;">
-        Batal
-      </button>
-      <button class="btn btn-primary" id="btnSubmitAdminLogin" style="flex:1; justify-content:center;">
-        Masuk 🔓
-      </button>
+      <button class="btn btn-ghost" id="btnCancelAdminLogin" style="flex:1; justify-content:center;">Batal</button>
+      <button class="btn btn-primary" id="btnSubmitAdminLogin" style="flex:1; justify-content:center;">Masuk 🔓</button>
     </div>
   </div>
 </div>
 
-<!-- LAYAR 3: DASHBOARD INPUT NAMA KELOMPOK & RONDE -->
+<!-- LAYAR 3: INPUT NAMA & RONDE -->
 <div class="overlay" id="dashboardOverlay" hidden>
   <div class="modal">
     <div class="big-emoji">👥</div>
@@ -672,11 +662,11 @@
 
       <label><b>Pilih Ronde</b></label>
       <select id="roundSelect" style="width:100%; margin-top:8px; padding:12px; border-radius:12px; border:2px solid #ddd; font-size:16px;">
-        <option value="0">Ronde 1 (6 Step · 2 Kasus)</option>
-        <option value="1">Ronde 2 (7 Step · 2 Kasus)</option>
-        <option value="2">Ronde 3 (8 Step · 2 Kasus)</option>
-        <option value="3">Ronde 4 (10 Step · 2 Kasus)</option>
-        <option value="4">Ronde 5 (12 Step · 2 Kasus)</option>
+        <option value="0">Ronde 1 </option>
+        <option value="1">Ronde 2 </option>
+        <option value="2">Ronde 3 </option>
+        <option value="3">Ronde 4 </option>
+        <option value="4">Ronde 5 </option>
       </select>
     </div>
 
@@ -691,7 +681,7 @@
   </div>
 </div>
 
-<!-- LAYAR COUNTDOWN 3-2-1 LAYAR BESAR -->
+<!-- COUNTDOWN LAYAR BESAR -->
 <div class="overlay" id="startCountdownOverlay" hidden>
   <div style="text-align:center;">
     <div style="font-size:22px; font-weight:800; color:var(--navy); letter-spacing:2px; margin-bottom:10px; text-transform:uppercase;">
@@ -712,15 +702,11 @@
     
     <div style="font-size: 55px; margin: 10px 0 0;">🥳🏆</div>
     <h1 style="font-size: 32px; color: var(--navy); margin: 6px 0;">HOREEE!</h1>
-    <p style="font-size: 16px; font-weight: 700; color: #5a5346; margin-bottom: 20px;" id="finalGroupName">
-      Kelompok Garuda
-    </p>
+    <p style="font-size: 16px; font-weight: 700; color: #5a5346; margin-bottom: 20px;" id="finalGroupName">Kelompok Garuda</p>
 
     <div style="background: linear-gradient(135deg, var(--navy), var(--navy-2)); border: 3px solid var(--amber); border-radius: 20px; padding: 22px; color: #fff; box-shadow: var(--shadow);">
       <span style="font-size: 14px; font-weight: 700; letter-spacing: 1px; color: var(--amber);">TOTAL SCORE KAMU</span>
-      <div style="font-size: 48px; font-family: 'Baloo 2', sans-serif; font-weight: 800; color: #FFF; margin: 4px 0 0; line-height: 1.1;" id="finalScoreDisplay">
-        0 Pts
-      </div>
+      <div style="font-size: 48px; font-family: 'Baloo 2', sans-serif; font-weight: 800; color: #FFF; margin: 4px 0 0; line-height: 1.1;" id="finalScoreDisplay">0 Pts</div>
     </div>
 
     <p style="font-size: 13.5px; color: #6b7280; margin-top: 20px;">
@@ -814,10 +800,10 @@
 </div>
 
 <script>
-/* ============================================================
-   1. INTEGRASI FIREBASE REALTIME DATABASE & KATA SANDI ADMIN
-   ============================================================ */
-  const ADMIN_PASSWORD = "admin123"; // PASSWORD ADMIN DEFAULT
+  /* ============================================================
+     1. INTEGRASI FIREBASE REALTIME DATABASE & KATA SANDI ADMIN
+     ============================================================ */
+  const ADMIN_PASSWORD = "admin123";
 
   const firebaseConfig = {
     apiKey: "AIzaSy...",
@@ -848,9 +834,9 @@
     });
   }
 
-/* ============================================================
-   2. DATA RONDE (DENGAN PENINGKATAN STEP DARI 6 HINGGA 12 STEP)
-   ============================================================ */
+  /* ============================================================
+     2. DATA RONDE (6 DENGAN 12 STEP OBJEKTIF)
+     ============================================================ */
   const ROUNDS = [
     // RONDE 1 (6 STEP)
     [
@@ -891,7 +877,7 @@
       {
         tag: "RONDE 2 · KASUS 1 (7 STEP)",
         title: "🍫 Membuat Minuman Cokelat",
-        mission: "Prosedur penyajian minuman cokelat hangat yang tepat. Cari bug-nya!",
+        mission: "Prosedur penyajikan minuman cokelat hangat yang tepat. Cari bug-nya!",
         startIcon: "🤖", goalIcon: "🥤",
         steps: [
           { id:"r2c1s1", emoji:"🥛", txt:"Menyiapkan gelas bersih", note:"Mulai dengan menyiapkan cangkir/gelas yang higienis." },
@@ -1049,9 +1035,9 @@
     ]
   ];
 
-/* ============================================================
-   3. STATE GAME, TIMER & SKOR RENTANG 1–100
-   ============================================================ */
+  /* ============================================================
+     3. STATE GAME, TIMER & SKOR
+     ============================================================ */
   let roundIndex = 0;
   let caseInRoundIndex = 0;
   let currentOrder = [];
@@ -1064,7 +1050,7 @@
 
   let totalScore = 0;
   let timerInterval = null;
-  let timeLeft = 120; // 2 Menit (120 detik)
+  let timeLeft = 120;
 
   const board = document.getElementById('board');
   const feedbackEl = document.getElementById('feedback');
@@ -1198,7 +1184,6 @@
       card.dataset.index = i;
       card.innerHTML = `<div class="emoji">${step.emoji}</div><div class="txt">${step.txt}</div>`;
 
-      // Drag and drop
       card.addEventListener('dragstart', (e) => {
         dragSourceIndex = i;
         e.dataTransfer.effectAllowed = 'move';
@@ -1225,7 +1210,6 @@
         dragSourceIndex = null;
       });
 
-      // Click / keyboard select-to-swap
       card.addEventListener('click', () => {
         if (justDragged) return;
         handleCardSelect(i);
@@ -1271,9 +1255,9 @@
     renderBoard();
   }
 
-/* ============================================================
-   4. CHECK ANSWER & PERHITUNGAN SKOR
-   ============================================================ */
+  /* ============================================================
+     4. CHECK ANSWER & SKOR
+     ============================================================ */
   document.getElementById('btnCheck').addEventListener('click', checkAnswer);
 
   function checkAnswer(){
@@ -1310,10 +1294,10 @@
     document.getElementById('statBugs').textContent = wrongIndexes.length;
 
     if (wrongIndexes.length === 0) {
-      let timeBonus = Math.floor((timeLeft / 120) * 25); // Maks 25 Pts
-      let accuracyScore = Math.max(5, 25 - ((attempts - 1) * 5)); // Maks 25 Pts
+      let timeBonus = Math.floor((timeLeft / 120) * 25);
+      let accuracyScore = Math.max(5, 25 - ((attempts - 1) * 5));
       
-      let gainedScore = accuracyScore + timeBonus; // Maksimal 50 Pts per kasus
+      let gainedScore = accuracyScore + timeBonus;
       
       totalScore += gainedScore;
       localStorage.setItem('score_' + groupName, totalScore);
@@ -1405,9 +1389,9 @@
     renderBoard();
   });
 
-/* ============================================================
-   5. WIN STATE, FINAL SCORE PAGE & MODAL
-   ============================================================ */
+  /* ============================================================
+     5. WIN STATE & MODAL
+     ============================================================ */
   function showWin(){
     renderDots();
 
@@ -1489,19 +1473,16 @@
     }
   });
 
-  /* NAVIGASI DARI SKOR AKHIR KEMBALI KE WELCOME SCREEN */
   document.getElementById('btnBackToWelcome').addEventListener('click', () => {
     document.getElementById('finalScoreOverlay').hidden = true;
     document.getElementById('welcomeOverlay').hidden = false;
   });
 
-  /* NAVIGASI DARI WELCOME -> LAYAR PILIH ROLE */
   document.getElementById('btnWelcomeNext').addEventListener('click', () => {
     document.getElementById('welcomeOverlay').hidden = true;
     document.getElementById('roleOverlay').hidden = false;
   });
 
-  /* EVENT PEMILIHAN ROLE (USER ATAU LOGIN ADMIN) */
   document.getElementById('btnRoleUser').addEventListener('click', () => {
     document.getElementById('roleOverlay').hidden = true;
     openDashboardOverlay();
@@ -1514,7 +1495,6 @@
     document.getElementById('adminLoginOverlay').hidden = false;
   });
 
-  /* LOGIKA MODAL LOGIN ADMIN */
   document.getElementById('btnCancelAdminLogin').addEventListener('click', () => {
     document.getElementById('adminLoginOverlay').hidden = true;
     document.getElementById('roleOverlay').hidden = false;
@@ -1529,7 +1509,6 @@
     }
   });
 
-  /* HOW TO PLAY MODAL & LOGIKA COUNTDOWN 3-2-1 */
   const howOverlay = document.getElementById('howOverlay');
   const startCountdownOverlay = document.getElementById('startCountdownOverlay');
   const countdownBigText = document.getElementById('countdownBigText');
@@ -1563,7 +1542,6 @@
 
   document.getElementById('btnHelp').addEventListener('click', () => howOverlay.hidden = false);
 
-  /* UPDATE TAMPILAN SKOR SEMENTARA DI DASHBOARD KETIKA MENGETIK NAMA */
   document.getElementById("groupNameInput").addEventListener("input", (e) => {
     const inputName = e.target.value.trim();
     if(inputName) {
@@ -1576,7 +1554,6 @@
     }
   });
 
-  /* RESET SKOR MANUAL DARI DASHBOARD */
   document.getElementById('btnResetScore').addEventListener('click', () => {
     const namaInput = document.getElementById("groupNameInput").value.trim();
     if(!namaInput) {
@@ -1588,11 +1565,14 @@
       totalScore = 0;
       document.getElementById('scoreDisplay').textContent = "⭐ 0 Pts";
       document.getElementById("tempScoreValue").textContent = "0 Pts";
+      
+      /* SYNC RESET KE FIREBASE SEKETIKA */
+      sendToFirebase("Mereset Skor"); 
+      
       alert(`Skor untuk ${namaInput} telah di-reset ke 0.`);
     }
   });
 
-  /* INIT awal: Tampilkan Layar Welcome Screen */
   document.getElementById("welcomeOverlay").hidden = false;
 
   document.getElementById("btnDashboardStart").addEventListener("click", () => {
@@ -1606,7 +1586,6 @@
     groupName = nama;
     const selectedRound = Number(document.getElementById("roundSelect").value);
 
-    /* LOGIKA RESET DI RONDE 1 ATAU AKUMULASI DI RONDE 2-5 */
     if (selectedRound === 0) {
       totalScore = 0;
       localStorage.setItem('score_' + groupName, 0);
