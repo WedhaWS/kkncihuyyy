@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Realtime Leaderboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+
+<!-- Firebase App & Database SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<style>
+  body { font-family: 'Quicksand', sans-serif; background: #111827; color: #FFF; margin: 0; padding: 24px; }
+  .container { max-width: 1000px; margin: 0 auto; }
+  header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #374151; padding-bottom: 16px; margin-bottom: 24px; }
+  h1 { font-family: 'Baloo 2', sans-serif; color: #F5A623; margin: 0; }
+  .badge { background: #E8543E; color: white; padding: 6px 14px; border-radius: 999px; font-weight: bold; animation: blink 1s infinite alternate; }
+  @keyframes blink { from { opacity: 1; } to { opacity: 0.4; } }
+
+  table { width: 100%; border-collapse: collapse; background: #1F2937; border-radius: 12px; overflow: hidden; }
+  th, td { padding: 16px; text-align: left; }
+  th { background: #374151; color: #F5A623; font-family: 'Baloo 2', sans-serif; font-size: 18px; }
+  tr:nth-child(even) { background: #111827; }
+  
+  .rank { font-family: 'Baloo 2', sans-serif; font-size: 22px; font-weight: bold; color: #F5A623; }
+  .score { font-size: 20px; font-weight: bold; color: #3FB68B; }
+  .status { padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: bold; background: #374151; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div>
+      <h1>🕵️ Papan Skor Real-Time (Admin)</h1>
+      <span style="color:#9CA3AF;">Monitoring 4 Kelompok & 5 Ronde KKN</span>
+    </div>
+    <span class="badge">🔴 LIVE ONLINE</span>
+  </header>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Peringkat</th>
+        <th>Kelompok</th>
+        <th>Ronde</th>
+        <th>Soal</th>
+        <th>Sisa Waktu</th>
+        <th>Total Skor</th>
+        <th>Status</th>
+        <th>Update</th>
+      </tr>
+    </thead>
+    <tbody id="leaderboardBody">
+      <tr><td colspan="8" style="text-align:center; color:#9CA3AF;">Menunggu data kelompok...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  // -------------------------------------------------------------
+  // ISIKAN CONFIG FIREBASE YANG SAMA DENGAN INDEX.HTML
+  // -------------------------------------------------------------
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "kkncihuyyy.firebaseapp.com",
+    databaseURL: "https://kkncihuyyy-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "kkncihuyyy",
+    storageBucket: "kkncihuyyy.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:abcde"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+
+  // Dengarkan perubahan data secara otomatis dari Cloud
+  database.ref('game_scores').on('value', (snapshot) => {
+    const data = snapshot.val();
+    if(!data) return;
+
+    const list = Object.values(data).sort((a, b) => b.score - a.score);
+    const tbody = document.getElementById('leaderboardBody');
+
+    tbody.innerHTML = list.map((item, idx) => {
+      const min = Math.floor(item.timeLeft / 60), sec = item.timeLeft % 60;
+      return `
+        <tr>
+          <td class="rank">#${idx + 1}</td>
+          <td style="font-weight:bold; font-size:18px;">${item.groupName}</td>
+          <td>Ronde ${item.round}</td>
+          <td>Soal ${item.question}</td>
+          <td style="font-family:monospace; color:#F5A623;">${min}:${sec<10?'0':''}${sec}</td>
+          <td class="score">${item.score} Pts</td>
+          <td><span class="status">${item.status}</span></td>
+          <td style="color:#9CA3AF; font-size:12px;">${item.lastUpdate}</td>
+        </tr>
+      `;
+    }).join('');
+  });
+</script>
+</body>
+</html>

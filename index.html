@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detektif Kode — Debugging Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<style>
+  :root{
+    --navy:#1E2A47;
+    --navy-2:#2C3D66;
+    --cream:#FFF8EA;
+    --paper:#FFFDF8;
+    --amber:#F5A623;
+    --amber-dark:#D6860C;
+    --coral:#E8543E;
+    --coral-dark:#C13F2C;
+    --mint:#3FB68B;
+    --mint-dark:#2C8F6B;
+    --ink:#26241E;
+    --line:#E6D8B8;
+    --shadow: 0 10px 24px rgba(30,42,71,0.18);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  
+  /* BACKGROUND HALAMAN UTAMA GAME (WARNA CREAM SOFT) */
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 8% 12%, rgba(245,166,35,0.14), transparent 40%),
+      radial-gradient(circle at 92% 88%, rgba(63,182,139,0.14), transparent 40%),
+      var(--cream);
+    font-family:'Quicksand', sans-serif;
+    color:var(--ink);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:18px 16px 40px;
+  }
+
+  h1,h2,h3,.display{font-family:'Baloo 2', sans-serif;}
+
+  button{font-family:inherit; cursor:pointer;}
+  button:focus-visible, [tabindex]:focus-visible{
+    outline:3px solid var(--navy);
+    outline-offset:3px;
+  }
+
+  /* LOGO HEADER LAYAR UTAMA & MODAL */
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .logo-img {
+    height: 65px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  /* ---------- TOP BAR ---------- */
+  .topbar{
+    width:100%;
+    max-width:1100px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand-badge{
+    width:52px;height:52px;
+    border-radius:50%;
+    background:var(--navy);
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;
+    box-shadow: var(--shadow);
+    border:3px solid var(--amber);
+    flex-shrink:0;
+  }
+  .brand-text .display{
+    font-size:22px;
+    font-weight:800;
+    color:var(--navy);
+    line-height:1.1;
+    letter-spacing:0.3px;
+  }
+  .brand-text span{
+    font-size:12.5px;
+    font-weight:600;
+    color:#7a7060;
+  }
+
+  .top-actions{display:flex; align-items:center; gap:10px;}
+  .progress-dots{display:flex; gap:8px; align-items:center; background:var(--paper); border:2px solid var(--line); padding:7px 12px; border-radius:999px; box-shadow: var(--shadow);}
+  .dot{
+    width:14px;height:14px;border-radius:50%;
+    background:#E9E1CC;
+    border:2px solid #d8cca0;
+    transition:.25s;
+  }
+  .dot.active{background:var(--amber); border-color:var(--amber-dark); transform:scale(1.25);}
+  .dot.done{background:var(--mint); border-color:var(--mint-dark);}
+
+  .icon-btn{
+    background:var(--paper);
+    border:2px solid var(--line);
+    border-radius:999px;
+    width:42px;height:42px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:19px;
+    box-shadow: var(--shadow);
+    transition:.15s;
+  }
+  .icon-btn:hover{transform:translateY(-2px);}
+
+  /* TIMER & SCORE CHIP */
+  .timer-box{
+    background:var(--paper);
+    border:2px solid var(--coral);
+    padding:6px 14px;
+    border-radius:999px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:16px;
+    color:var(--coral-dark);
+    display:flex; align-items:center; gap:6px;
+    box-shadow: var(--shadow);
+  }
+  .timer-box.warning { animation: pulse 1s infinite alternate; }
+  @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.08); background: #FDF1EF; } }
+
+  .score-chip {
+    background: var(--navy);
+    color: var(--amber);
+    border: 2px solid var(--amber);
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  /* SCORE BOARD SEMENTARA DIDESAIN MODAL */
+  .dashboard-score-card {
+    background: linear-gradient(135deg, var(--navy), var(--navy-2));
+    color: #fff;
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid var(--amber);
+    box-shadow: var(--shadow);
+  }
+
+  /* ---------- CASE BRIEF ---------- */
+  .case-brief{
+    width:100%;
+    max-width:1100px;
+    background:var(--navy);
+    background-image: linear-gradient(135deg, var(--navy), var(--navy-2));
+    color:#fff;
+    border-radius:22px;
+    padding:22px 26px;
+    box-shadow: var(--shadow);
+    display:flex;
+    gap:20px;
+    align-items:center;
+    flex-wrap:wrap;
+    position:relative;
+    overflow:hidden;
+    margin-bottom:22px;
+  }
+  .case-brief::after{
+    content:"";
+    position:absolute; inset:0;
+    background-image: repeating-linear-gradient(115deg, rgba(255,255,255,0.035) 0 2px, transparent 2px 26px);
+    pointer-events:none;
+  }
+  .case-tag{
+    background:var(--amber);
+    color:var(--navy);
+    font-family:'Baloo 2';
+    font-weight:800;
+    font-size:12.5px;
+    letter-spacing:0.06em;
+    padding:5px 12px;
+    border-radius:999px;
+    display:inline-block;
+    margin-bottom:8px;
+  }
+  .case-brief h2{
+    margin:0 0 6px;
+    font-size:24px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .case-brief p{
+    margin:0;
+    font-size:15px;
+    line-height:1.5;
+    max-width:640px;
+    color:#EDEBE0;
+  }
+  .case-left{flex:1; min-width:260px;}
+  .case-stats{
+    display:flex; gap:10px; flex-shrink:0;
+  }
+  .stat-chip{
+    background:rgba(255,255,255,0.1);
+    border:1px solid rgba(255,255,255,0.25);
+    border-radius:14px;
+    padding:10px 14px;
+    text-align:center;
+    min-width:74px;
+  }
+  .stat-chip b{display:block; font-family:'Baloo 2'; font-size:19px;}
+  .stat-chip span{font-size:11px; color:#D9D6C8;}
+
+  /* ---------- BOARD ---------- */
+  .board-wrap{
+    width:100%;
+    max-width:1100px;
+    background:var(--paper);
+    border:2px solid var(--line);
+    border-radius:24px;
+    padding:34px 28px 26px;
+    box-shadow: var(--shadow);
+    position:relative;
+  }
+  .board-title{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:22px;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .board-title h3{margin:0; font-size:16px; color:var(--navy);}
+  .hint-text{font-size:12.5px; color:#8a7f68; font-weight:600;}
+
+  .board{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    padding:10px 4px 26px;
+  }
+  .board::before{
+    content:"";
+    position:absolute;
+    left:36px; right:36px; top:56px;
+    border-top:3px dashed #D9CBA0;
+    z-index:0;
+  }
+
+  .rail-marker{
+    width:58px;height:58px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:28px;
+    flex-shrink:0;
+    position:relative;
+    z-index:2;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  }
+  .rail-marker.start{background:var(--navy); border:3px solid var(--amber);}
+  .rail-marker.goal{background:var(--mint); border:3px solid var(--mint-dark);}
+
+  .slot{
+    position:relative;
+    z-index:1;
+    flex-shrink:0;
+  }
+  .slot-index{
+    position:absolute;
+    top:-11px; left:50%; transform:translateX(-50%);
+    background:var(--navy);
+    color:#fff;
+    font-family:'Baloo 2';
+    font-size:12px;
+    font-weight:700;
+    width:22px;height:22px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    z-index:3;
+    box-shadow:0 2px 5px rgba(0,0,0,0.25);
+  }
+
+  .card{
+    width:136px;
+    min-height:112px;
+    background:#fff;
+    border:2.5px solid var(--line);
+    border-radius:16px;
+    padding:16px 10px 12px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap:8px;
+    cursor:grab;
+    user-select:none;
+    box-shadow: 0 4px 0 var(--line), 0 6px 14px rgba(30,42,71,0.08);
+    transition: transform .15s, box-shadow .15s, border-color .2s, background .2s;
+  }
+  .card:hover{transform:translateY(-3px);}
+  .card:active{cursor:grabbing;}
+  .card .emoji{font-size:30px;}
+  .card .txt{font-size:12.5px; font-weight:700; line-height:1.3; color:var(--ink);}
+
+  .card.selected{
+    border-color:var(--amber);
+    box-shadow: 0 4px 0 var(--amber-dark), 0 8px 16px rgba(245,166,35,0.28);
+    transform:translateY(-3px) scale(1.03);
+  }
+  .card.dragover-target{
+    border-color:var(--navy);
+    background:#F1EFE4;
+  }
+  .card.correct{
+    border-color:var(--mint-dark);
+    background:#F1FBF6;
+    box-shadow: 0 4px 0 var(--mint-dark), 0 6px 14px rgba(63,182,139,0.2);
+  }
+  .card.wrong{
+    border-color:var(--coral-dark);
+    background:#FDF1EF;
+    animation: shake .45s;
+  }
+  .card.wrong .emoji{filter:none;}
+
+  .bug-stamp{
+    position:absolute;
+    top:-14px; right:-10px;
+    background:var(--coral);
+    color:#fff;
+    font-family:'Baloo 2';
+    font-weight:800;
+    font-size:10.5px;
+    padding:4px 8px;
+    border-radius:8px;
+    transform:rotate(9deg);
+    box-shadow:0 3px 6px rgba(0,0,0,0.25);
+    z-index:4;
+    letter-spacing:0.03em;
+  }
+  .ok-stamp{
+    position:absolute;
+    top:-12px; right:-8px;
+    background:var(--mint-dark);
+    color:#fff;
+    font-size:14px;
+    width:24px;height:24px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    z-index:4;
+    box-shadow:0 3px 6px rgba(0,0,0,0.25);
+  }
+
+  @keyframes shake{
+    0%,100%{transform:translateX(0);}
+    20%{transform:translateX(-6px) rotate(-2deg);}
+    40%{transform:translateX(6px) rotate(2deg);}
+    60%{transform:translateX(-4px) rotate(-1deg);}
+    80%{transform:translateX(4px) rotate(1deg);}
+  }
+
+  /* ---------- CONTROLS ---------- */
+  .controls{
+    display:flex; justify-content:center; gap:14px; margin-top:6px; flex-wrap:wrap;
+  }
+  .btn{
+    font-family:'Baloo 2';
+    font-weight:700;
+    font-size:15px;
+    border-radius:14px;
+    padding:13px 26px;
+    border:none;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.18);
+    transition: transform .12s, box-shadow .12s;
+    display:flex; align-items:center; gap:8px;
+  }
+  .btn:active{transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,0.18);}
+  .btn-primary{background:var(--navy); color:#fff;}
+  .btn-primary:hover{background:var(--navy-2);}
+  .btn-ghost{background:var(--paper); color:var(--navy); border:2px solid var(--line); box-shadow:none;}
+  .btn-ghost:hover{background:#F1EEE2;}
+  .btn-amber{background:var(--amber); color:var(--navy);}
+
+  /* ---------- FEEDBACK ---------- */
+  .feedback{
+    width:100%; max-width:1100px;
+    margin-top:18px;
+  }
+  .feedback-box{
+    background:#FDF1EF;
+    border:2px solid #F3C7BE;
+    border-radius:18px;
+    padding:18px 20px;
+    box-shadow: var(--shadow);
+  }
+  .feedback-box.win{
+    background:#F0FBF6;
+    border-color:#BFE9D6;
+  }
+  .feedback-head{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Baloo 2'; font-weight:700; font-size:16px;
+    color:var(--coral-dark);
+    margin-bottom:10px;
+  }
+  .feedback-box.win .feedback-head{color:var(--mint-dark);}
+  .bug-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;}
+  .bug-item{
+    background:#fff;
+    border:1.5px solid #F3C7BE;
+    border-radius:12px;
+    padding:10px 14px;
+  }
+  .bug-item summary{
+    cursor:pointer;
+    font-weight:700; font-size:13.5px;
+    color:var(--ink);
+    list-style:none;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .bug-item summary::-webkit-details-marker{display:none;}
+  .bug-item summary::after{content:"Lihat penjelasan ▾"; font-size:11.5px; color:var(--coral-dark); font-weight:700;}
+  .bug-item[open] summary::after{content:"Sembunyikan ▴";}
+  .bug-item p{margin:8px 0 0; font-size:13.5px; line-height:1.5; color:#5a5346;}
+
+  /* ---------- MODAL / OVERLAY ---------- */
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(26,24,20,0.62);
+    display:flex; align-items:center; justify-content:center;
+    z-index:50;
+    padding:20px;
+  }
+  .overlay[hidden]{display:none !important;}
+  
+  /* BACKGROUND NATURAL ASEEC TOWER (DENGAN TINT NETRAL RINGAN AGAR GAMBAR CERAH & MODAL JELAS) */
+  #welcomeOverlay, #dashboardOverlay {
+    background: 
+      linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
+      url('asset/aseec.jpg') center/cover no-repeat fixed;
+    z-index: 100;
+  }
+
+  .modal{
+    background:var(--paper);
+    border-radius:22px;
+    max-width:520px;
+    width:100%;
+    padding:30px 28px 26px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    text-align:center;
+    position:relative;
+    max-height:88vh;
+    overflow:auto;
+    border:3px solid var(--amber);
+  }
+  .modal h2{margin:6px 0 4px; color:var(--navy); font-size:23px;}
+  .modal p{font-size:14.5px; line-height:1.6; color:#5a5346;}
+  .modal .big-emoji{font-size:52px;}
+  .how-steps{
+    text-align:left;
+    display:flex; flex-direction:column; gap:12px;
+    margin:18px 0 22px;
+  }
+  .how-steps li{
+    list-style:none;
+    display:flex; gap:12px; align-items:flex-start;
+    font-size:14px; line-height:1.5; color:var(--ink);
+  }
+  .how-num{
+    flex-shrink:0;
+    width:26px;height:26px;
+    background:var(--amber);
+    color:var(--navy);
+    border-radius:50%;
+    font-family:'Baloo 2'; font-weight:800; font-size:13px;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  .stars{font-size:34px; letter-spacing:6px; margin:8px 0 4px;}
+  .confetti-layer{position:absolute; inset:0; overflow:hidden; border-radius:22px; pointer-events:none;}
+  .confetti{
+    position:absolute; top:-20px;
+    width:9px; height:14px;
+    opacity:0.9;
+    animation: fall linear forwards;
+  }
+  @keyframes fall{
+    to{ transform: translateY(560px) rotate(540deg); opacity:0.2;}
+  }
+
+  footer{
+    margin-top:30px;
+    font-size:12px;
+    color:#6b7280;
+    text-align:center;
+    max-width:600px;
+    line-height:1.6;
+    background: rgba(255, 255, 255, 0.75);
+    padding: 8px 16px;
+    border-radius: 12px;
+  }
+
+  @media (max-width:640px){
+    .case-brief{flex-direction:column; align-items:flex-start;}
+    .board::before{left:28px; right:28px;}
+    .card{width:112px; min-height:100px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- LAYAR 1: DASHBOARD SELAMAT DATANG (BACKGROUND NATURAL ASEEC TOWER) -->
+<div class="overlay" id="welcomeOverlay">
+  <div class="modal">
+    <div class="logo-container">
+      <img src="asset/Logo Branding UNAIR (Biru).png" alt="Logo UNAIR" class="logo-img">
+      <img src="asset/logobbk.jpeg" alt="Maskot GaruDA" class="logo-img" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
+    </div>
+
+    <h2>Selamat Datang, Detektif! 🕵️‍♂️🤖</h2>
+    <p style="margin-top:10px; font-weight:600; color:var(--navy);">
+      <b>Game Edukasi "Detektif Kode"</b><br>
+      <span style="font-size:13px; color:#6b7280;">Kegiatan KKN Universitas Airlangga · SDN Caruban 1</span>
+    </p>
+    <p style="font-size:13.5px; margin-top:12px;">
+      Ayo bantu robot menyelesaikan tugas sehari-hari dengan menyusun langkah-langkah logika yang benar dan menemukan bug!
+    </p>
+
+    <br>
+    <button class="btn btn-primary" id="btnWelcomeNext" style="width:100%; justify-content:center; font-size:17px;">
+      Selanjutnya ➡️
+    </button>
+  </div>
+</div>
+
+<!-- LAYAR 2: DASHBOARD INPUT NAMA KELOMPOK & RONDE (BACKGROUND NATURAL ASEEC TOWER) -->
+<div class="overlay" id="dashboardOverlay" hidden>
+  <div class="modal">
+    <div class="big-emoji">👥</div>
+    <h2>Detektif Kode</h2>
+    <p>Silakan isi nama kelompok dan pilih ronde sebelum bermain.</p>
+
+    <div style="margin-top:20px;text-align:left">
+      <label><b>Nama Kelompok</b></label>
+      <input type="text" id="groupNameInput" placeholder="Contoh: Kelompok Garuda" style="width:100%; margin-top:8px; padding:12px; border-radius:12px; border:2px solid #ddd; font-size:16px;">
+
+      <!-- KARTU SKOR SEMENTARA -->
+      <div class="dashboard-score-card" id="tempScoreBox" hidden>
+        <span style="font-size:13.5px; font-weight:700;">⭐ Skor Sementara Kelompok:</span>
+        <b style="font-size:18px; color:var(--amber);" id="tempScoreValue">0 Pts</b>
+      </div>
+
+      <br>
+
+      <label><b>Pilih Ronde</b></label>
+      <select id="roundSelect" style="width:100%; margin-top:8px; padding:12px; border-radius:12px; border:2px solid #ddd; font-size:16px;">
+        <option value="0">Ronde 1 </option>
+        <option value="1">Ronde 2 </option>
+        <option value="2">Ronde 3 </option>
+        <option value="3">Ronde 4 </option>
+        <option value="4">Ronde 5 </option>
+      </select>
+    </div>
+
+    <br>
+    <button class="btn btn-primary" id="btnDashboardStart" style="width:100%; justify-content:center;">
+      ▶ Mulai Permainan
+    </button>
+    <br>
+    <button id="btnResetScore" style="background:none; border:none; color:var(--coral); font-size:12px; cursor:pointer; text-decoration:underline;">
+      ⚠️ Reset Skor Kelompok Ini dari 0
+    </button>
+  </div>
+</div>
+
+<!-- LAYAR UTAMA PERMAINAN -->
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-badge">🕵️</div>
+    <div class="brand-text">
+      <div class="display">Detektif Kode</div>
+      <span id="groupInfoDisplay">Debugging Game · Code Detective</span>
+    </div>
+  </div>
+  <div class="top-actions">
+    <div class="timer-box" id="timerBox">⏱️ <span id="timerDisplay">02:00</span></div>
+    <div class="score-chip" id="scoreDisplay">⭐ 0 Pts</div>
+    <div class="progress-dots" id="progressDots"></div>
+    <button class="icon-btn" id="btnHelp" title="Cara bermain" aria-label="Cara bermain">❓</button>
+  </div>
+</div>
+
+<div class="case-brief">
+  <div class="case-left">
+    <span class="case-tag" id="caseTag">KASUS 1</span>
+    <h2 id="caseTitle">🧺 Mencuci Baju</h2>
+    <p id="caseMission">Robot mau mencuci baju, tapi ada instruksi yang salah taruh sehingga robot bingung! Seret (drag) kartu untuk membetulkan urutannya.</p>
+  </div>
+  <div class="case-stats">
+    <div class="stat-chip"><b id="statAttempts">0</b><span>Percobaan</span></div>
+    <div class="stat-chip"><b id="statBugs">–</b><span>Bug ditemukan</span></div>
+  </div>
+</div>
+
+<div class="board-wrap">
+  <div class="board-title">
+    <h3>📋 Papan Instruksi Robot</h3>
+    <span class="hint-text">Seret kartu, lalu tukar posisinya sampai urutannya benar</span>
+  </div>
+  <div class="board" id="board"></div>
+  <div class="controls">
+    <button class="btn btn-primary" id="btnCheck">🔍 Periksa Urutan</button>
+    <button class="btn btn-amber" id="btnHint">💡 Petunjuk</button>
+    <button class="btn btn-ghost" id="btnReset">🔄 Ulangi Kasus</button>
+  </div>
+</div>
+
+<div class="feedback" id="feedback" hidden></div>
+
+<footer>
+  Dibuat untuk kegiatan KKN Universitas Airlangga — Debugging Game: Code Detective · SDN Caruban 1<br>
+  Kasus dipilih dan disiapkan oleh panitia KKN.
+</footer>
+
+<!-- HOW TO PLAY MODAL -->
+<div class="overlay" id="howOverlay" hidden style="background:rgba(26,24,20,0.62);">
+  <div class="modal">
+    <div class="big-emoji">🕵️‍♀️🤖</div>
+    <h2>Selamat Datang, Detektif!</h2>
+    <p>Robot kita mau menyelesaikan tugas sehari-hari, tapi instruksinya ada yang salah taruh (bug)! Tugas kalian: temukan bug-nya dan betulkan urutannya.</p>
+    <ol class="how-steps">
+      <li><span class="how-num">1</span> Setiap Ronde terdiri dari <b>2 Kasus/Soal</b> dengan durasi <b>2 Menit</b>.</li>
+      <li><span class="how-num">2</span> Diskusikan bersama kelompok, mana instruksi yang letaknya salah.</li>
+      <li><span class="how-num">3</span> Seret (drag) kartu untuk menukar posisinya sampai urutan masuk akal.</li>
+      <li><span class="how-num">4</span> Klik <b>Periksa Urutan</b>. Kartu yang masih salah akan diberi cap 🐞 BUG!</li>
+      <li><span class="how-num">5</span> Setiap kasus berhadiah hingga <b>50 Pts</b> (Maksimal 100 Pts per Ronde)!</li>
+    </ol>
+    <button class="btn btn-primary" id="btnStart" style="width:100%; justify-content:center;">🚀 Mulai Bermain</button>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="overlay" id="winOverlay" hidden style="background:rgba(26,24,20,0.62);">
+  <div class="modal">
+    <div class="confetti-layer" id="confettiLayer"></div>
+    <div class="big-emoji" id="winEmoji">🎉</div>
+    <h2>Kasus Terpecahkan!</h2>
+    <p id="winText">Kerja bagus, Detektif! Robot berhasil menyelesaikan tugasnya dengan urutan instruksi yang benar.</p>
+    <div style="font-size:24px; font-weight:800; color:var(--mint-dark); margin:8px 0;" id="quizizzGainedScore">+0 Pts</div>
+    <div class="stars" id="winStars">⭐⭐⭐</div>
+    <button class="btn btn-primary" id="btnNext" style="width:100%; justify-content:center;">Lanjut Kasus Berikutnya ➡️</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   1. INTEGRASI FIREBASE REALTIME DATABASE
+   ============================================================ */
+  const firebaseConfig = {
+    apiKey: "AIzaSy...",
+    authDomain: "kkncihuyyy.firebaseapp.com",
+    databaseURL: "https://kkncihuyyy-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "kkncihuyyy",
+    storageBucket: "kkncihuyyy.appspot.com",
+    messagingSenderId: "123456789...",
+    appId: "1:123456789...:web:abcde..."
+  };
+  
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+
+  let groupName = "";
+
+  function sendToFirebase(status = "Bermain") {
+    if(!groupName) return;
+    const cleanKey = groupName.replace(/[\.\#\$\[\]]/g, '_');
+    database.ref('game_scores/' + cleanKey).set({
+      groupName: groupName,
+      round: roundIndex + 1,
+      caseNumber: caseInRoundIndex + 1,
+      totalScore: totalScore,
+      timeLeft: timeLeft,
+      status: status,
+      lastUpdate: new Date().toLocaleTimeString()
+    });
+  }
+
+/* ============================================================
+   2. DATA RONDE (5 RONDE · MASING-MASING 2 KASUS)
+   ============================================================ */
+  const ROUNDS = [
+    // RONDE 1
+    [
+      {
+        tag: "RONDE 1 · KASUS 1",
+        title: "🧺 Mencuci Baju",
+        mission: "Robot mau mencuci baju, tapi ada instruksi yang salah taruh sehingga robot bingung! Seret kartu untuk membetulkan urutannya.",
+        startIcon: "🤖", goalIcon: "🧺",
+        steps: [
+          { id:"c1s1", emoji:"🧦", txt:"Pisahkan baju putih & berwarna", note:"Baju harus dipisah dulu sebelum dicuci, supaya warnanya tidak luntur." },
+          { id:"c1s2", emoji:"🌀", txt:"Masukkan baju ke mesin cuci", note:"Baju baru boleh dimasukkan setelah dipisah menurut warnanya." },
+          { id:"c1s3", emoji:"🧴", txt:"Tambahkan deterjen secukupnya", note:"Deterjen harus ditambahkan sebelum mesin dinyalakan." },
+          { id:"c1s4", emoji:"⏱️", txt:"Nyalakan mesin & tunggu selesai", note:"Mesin baru bisa dinyalakan setelah baju dan deterjen sudah dimasukkan." },
+          { id:"c1s5", emoji:"☀️", txt:"Jemur baju di bawah matahari", note:"Baju dijemur setelah proses mencuci di mesin selesai." },
+          { id:"c1s6", emoji:"🙌", txt:"Angkat baju yang sudah kering", note:"Baju baru diangkat setelah benar-benar kering dijemur." },
+          { id:"c1s7", emoji:"👕", txt:"Lipat & setrika baju", note:"Baju hanya bisa disetrika kalau sudah kering." },
+        ],
+        bugSwaps: [[2,6]]
+      },
+      {
+        tag: "RONDE 1 · KASUS 2",
+        title: "🪥 Menggosok Gigi",
+        mission: "Robot mau bantu menggosok gigi dengan benar, tapi ada dua instruksi yang tertukar tempat. Bantu robot menemukan bug-nya!",
+        startIcon: "🤖", goalIcon: "😁",
+        steps: [
+          { id:"c2s1", emoji:"🪥", txt:"Ambil sikat gigi", note:"Langkah pertama adalah menyiapkan sikat gigi." },
+          { id:"c2s2", emoji:"💧", txt:"Basahi sikat gigi dengan air", note:"Sikat perlu dibasahi dulu sebelum diberi pasta gigi." },
+          { id:"c2s3", emoji:"🧴", txt:"Oleskan pasta gigi ke sikat", note:"Pasta gigi baru dioleskan setelah sikat basah." },
+          { id:"c2s4", emoji:"⏲️", txt:"Sikat gigi selama 2 menit", note:"Menyikat gigi baru bisa dilakukan setelah pasta gigi ada di sikat." },
+          { id:"c2s5", emoji:"🚰", txt:"Kumur dengan air bersih", note:"Berkumur dilakukan setelah selesai menyikat gigi." },
+          { id:"c2s6", emoji:"🧽", txt:"Bilas sikat gigi & simpan", note:"Sikat gigi baru dibilas dan disimpan di langkah paling akhir." },
+        ],
+        bugSwaps: [[2,5]]
+      }
+    ],
+
+    // RONDE 2
+    [
+      {
+        tag: "RONDE 2 · KASUS 1",
+        title: "🍫 Membuat Susu Cokelat",
+        mission: "Robot ingin membuat susu cokelat hangat untuk teman-teman, tapi urutannya berantakan. Yuk bantu cari bug-nya!",
+        startIcon: "🤖", goalIcon: "🥤",
+        steps: [
+          { id:"c3s1", emoji:"🥛", txt:"Siapkan gelas bersih", note:"Langkah pertama menyiapkan gelas yang akan dipakai." },
+          { id:"c3s2", emoji:"🍫", txt:"Masukkan bubuk cokelat ke gelas", note:"Bubuk cokelat dimasukkan ke gelas kosong, sebelum air dituang." },
+          { id:"c3s3", emoji:"♨️", txt:"Tuang air hangat ke gelas", note:"Air hangat dituang setelah bubuk cokelat ada di gelas." },
+          { id:"c3s4", emoji:"🥄", txt:"Aduk hingga larut", note:"Mengaduk baru bisa dilakukan setelah air dan bubuk cokelat sudah ada di gelas." },
+          { id:"c3s5", emoji:"😋", txt:"Minum selagi hangat", note:"Minum adalah langkah terakhir, setelah semuanya tercampur rata." },
+        ],
+        bugSwaps: [[1,4]]
+      },
+      {
+        tag: "RONDE 2 · KASUS 2",
+        title: "🍜 Memasak Mie Instan",
+        mission: "Robot mau memasak mie instan untuk makan siang, tapi urutannya ada yang salah. Betulkan urutan langkahnya!",
+        startIcon: "🤖", goalIcon: "🍜",
+        steps: [
+          { id:"c4s1", emoji:"🚰", txt:"Rebus air hingga mendidih", note:"Air harus direbus dulu sampai mendidih sebelum mie dimasukkan." },
+          { id:"c4s2", emoji:"🍜", txt:"Masukkan mie ke air mendidih", note:"Mie baru dimasukkan saat air sudah mendidih." },
+          { id:"c4s3", emoji:"🍽️", txt:"Tuang bumbu ke atas piring", note:"Bumbu disiapkan di piring sembari menunggu mie matang." },
+          { id:"c4s4", emoji:"🥣", txt:"Tiriskan mie & campur bumbu", note:"Mie dicampur dengan bumbu setelah mie matang." },
+          { id:"c4s5", emoji:"😋", txt:"Mie lezat siap disantap", note:"Mie baru siap dimakan jika sudah tercampur rata." }
+        ],
+        bugSwaps: [[0,3]]
+      }
+    ],
+
+    // RONDE 3
+    [
+      {
+        tag: "RONDE 3 · KASUS 1",
+        title: "🚶 Menyeberang Jalan",
+        mission: "Robot ingin menyeberang jalan raya dengan aman. Bantu robot menyusun langkah keselamatan yang benar!",
+        startIcon: "🤖", goalIcon: "🚸",
+        steps: [
+          { id:"c5s1", emoji:"🛑", txt:"Berhenti di trotoar/zebra cross", note:"Harus berhenti di pinggir jalan dulu, tidak boleh langsung jalan." },
+          { id:"c5s2", emoji:"👀", txt:"Tengok kanan dan kiri", note:"Periksa kendaraan yang lewat sebelum melangkah." },
+          { id:"c5s3", emoji:"👂", txt:"Dengarkan suara kendaraan", note:"Pastikan situasi aman dari suara kendaraan." },
+          { id:"c5s4", emoji:"🚶", txt:"Jalan menyeberang dengan tenang", note:"Menyeberang baru dilakukan jika jalan sudah aman." },
+          { id:"c5s5", emoji:"🎉", txt:"Sampai di seberang dengan selamat", note:"Ini adalah tujuan akhir setelah menyeberang." }
+        ],
+        bugSwaps: [[1,3]]
+      },
+      {
+        tag: "RONDE 3 · KASUS 2",
+        title: "🧼 Mencuci Tangan",
+        mission: "Robot mau membersihkan tangan sebelum makan, tapi langkahnya tertukar. Betulkan urutannya!",
+        startIcon: "🤖", goalIcon: "🧼",
+        steps: [
+          { id:"c6s1", emoji:"💧", txt:"Basahi tangan dengan air", note:"Tangan dibasahi dulu sebelum diberi sabun." },
+          { id:"c6s2", emoji:"🧼", txt:"Gunakan sabun secukupnya", note:"Sabun digunakan setelah tangan basah." },
+          { id:"c6s3", emoji:"🤲", txt:"Gosok sela jari & telapak", note:"Gosok tangan dengan sabun hingga berbusa." },
+          { id:"c6s4", emoji:"🚰", txt:"Bilas dengan air mengalir", note:"Bilas semua busa sabun hingga bersih." },
+          { id:"c6s5", emoji:"🧻", txt:"Keringkan dengan lap bersih", note:"Keringkan tangan setelah pembilasan selesai." }
+        ],
+        bugSwaps: [[1,3]]
+      }
+    ],
+
+    // RONDE 4
+    [
+      {
+        tag: "RONDE 4 · KASUS 1",
+        title: "🎒 Bersiap Sekolah",
+        mission: "Persiapan pagi hari sebelum berangkat sekolah! Bantu robot menyusun jalannya pagi hari.",
+        startIcon: "🤖", goalIcon: "🏫",
+        steps: [
+          { id:"c7s1", emoji:"⏰", txt:"Bangun tidur tepat waktu", note:"Langkah pertama memulai hari adalah bangun tidur." },
+          { id:"c7s2", emoji:"🚿", txt:"Mandi hingga bersih", note:"Mandi dilakukan setelah bangun tidur." },
+          { id:"c7s3", emoji:"👔", txt:"Pakai seragam sekolah", note:"Pakai seragam setelah selesai mandi." },
+          { id:"c7s4", emoji:"🍳", txt:"Sarapan pagi", note:"Sarapan dilakukan sebelum berangkat sekolah." },
+          { id:"c7s5", emoji:"🎒", txt:"Pakai sepatu & ambil tas", note:"Mengambil tas dilakukan tepat sebelum berangkat." }
+        ],
+        bugSwaps: [[1,3]]
+      },
+      {
+        tag: "RONDE 4 · KASUS 2",
+        title: "🌱 Menanam Bunga",
+        mission: "Bantu robot menanam bunga di pot agar tumbuh dengan subur!",
+        startIcon: "🤖", goalIcon: "🌻",
+        steps: [
+          { id:"c8s1", emoji:"🪴", txt:"Isi pot dengan tanah", note:"Siapkan wadah dan isi tanah lebih dulu." },
+          { id:"c8s2", emoji:"🌱", txt:"Masukkan benih tanaman", note:"Benih dimasukkan ke atas tanah." },
+          { id:"c8s3", emoji:"🟤", txt:"Tutup benih dengan tanah", note:"Benih ditutup sedikit tanah agar tumbuh." },
+          { id:"c8s4", emoji:"💧", txt:"Siram air secukupnya", note:"Siram air setelah benih tertanam." },
+          { id:"c8s5", emoji:"☀️", txt:"Taruh di bawah sinar matahari", note:"Jemur pot agar tanaman mendapat sinar matahari." }
+        ],
+        bugSwaps: [[0,3]]
+      }
+    ],
+
+    // RONDE 5
+    [
+      {
+        tag: "RONDE 5 · KASUS 1",
+        title: "🗑️ Membuang Sampah",
+        mission: "Pilah sampah dengan benar agar lingkungan tetap bersih dan rapi!",
+        startIcon: "🤖", goalIcon: "♻️",
+        steps: [
+          { id:"c9s1", emoji:"🔍", txt:"Lihat jenis sampah", note:"Identifikasi jenis sampah dulu." },
+          { id:"c9s2", emoji:"📦", txt:"Pisahkan plastik & organik", note:"Pisahkan sampah sesuai kategorinya." },
+          { id:"c9s3", emoji:"🗑️", txt:"Buang ke tempat sampah sesuai", note:"Buang ke tong sampah yang benar." },
+          { id:"c9s4", emoji:"🧼", txt:"Cuci tangan dengan sabun", note:"Selalu cuci tangan setelah membuang sampah." }
+        ],
+        bugSwaps: [[1,2]]
+      },
+      {
+        tag: "RONDE 5 · KASUS 2",
+        title: "😴 Tidur Malam",
+        mission: "Rutinitas malam hari sebelum tidur agar istirahat berkualitas!",
+        startIcon: "🤖", goalIcon: "🌙",
+        steps: [
+          { id:"c10s1", emoji:"📺", txt:"Matikan TV / Gadget", note:"Matikan layar elektronik sebelum bersiap tidur." },
+          { id:"c10s2", emoji:"🪥", txt:"Sikat gigi malam", note:"Bersihkan gigi sebelum naik ke tempat tidur." },
+          { id:"c10s3", emoji:"🛏️", txt:"Naik ke tempat tidur", note:"Naik ke tempat tidur setelah gigi bersih." },
+          { id:"c10s4", emoji:"💡", txt:"Matikan lampu kamar", note:"Matikan lampu saat sudah berada di kasur." },
+          { id:"c10s5", emoji:"😴", txt:"Berdoa & mulai tidur", note:"Berdoa adalah langkah paling akhir sebelum tidur." }
+        ],
+        bugSwaps: [[1,3]]
+      }
+    ]
+  ];
+
+/* ============================================================
+   3. STATE GAME, TIMER & SKOR RENTANG 1–100
+   ============================================================ */
+  let roundIndex = 0;
+  let caseInRoundIndex = 0;
+  let currentOrder = [];
+  let attempts = 0;
+  let solvedCases = new Set();
+  let dragSourceIndex = null;
+  let selectedIndex = null;
+  let justDragged = false;
+  let checked = false;
+
+  let totalScore = 0;
+  let timerInterval = null;
+  let timeLeft = 120; // 2 Menit (120 detik)
+
+  const board = document.getElementById('board');
+  const feedbackEl = document.getElementById('feedback');
+  const progressDots = document.getElementById('progressDots');
+  const timerDisplay = document.getElementById('timerDisplay');
+  const timerBox = document.getElementById('timerBox');
+
+  function startRoundTimer() {
+    stopRoundTimer();
+    timeLeft = 120;
+    updateTimerDisplay();
+
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      updateTimerDisplay();
+      sendToFirebase("Bermain");
+
+      if (timeLeft <= 30) {
+        timerBox.classList.add('warning');
+      } else {
+        timerBox.classList.remove('warning');
+      }
+
+      if (timeLeft <= 0) {
+        stopRoundTimer();
+        sendToFirebase("Waktu Habis");
+        alert(`⏰ Waktu untuk Ronde ${roundIndex + 1} telah habis! Kembali ke Dashboard.`);
+        openDashboardOverlay();
+      }
+    }, 1000);
+  }
+
+  function stopRoundTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+    timerBox.classList.remove('warning');
+  }
+
+  function updateTimerDisplay() {
+    const min = Math.floor(timeLeft / 60);
+    const sec = timeLeft % 60;
+    timerDisplay.textContent = `${min < 10 ? '0' : ''}${min}:${sec < 10 ? '0' : ''}${sec}`;
+  }
+
+  function currentKasus() {
+    return ROUNDS[roundIndex][caseInRoundIndex];
+  }
+
+  function buildGivenOrder(kasus){
+    const order = kasus.steps.map(s => s.id);
+    const correct = [...order];
+    kasus.bugSwaps.forEach(([a,b]) => {
+      const tmp = order[a];
+      order[a] = order[b];
+      order[b] = tmp;
+    });
+    return { given: order, correct: correct };
+  }
+
+  function loadCase(rIdx, cIdx){
+    roundIndex = rIdx;
+    caseInRoundIndex = cIdx;
+    
+    const kasus = currentKasus();
+    const { given, correct } = buildGivenOrder(kasus);
+    kasus.correctOrder = correct;
+    currentOrder = [...given];
+    attempts = 0;
+    checked = false;
+    selectedIndex = null;
+
+    document.getElementById('groupInfoDisplay').textContent = `${groupName} | Ronde ${roundIndex + 1}`;
+    document.getElementById('caseTag').textContent = kasus.tag;
+    document.getElementById('caseTitle').textContent = kasus.title;
+    document.getElementById('caseMission').textContent = kasus.mission;
+    document.getElementById('statAttempts').textContent = "0";
+    document.getElementById('statBugs').textContent = "–";
+    document.getElementById('scoreDisplay').textContent = `⭐ ${totalScore} Pts`;
+
+    feedbackEl.hidden = true;
+    feedbackEl.innerHTML = "";
+
+    sendToFirebase("Bermain Kasus " + (caseInRoundIndex + 1));
+
+    renderDots();
+    renderBoard();
+  }
+
+  function renderDots(){
+    progressDots.innerHTML = "";
+    ROUNDS[roundIndex].forEach((_, i) => {
+      const d = document.createElement('div');
+      const isSolved = solvedCases.has(`${roundIndex}_${i}`);
+      d.className = 'dot' + (i === caseInRoundIndex ? ' active' : '') + (isSolved ? ' done' : '');
+      progressDots.appendChild(d);
+    });
+  }
+
+  function stepById(id){
+    return currentKasus().steps.find(s => s.id === id);
+  }
+
+  function renderBoard(){
+    const kasus = currentKasus();
+    board.innerHTML = "";
+
+    const startMarker = document.createElement('div');
+    startMarker.className = 'rail-marker start';
+    startMarker.textContent = kasus.startIcon;
+    startMarker.title = "Mulai";
+    board.appendChild(startMarker);
+
+    currentOrder.forEach((id, i) => {
+      const step = stepById(id);
+      const slot = document.createElement('div');
+      slot.className = 'slot';
+
+      const idxTag = document.createElement('div');
+      idxTag.className = 'slot-index';
+      idxTag.textContent = i + 1;
+      slot.appendChild(idxTag);
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.setAttribute('draggable', 'true');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-label', 'Kartu instruksi: ' + step.txt);
+      card.dataset.index = i;
+      card.innerHTML = `<div class="emoji">${step.emoji}</div><div class="txt">${step.txt}</div>`;
+
+      // Drag and drop
+      card.addEventListener('dragstart', (e) => {
+        dragSourceIndex = i;
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', String(i));
+      });
+      card.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        card.classList.add('dragover-target');
+      });
+      card.addEventListener('dragleave', () => {
+        card.classList.remove('dragover-target');
+      });
+      card.addEventListener('drop', (e) => {
+        e.preventDefault();
+        card.classList.remove('dragover-target');
+        const from = dragSourceIndex !== null ? dragSourceIndex : Number(e.dataTransfer.getData('text/plain'));
+        const to = i;
+        if (from !== null && from !== to) swapCards(from, to);
+        dragSourceIndex = null;
+        justDragged = true;
+        setTimeout(() => justDragged = false, 200);
+      });
+      card.addEventListener('dragend', () => {
+        dragSourceIndex = null;
+      });
+
+      // Click / keyboard select-to-swap
+      card.addEventListener('click', () => {
+        if (justDragged) return;
+        handleCardSelect(i);
+      });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleCardSelect(i);
+        }
+      });
+
+      if (selectedIndex === i) card.classList.add('selected');
+
+      slot.appendChild(card);
+      board.appendChild(slot);
+    });
+
+    const goalMarker = document.createElement('div');
+    goalMarker.className = 'rail-marker goal';
+    goalMarker.textContent = kasus.goalIcon;
+    goalMarker.title = "Tujuan";
+    board.appendChild(goalMarker);
+  }
+
+  function handleCardSelect(i){
+    if (selectedIndex === null) {
+      selectedIndex = i;
+    } else if (selectedIndex === i) {
+      selectedIndex = null;
+    } else {
+      swapCards(selectedIndex, i);
+      selectedIndex = null;
+    }
+    renderBoard();
+  }
+
+  function swapCards(a, b){
+    const tmp = currentOrder[a];
+    currentOrder[a] = currentOrder[b];
+    currentOrder[b] = tmp;
+    checked = false;
+    feedbackEl.hidden = true;
+    renderBoard();
+  }
+
+/* ============================================================
+   4. CHECK ANSWER & PERHITUNGAN SKOR (MAKSIMAL 50 PTS PER KASUS -> 1 RONDE = 100 PTS)
+   ============================================================ */
+  document.getElementById('btnCheck').addEventListener('click', checkAnswer);
+
+  function checkAnswer(){
+    const kasus = currentKasus();
+    attempts++;
+    checked = true;
+    document.getElementById('statAttempts').textContent = attempts;
+
+    const cards = [...board.querySelectorAll('.card')];
+    let wrongIndexes = [];
+
+    cards.forEach((card, i) => {
+      card.classList.remove('correct', 'wrong');
+      const stampOld = card.parentElement.querySelector('.bug-stamp, .ok-stamp');
+      if (stampOld) stampOld.remove();
+
+      const isCorrect = currentOrder[i] === kasus.correctOrder[i];
+      if (isCorrect) {
+        card.classList.add('correct');
+        const ok = document.createElement('div');
+        ok.className = 'ok-stamp';
+        ok.textContent = '✓';
+        card.parentElement.appendChild(ok);
+      } else {
+        card.classList.add('wrong');
+        wrongIndexes.push(i);
+        const bug = document.createElement('div');
+        bug.className = 'bug-stamp';
+        bug.textContent = '🐞 BUG!';
+        card.parentElement.appendChild(bug);
+      }
+    });
+
+    document.getElementById('statBugs').textContent = wrongIndexes.length;
+
+    if (wrongIndexes.length === 0) {
+      let timeBonus = Math.floor((timeLeft / 120) * 25); // Maks 25 Pts
+      let accuracyScore = Math.max(5, 25 - ((attempts - 1) * 5)); // Maks 25 Pts
+      
+      let gainedScore = accuracyScore + timeBonus; // Maksimal 50 Pts per kasus
+      
+      totalScore += gainedScore;
+      localStorage.setItem('score_' + groupName, totalScore);
+
+      document.getElementById('scoreDisplay').textContent = `⭐ ${totalScore} Pts`;
+      document.getElementById('quizizzGainedScore').textContent = `+${gainedScore} Pts! (Total: ${totalScore} Pts)`;
+
+      solvedCases.add(`${roundIndex}_${caseInRoundIndex}`);
+
+      const isLastCaseInRound = caseInRoundIndex === ROUNDS[roundIndex].length - 1;
+      if (isLastCaseInRound) {
+        stopRoundTimer();
+        sendToFirebase("Ronde " + (roundIndex + 1) + " Selesai");
+      } else {
+        sendToFirebase("Kasus " + (caseInRoundIndex + 1) + " Selesai");
+      }
+
+      showWin();
+    } else {
+      showBugFeedback(wrongIndexes);
+    }
+  }
+
+  function showBugFeedback(wrongIndexes){
+    feedbackEl.hidden = false;
+    const box = document.createElement('div');
+    box.className = 'feedback-box';
+    const head = document.createElement('div');
+    head.className = 'feedback-head';
+    head.innerHTML = `🐞 Ditemukan ${wrongIndexes.length} bug di urutan instruksi!`;
+    box.appendChild(head);
+
+    const p = document.createElement('p');
+    p.style.cssText = "margin:0 0 12px; font-size:13.5px; color:#7a4237;";
+    p.textContent = "Diskusikan dulu bersama kelompok: kenapa kartu bertanda 🐞 ini salah? Klik untuk melihat penjelasannya.";
+    box.appendChild(p);
+
+    const list = document.createElement('ul');
+    list.className = 'bug-list';
+    wrongIndexes.forEach(i => {
+      const step = stepById(currentOrder[i]);
+      const item = document.createElement('li');
+      item.className = 'bug-item';
+      const det = document.createElement('details');
+      det.innerHTML = `<summary>Instruksi #${i+1}: ${step.txt}</summary><p>${step.note}</p>`;
+      item.appendChild(det);
+      list.appendChild(item);
+    });
+    box.appendChild(list);
+
+    feedbackEl.innerHTML = "";
+    feedbackEl.appendChild(box);
+  }
+
+  document.getElementById('btnHint').addEventListener('click', () => {
+    const kasus = currentKasus();
+    const wrongPositions = currentOrder
+      .map((id, i) => id === kasus.correctOrder[i] ? null : i + 1)
+      .filter(x => x !== null);
+
+    feedbackEl.hidden = false;
+    const box = document.createElement('div');
+    box.className = 'feedback-box';
+    box.innerHTML = `<div class="feedback-head">💡 Petunjuk</div>`;
+    const p = document.createElement('p');
+    p.style.cssText = "margin:0; font-size:13.5px; color:#7a4237;";
+    if (wrongPositions.length === 0 && checked) {
+      p.textContent = "Semua instruksi sudah berada di tempat yang benar. Coba klik Periksa Urutan!";
+    } else if (wrongPositions.length === 0) {
+      p.textContent = "Coba klik dulu tombol Periksa Urutan untuk melihat apakah ada bug.";
+    } else {
+      p.textContent = `Coba perhatikan baik-baik kartu nomor ${wrongPositions.join(" dan ")}. Apakah urutannya masuk akal?`;
+    }
+    box.appendChild(p);
+    feedbackEl.innerHTML = "";
+    feedbackEl.appendChild(box);
+  });
+
+  document.getElementById('btnReset').addEventListener('click', () => {
+    const kasus = currentKasus();
+    const { given } = buildGivenOrder(kasus);
+    currentOrder = [...given];
+    attempts = 0;
+    checked = false;
+    selectedIndex = null;
+    document.getElementById('statAttempts').textContent = "0";
+    document.getElementById('statBugs').textContent = "–";
+    feedbackEl.hidden = true;
+    renderBoard();
+  });
+
+/* ============================================================
+   5. WIN STATE & MODAL
+   ============================================================ */
+  function showWin(){
+    renderDots();
+
+    const winOverlay = document.getElementById('winOverlay');
+    const winText = document.getElementById('winText');
+    const winStars = document.getElementById('winStars');
+    const btnNext = document.getElementById('btnNext');
+
+    const isLastCaseInRound = caseInRoundIndex === ROUNDS[roundIndex].length - 1;
+
+    if (isLastCaseInRound) {
+      winText.textContent = `Luar biasa! Kelompok ${groupName} berhasil menyelesaikan Ronde ${roundIndex + 1} dengan Akumulasi Skor: ${totalScore} Pts! Klik tombol di bawah untuk kembali ke Dashboard.`;
+      btnNext.textContent = "🏠 Kembali ke Dashboard";
+    } else {
+      winText.textContent = "Kerja bagus, Detektif! Kasus 1 dipecahkan. Lanjut ke Kasus 2 secepatnya!";
+      btnNext.textContent = "Lanjut Kasus 2 ➡️";
+    }
+
+    let starCount = 3;
+    if (attempts > 3) starCount = 1;
+    else if (attempts > 1) starCount = 2;
+    winStars.textContent = "⭐".repeat(starCount) + "☆".repeat(3 - starCount);
+
+    launchConfetti();
+    winOverlay.hidden = false;
+  }
+
+  function launchConfetti(){
+    const layer = document.getElementById('confettiLayer');
+    layer.innerHTML = "";
+    const colors = ['#F5A623', '#3FB68B', '#E8543E', '#1E2A47'];
+    for (let i = 0; i < 34; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti';
+      piece.style.left = Math.random() * 100 + '%';
+      piece.style.background = colors[i % colors.length];
+      piece.style.animationDuration = (1.6 + Math.random() * 1.2) + 's';
+      piece.style.animationDelay = (Math.random() * 0.4) + 's';
+      layer.appendChild(piece);
+    }
+  }
+
+  function openDashboardOverlay() {
+    if (groupName) {
+      document.getElementById("groupNameInput").value = groupName;
+      document.getElementById("tempScoreBox").hidden = false;
+      document.getElementById("tempScoreValue").textContent = `${totalScore} Pts`;
+    }
+    document.getElementById("dashboardOverlay").hidden = false;
+  }
+
+  document.getElementById('btnNext').addEventListener('click', () => {
+    document.getElementById('winOverlay').hidden = true;
+
+    const isLastCaseInRound = caseInRoundIndex === ROUNDS[roundIndex].length - 1;
+
+    if (!isLastCaseInRound) {
+      loadCase(roundIndex, caseInRoundIndex + 1);
+    } else {
+      openDashboardOverlay();
+    }
+  });
+
+  /* NAVIGASI DASHBOARD WELCOME & INPUT */
+  document.getElementById('btnWelcomeNext').addEventListener('click', () => {
+    document.getElementById('welcomeOverlay').hidden = true;
+    openDashboardOverlay();
+  });
+
+  /* HOW TO PLAY MODAL */
+  const howOverlay = document.getElementById('howOverlay');
+  document.getElementById('btnStart').addEventListener('click', () => {
+    howOverlay.hidden = true;
+    startRoundTimer(); 
+  });
+  document.getElementById('btnHelp').addEventListener('click', () => howOverlay.hidden = false);
+
+  /* UPDATE TAMPILAN SKOR SEMENTARA DI DASHBOARD KETIKA MENGETIK NAMA */
+  document.getElementById("groupNameInput").addEventListener("input", (e) => {
+    const inputName = e.target.value.trim();
+    if(inputName) {
+      const savedScore = localStorage.getItem('score_' + inputName);
+      const scoreVal = (savedScore !== null) ? Number(savedScore) : 0;
+      document.getElementById("tempScoreBox").hidden = false;
+      document.getElementById("tempScoreValue").textContent = `${scoreVal} Pts`;
+    } else {
+      document.getElementById("tempScoreBox").hidden = true;
+    }
+  });
+
+  /* RESET SKOR MANUAL DARI DASHBOARD */
+  document.getElementById('btnResetScore').addEventListener('click', () => {
+    const namaInput = document.getElementById("groupNameInput").value.trim();
+    if(!namaInput) {
+      alert("Masukkan nama kelompok terlebih dahulu!");
+      return;
+    }
+    if(confirm(`Apakah Anda yakin ingin MERESET skor ${namaInput} kembali menjadi 0?`)) {
+      localStorage.removeItem('score_' + namaInput);
+      totalScore = 0;
+      document.getElementById('scoreDisplay').textContent = "⭐ 0 Pts";
+      document.getElementById("tempScoreValue").textContent = "0 Pts";
+      alert(`Skor untuk ${namaInput} telah di-reset ke 0.`);
+    }
+  });
+
+  /* INIT awal: Tampilkan Layar Welcome Screen */
+  document.getElementById("welcomeOverlay").hidden = false;
+
+  document.getElementById("btnDashboardStart").addEventListener("click", () => {
+    const nama = document.getElementById("groupNameInput").value.trim();
+
+    if(nama === "") {
+      alert("Masukkan nama kelompok terlebih dahulu!");
+      return;
+    }
+
+    groupName = nama;
+    const selectedRound = Number(document.getElementById("roundSelect").value);
+
+    /* LOGIKA RESET DI RONDE 1 ATAU AKUMULASI DI RONDE 2-5 */
+    if (selectedRound === 0) {
+      totalScore = 0;
+      localStorage.setItem('score_' + groupName, 0);
+    } else {
+      const savedScore = localStorage.getItem('score_' + groupName);
+      totalScore = (savedScore !== null) ? Number(savedScore) : 0;
+    }
+
+    document.getElementById('scoreDisplay').textContent = `⭐ ${totalScore} Pts`;
+
+    document.getElementById("dashboardOverlay").hidden = true;
+    howOverlay.hidden = false;
+
+    loadCase(selectedRound, 0);
+  });
+</script>
+</body>
+</html>
