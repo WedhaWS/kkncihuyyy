@@ -31,7 +31,7 @@
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   
-  /* BACKGROUND HALAMAN UTAMA GAME (WARNA CREAM SOFT) */
+  /* BACKGROUND HALAMAN UTAMA GAME */
   body{
     min-height:100vh;
     background:
@@ -158,7 +158,6 @@
     box-shadow: var(--shadow);
   }
 
-  /* SCORE BOARD SEMENTARA DIDESAIN MODAL */
   .dashboard-score-card {
     background: linear-gradient(135deg, var(--navy), var(--navy-2));
     color: #fff;
@@ -171,6 +170,34 @@
     border: 2px solid var(--amber);
     box-shadow: var(--shadow);
   }
+
+  /* ROLE SELECTION CARDS STYLE */
+  .role-card-grid {
+    display: flex;
+    gap: 16px;
+    margin-top: 22px;
+  }
+  .role-card {
+    flex: 1;
+    background: #fff;
+    border: 3px solid var(--line);
+    border-radius: 18px;
+    padding: 22px 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .role-card:hover {
+    border-color: var(--amber);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+  }
+  .role-icon { font-size: 42px; }
+  .role-title { font-family: 'Baloo 2'; font-weight: 800; font-size: 18px; color: var(--navy); }
+  .role-desc { font-size: 12px; color: #7a7060; margin: 0; line-height: 1.3; }
 
   /* ---------- CASE BRIEF ---------- */
   .case-brief{
@@ -346,7 +373,6 @@
     background:#FDF1EF;
     animation: shake .45s;
   }
-  .card.wrong .emoji{filter:none;}
 
   .bug-stamp{
     position:absolute;
@@ -418,17 +444,12 @@
     padding:18px 20px;
     box-shadow: var(--shadow);
   }
-  .feedback-box.win{
-    background:#F0FBF6;
-    border-color:#BFE9D6;
-  }
   .feedback-head{
     display:flex; align-items:center; gap:10px;
     font-family:'Baloo 2'; font-weight:700; font-size:16px;
     color:var(--coral-dark);
     margin-bottom:10px;
   }
-  .feedback-box.win .feedback-head{color:var(--mint-dark);}
   .bug-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;}
   .bug-item{
     background:#fff;
@@ -458,11 +479,15 @@
   }
   .overlay[hidden]{display:none !important;}
   
-  /* BACKGROUND NATURAL ASEEC TOWER (DENGAN TINT NETRAL RINGAN AGAR GAMBAR CERAH & MODAL JELAS) */
-  #welcomeOverlay, #dashboardOverlay {
+  #welcomeOverlay, #roleOverlay, #dashboardOverlay, #adminLoginOverlay {
     background: 
       linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
       url('asset/aseec.jpg') center/cover no-repeat fixed;
+    z-index: 100;
+  }
+
+  #howOverlay, #startCountdownOverlay, #finalScoreOverlay {
+    background: var(--cream);
     z-index: 100;
   }
 
@@ -502,6 +527,20 @@
     display:flex;align-items:center;justify-content:center;
   }
 
+  .countdown-number {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 130px;
+    font-weight: 800;
+    color: var(--navy);
+    text-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    line-height: 1;
+    animation: zoomPulse 0.8s ease-in-out infinite alternate;
+  }
+  @keyframes zoomPulse {
+    from { transform: scale(0.85); opacity: 0.8; }
+    to { transform: scale(1.15); opacity: 1; }
+  }
+
   .stars{font-size:34px; letter-spacing:6px; margin:8px 0 4px;}
   .confetti-layer{position:absolute; inset:0; overflow:hidden; border-radius:22px; pointer-events:none;}
   .confetti{
@@ -530,12 +569,14 @@
     .case-brief{flex-direction:column; align-items:flex-start;}
     .board::before{left:28px; right:28px;}
     .card{width:112px; min-height:100px;}
+    .countdown-number { font-size: 90px; }
+    .role-card-grid { flex-direction: column; }
   }
 </style>
 </head>
 <body>
 
-<!-- LAYAR 1: DASHBOARD SELAMAT DATANG (BACKGROUND NATURAL ASEEC TOWER) -->
+<!-- LAYAR 1: DASHBOARD SELAMAT DATANG -->
 <div class="overlay" id="welcomeOverlay">
   <div class="modal">
     <div class="logo-container">
@@ -559,7 +600,59 @@
   </div>
 </div>
 
-<!-- LAYAR 2: DASHBOARD INPUT NAMA KELOMPOK & RONDE (BACKGROUND NATURAL ASEEC TOWER) -->
+<!-- LAYAR 2: PILIH ROLE (USER ATAU ADMIN) -->
+<div class="overlay" id="roleOverlay" hidden>
+  <div class="modal">
+    <div class="big-emoji">🎭</div>
+    <h2>Pilih Peran Anda</h2>
+    <p>Silakan pilih peran untuk melanjutkan ke sistem.</p>
+
+    <div class="role-card-grid">
+      <!-- OPSI 1: PEMAIN / USER -->
+      <div class="role-card" id="btnRoleUser">
+        <div class="role-icon">🎮</div>
+        <div class="role-title">Pemain / Siswa</div>
+        <p class="role-desc">Masuk sebagai kelompok untuk bermain dan memecahkan kasus debugging.</p>
+      </div>
+
+      <!-- OPSI 2: ADMIN / FASILITATOR -->
+      <div class="role-card" id="btnRoleAdmin">
+        <div class="role-icon">👨‍💻</div>
+        <div class="role-title">Admin / KKN</div>
+        <p class="role-desc">Pantau papan skor live dan progres permainan seluruh kelompok.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LAYAR MODAL LOGIN ADMIN (VERIFIKASI PASSWORD) -->
+<div class="overlay" id="adminLoginOverlay" hidden>
+  <div class="modal" style="max-width:420px;">
+    <div class="big-emoji">🔒</div>
+    <h2>Akses Khusus Admin</h2>
+    <p>Masukkan kata sandi untuk masuk ke Dashboard Admin.</p>
+
+    <div style="margin-top:18px; text-align:left;">
+      <label><b>Password Admin</b></label>
+      <input type="password" id="adminPasswordInput" placeholder="Masukkan password..." style="width:100%; margin-top:8px; padding:12px; border-radius:12px; border:2px solid #ddd; font-size:16px;">
+      <div id="adminLoginError" style="color:var(--coral); font-size:13px; font-weight:700; margin-top:6px;" hidden>
+        ⚠️ Password salah! Silakan coba lagi.
+      </div>
+    </div>
+
+    <br>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-ghost" id="btnCancelAdminLogin" style="flex:1; justify-content:center;">
+        Batal
+      </button>
+      <button class="btn btn-primary" id="btnSubmitAdminLogin" style="flex:1; justify-content:center;">
+        Masuk 🔓
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- LAYAR 3: DASHBOARD INPUT NAMA KELOMPOK & RONDE -->
 <div class="overlay" id="dashboardOverlay" hidden>
   <div class="modal">
     <div class="big-emoji">👥</div>
@@ -570,7 +663,6 @@
       <label><b>Nama Kelompok</b></label>
       <input type="text" id="groupNameInput" placeholder="Contoh: Kelompok Garuda" style="width:100%; margin-top:8px; padding:12px; border-radius:12px; border:2px solid #ddd; font-size:16px;">
 
-      <!-- KARTU SKOR SEMENTARA -->
       <div class="dashboard-score-card" id="tempScoreBox" hidden>
         <span style="font-size:13.5px; font-weight:700;">⭐ Skor Sementara Kelompok:</span>
         <b style="font-size:18px; color:var(--amber);" id="tempScoreValue">0 Pts</b>
@@ -580,11 +672,11 @@
 
       <label><b>Pilih Ronde</b></label>
       <select id="roundSelect" style="width:100%; margin-top:8px; padding:12px; border-radius:12px; border:2px solid #ddd; font-size:16px;">
-        <option value="0">Ronde 1 </option>
-        <option value="1">Ronde 2 </option>
-        <option value="2">Ronde 3 </option>
-        <option value="3">Ronde 4 </option>
-        <option value="4">Ronde 5 </option>
+        <option value="0">Ronde 1 (6 Step · 2 Kasus)</option>
+        <option value="1">Ronde 2 (7 Step · 2 Kasus)</option>
+        <option value="2">Ronde 3 (8 Step · 2 Kasus)</option>
+        <option value="3">Ronde 4 (10 Step · 2 Kasus)</option>
+        <option value="4">Ronde 5 (12 Step · 2 Kasus)</option>
       </select>
     </div>
 
@@ -595,6 +687,49 @@
     <br>
     <button id="btnResetScore" style="background:none; border:none; color:var(--coral); font-size:12px; cursor:pointer; text-decoration:underline;">
       ⚠️ Reset Skor Kelompok Ini dari 0
+    </button>
+  </div>
+</div>
+
+<!-- LAYAR COUNTDOWN 3-2-1 LAYAR BESAR -->
+<div class="overlay" id="startCountdownOverlay" hidden>
+  <div style="text-align:center;">
+    <div style="font-size:22px; font-weight:800; color:var(--navy); letter-spacing:2px; margin-bottom:10px; text-transform:uppercase;">
+      Bersiaplah, Detektif!
+    </div>
+    <div class="countdown-number" id="countdownBigText">3</div>
+  </div>
+</div>
+
+<!-- LAYAR SKOR AKHIR BESAR (AKHIR RONDE 5) -->
+<div class="overlay" id="finalScoreOverlay" hidden>
+  <div class="modal" style="max-width: 580px; padding: 36px 28px;">
+    <div class="confetti-layer" id="finalConfettiLayer"></div>
+    <div class="logo-container">
+      <img src="asset/Logo Branding UNAIR (Biru).png" alt="Logo UNAIR" class="logo-img">
+      <img src="asset/logobbk.jpeg" alt="Maskot GaruDA" class="logo-img">
+    </div>
+    
+    <div style="font-size: 55px; margin: 10px 0 0;">🥳🏆</div>
+    <h1 style="font-size: 32px; color: var(--navy); margin: 6px 0;">HOREEE!</h1>
+    <p style="font-size: 16px; font-weight: 700; color: #5a5346; margin-bottom: 20px;" id="finalGroupName">
+      Kelompok Garuda
+    </p>
+
+    <div style="background: linear-gradient(135deg, var(--navy), var(--navy-2)); border: 3px solid var(--amber); border-radius: 20px; padding: 22px; color: #fff; box-shadow: var(--shadow);">
+      <span style="font-size: 14px; font-weight: 700; letter-spacing: 1px; color: var(--amber);">TOTAL SCORE KAMU</span>
+      <div style="font-size: 48px; font-family: 'Baloo 2', sans-serif; font-weight: 800; color: #FFF; margin: 4px 0 0; line-height: 1.1;" id="finalScoreDisplay">
+        0 Pts
+      </div>
+    </div>
+
+    <p style="font-size: 13.5px; color: #6b7280; margin-top: 20px;">
+      Luar biasa! Kalian telah menyelesaikan seluruh misi permainan <b>Detektif Kode KKN Universitas Airlangga</b> dengan sangat baik!
+    </p>
+
+    <br>
+    <button class="btn btn-primary" id="btnBackToWelcome" style="width:100%; justify-content:center; font-size:16px; padding: 15px;">
+      🏠 Kembali ke Dashboard Selamat Datang
     </button>
   </div>
 </div>
@@ -649,7 +784,7 @@
 </footer>
 
 <!-- HOW TO PLAY MODAL -->
-<div class="overlay" id="howOverlay" hidden style="background:rgba(26,24,20,0.62);">
+<div class="overlay" id="howOverlay" hidden>
   <div class="modal">
     <div class="big-emoji">🕵️‍♀️🤖</div>
     <h2>Selamat Datang, Detektif!</h2>
@@ -680,8 +815,10 @@
 
 <script>
 /* ============================================================
-   1. INTEGRASI FIREBASE REALTIME DATABASE
+   1. INTEGRASI FIREBASE REALTIME DATABASE & KATA SANDI ADMIN
    ============================================================ */
+  const ADMIN_PASSWORD = "admin123"; // PASSWORD ADMIN DEFAULT
+
   const firebaseConfig = {
     apiKey: "AIzaSy...",
     authDomain: "kkncihuyyy.firebaseapp.com",
@@ -712,168 +849,202 @@
   }
 
 /* ============================================================
-   2. DATA RONDE (5 RONDE · MASING-MASING 2 KASUS)
+   2. DATA RONDE (DENGAN PENINGKATAN STEP DARI 6 HINGGA 12 STEP)
    ============================================================ */
   const ROUNDS = [
-    // RONDE 1
+    // RONDE 1 (6 STEP)
     [
       {
-        tag: "RONDE 1 · KASUS 1",
+        tag: "RONDE 1 · KASUS 1 (6 STEP)",
         title: "🧺 Mencuci Baju",
-        mission: "Robot mau mencuci baju, tapi ada instruksi yang salah taruh sehingga robot bingung! Seret kartu untuk membetulkan urutannya.",
+        mission: "Robot mau mencuci baju dengan benar secara berurutan. Bantu rapikan instruksinya!",
         startIcon: "🤖", goalIcon: "🧺",
         steps: [
-          { id:"c1s1", emoji:"🧦", txt:"Pisahkan baju putih & berwarna", note:"Baju harus dipisah dulu sebelum dicuci, supaya warnanya tidak luntur." },
-          { id:"c1s2", emoji:"🌀", txt:"Masukkan baju ke mesin cuci", note:"Baju baru boleh dimasukkan setelah dipisah menurut warnanya." },
-          { id:"c1s3", emoji:"🧴", txt:"Tambahkan deterjen secukupnya", note:"Deterjen harus ditambahkan sebelum mesin dinyalakan." },
-          { id:"c1s4", emoji:"⏱️", txt:"Nyalakan mesin & tunggu selesai", note:"Mesin baru bisa dinyalakan setelah baju dan deterjen sudah dimasukkan." },
-          { id:"c1s5", emoji:"☀️", txt:"Jemur baju di bawah matahari", note:"Baju dijemur setelah proses mencuci di mesin selesai." },
-          { id:"c1s6", emoji:"🙌", txt:"Angkat baju yang sudah kering", note:"Baju baru diangkat setelah benar-benar kering dijemur." },
-          { id:"c1s7", emoji:"👕", txt:"Lipat & setrika baju", note:"Baju hanya bisa disetrika kalau sudah kering." },
+          { id:"r1c1s1", emoji:"🧦", txt:"Memisahkan baju putih & berwarna", note:"Baju dipisah dulu agar warna pakaian tidak saling melunturi." },
+          { id:"r1c1s2", emoji:"🌀", txt:"Memasukkan baju ke mesin cuci", note:"Baju yang sudah dipisah dimasukkan ke dalam tabung mesin cuci." },
+          { id:"r1c1s3", emoji:"🧴", txt:"Menambahkan deterjen secukupnya", note:"Deterjen ditambahkan ke mesin sebelum siklus pencucian dimulai." },
+          { id:"r1c1s4", emoji:"⏱️", txt:"Menjalankan mesin cuci", note:"Mesin dinyalakan untuk memutar dan membersihkan pakaian." },
+          { id:"r1c1s5", emoji:"☀️", txt:"Menjemur pakaian hingga kering", note:"Pakaian basah dijemur di bawah sinar matahari setelah mesin selesai." },
+          { id:"r1c1s6", emoji:"👕", txt:"Melipat & menyetrika baju", note:"Pakaian yang telah kering diangkat lalu dilipat rapi." }
         ],
-        bugSwaps: [[2,6]]
+        bugSwaps: [[2, 5]]
       },
       {
-        tag: "RONDE 1 · KASUS 2",
+        tag: "RONDE 1 · KASUS 2 (6 STEP)",
         title: "🪥 Menggosok Gigi",
-        mission: "Robot mau bantu menggosok gigi dengan benar, tapi ada dua instruksi yang tertukar tempat. Bantu robot menemukan bug-nya!",
+        mission: "Robot mau menyikat gigi secara bersih dan higienis. Betulkan langkah yang tertukar!",
         startIcon: "🤖", goalIcon: "😁",
         steps: [
-          { id:"c2s1", emoji:"🪥", txt:"Ambil sikat gigi", note:"Langkah pertama adalah menyiapkan sikat gigi." },
-          { id:"c2s2", emoji:"💧", txt:"Basahi sikat gigi dengan air", note:"Sikat perlu dibasahi dulu sebelum diberi pasta gigi." },
-          { id:"c2s3", emoji:"🧴", txt:"Oleskan pasta gigi ke sikat", note:"Pasta gigi baru dioleskan setelah sikat basah." },
-          { id:"c2s4", emoji:"⏲️", txt:"Sikat gigi selama 2 menit", note:"Menyikat gigi baru bisa dilakukan setelah pasta gigi ada di sikat." },
-          { id:"c2s5", emoji:"🚰", txt:"Kumur dengan air bersih", note:"Berkumur dilakukan setelah selesai menyikat gigi." },
-          { id:"c2s6", emoji:"🧽", txt:"Bilas sikat gigi & simpan", note:"Sikat gigi baru dibilas dan disimpan di langkah paling akhir." },
+          { id:"r1c2s1", emoji:"🪥", txt:"Menyiapkan sikat gigi", note:"Langkah awal adalah mengambil sikat gigi yang bersih." },
+          { id:"r1c2s2", emoji:"💧", txt:"Membasahi bulu sikat air", note:"Bulu sikat dibasahi sedikit air sebelum diberi pasta gigi." },
+          { id:"r1c2s3", emoji:"🧴", txt:"Mengenakan pasta gigi", note:"Pasta gigi dioleskan secukupnya di atas bulu sikat yang basah." },
+          { id:"r1c2s4", emoji:"⏲️", txt:"Menyikat gigi secara merata", note:"Proses menyikat seluruh permukaan gigi selama 2 menit." },
+          { id:"r1c2s5", emoji:"🚰", txt:"Berkumur dengan air bersih", note:"Berkumur dilakukan untuk membuang sisa busa pasta gigi." },
+          { id:"r1c2s6", emoji:"🧽", txt:"Membilas & menyimpan sikat", note:"Sikat gigi dibilas dengan air mengalir lalu ditaruh di tempatnya." }
         ],
-        bugSwaps: [[2,5]]
+        bugSwaps: [[1, 4]]
       }
     ],
 
-    // RONDE 2
+    // RONDE 2 (7 STEP)
     [
       {
-        tag: "RONDE 2 · KASUS 1",
-        title: "🍫 Membuat Susu Cokelat",
-        mission: "Robot ingin membuat susu cokelat hangat untuk teman-teman, tapi urutannya berantakan. Yuk bantu cari bug-nya!",
+        tag: "RONDE 2 · KASUS 1 (7 STEP)",
+        title: "🍫 Membuat Minuman Cokelat",
+        mission: "Prosedur penyajian minuman cokelat hangat yang tepat. Cari bug-nya!",
         startIcon: "🤖", goalIcon: "🥤",
         steps: [
-          { id:"c3s1", emoji:"🥛", txt:"Siapkan gelas bersih", note:"Langkah pertama menyiapkan gelas yang akan dipakai." },
-          { id:"c3s2", emoji:"🍫", txt:"Masukkan bubuk cokelat ke gelas", note:"Bubuk cokelat dimasukkan ke gelas kosong, sebelum air dituang." },
-          { id:"c3s3", emoji:"♨️", txt:"Tuang air hangat ke gelas", note:"Air hangat dituang setelah bubuk cokelat ada di gelas." },
-          { id:"c3s4", emoji:"🥄", txt:"Aduk hingga larut", note:"Mengaduk baru bisa dilakukan setelah air dan bubuk cokelat sudah ada di gelas." },
-          { id:"c3s5", emoji:"😋", txt:"Minum selagi hangat", note:"Minum adalah langkah terakhir, setelah semuanya tercampur rata." },
+          { id:"r2c1s1", emoji:"🥛", txt:"Menyiapkan gelas bersih", note:"Mulai dengan menyiapkan cangkir/gelas yang higienis." },
+          { id:"r2c1s2", emoji:"🍫", txt:"Tuang bubuk cokelat ke gelas", note:"Bubuk cokelat dimasukkan saat gelas masih dalam keadaan kosong." },
+          { id:"r2c1s3", emoji:"🚰", txt:"Memanaskan air hingga matang", note:"Air dipanaskan di teko terlebih dahulu sebelum dituang." },
+          { id:"r2c1s4", emoji:"♨️", txt:"Mentuang air panas ke gelas", note:"Air panas dituang ke dalam gelas yang berisi bubuk cokelat." },
+          { id:"r2c1s5", emoji:"🥄", txt:"Mengaduk rata dengan sendok", note:"Aduk hingga seluruh bubuk cokelat larut sempurna." },
+          { id:"r2c1s6", emoji:"🧼", txt:"Mencuci sendok bekas pengaduk", note:"Sendok yang telah dipakai diaduk langsung dicuci bersih." },
+          { id:"r2c1s7", emoji:"😋", txt:"Menikmati minuman hangat", note:"Minuman cokelat siap dikonsumsi." }
         ],
-        bugSwaps: [[1,4]]
+        bugSwaps: [[1, 5]]
       },
       {
-        tag: "RONDE 2 · KASUS 2",
+        tag: "RONDE 2 · KASUS 2 (7 STEP)",
         title: "🍜 Memasak Mie Instan",
-        mission: "Robot mau memasak mie instan untuk makan siang, tapi urutannya ada yang salah. Betulkan urutan langkahnya!",
+        mission: "Prosedur memasak mie instan secara terstruktur. Susun kembali urutannya!",
         startIcon: "🤖", goalIcon: "🍜",
         steps: [
-          { id:"c4s1", emoji:"🚰", txt:"Rebus air hingga mendidih", note:"Air harus direbus dulu sampai mendidih sebelum mie dimasukkan." },
-          { id:"c4s2", emoji:"🍜", txt:"Masukkan mie ke air mendidih", note:"Mie baru dimasukkan saat air sudah mendidih." },
-          { id:"c4s3", emoji:"🍽️", txt:"Tuang bumbu ke atas piring", note:"Bumbu disiapkan di piring sembari menunggu mie matang." },
-          { id:"c4s4", emoji:"🥣", txt:"Tiriskan mie & campur bumbu", note:"Mie dicampur dengan bumbu setelah mie matang." },
-          { id:"c4s5", emoji:"😋", txt:"Mie lezat siap disantap", note:"Mie baru siap dimakan jika sudah tercampur rata." }
+          { id:"r2c2s1", emoji:"🚰", txt:"Memanaskan air dalam panci", note:"Rebus air secukupnya hingga mendidih di atas kompor." },
+          { id:"r2c2s2", emoji:"📦", txt:"Membuka kemasan mie instan", note:"Buka bungkus mie dan keluarkan bumbunya." },
+          { id:"r2c2s3", emoji:"🍜", txt:"Memasukkan mie ke air mendidih", note:"Mie dimasukkan setelah air dalam panci benar-benar mendidih." },
+          { id:"r2c2s4", emoji:"🍽️", txt:"Menuang bumbu ke piring", note:"Tuangkan bumbu kering & minyak ke atas piring saji." },
+          { id:"r2c2s5", emoji:"🥣", txt:"Mentingkatkan mie yang matang", note:"Tiriskan mie yang telah kenyal dari air rebusan panci." },
+          { id:"r2c2s6", emoji:"🥄", txt:"Aduk mie bersama bumbu", note:"Aduk mie di atas piring hingga bumbu tercampur rata." },
+          { id:"r2c2s7", emoji:"😋", txt:"Mie siap disajikan", note:"Mie instan lezat siap dimakan." }
         ],
-        bugSwaps: [[0,3]]
+        bugSwaps: [[0, 3]]
       }
     ],
 
-    // RONDE 3
+    // RONDE 3 (8 STEP)
     [
       {
-        tag: "RONDE 3 · KASUS 1",
-        title: "🚶 Menyeberang Jalan",
-        mission: "Robot ingin menyeberang jalan raya dengan aman. Bantu robot menyusun langkah keselamatan yang benar!",
+        tag: "RONDE 3 · KASUS 1 (8 STEP)",
+        title: "🚶 Menyeberang Jalan Raya",
+        mission: "Langkah-langkah keselamatan standar saat menyeberang jalan raya.",
         startIcon: "🤖", goalIcon: "🚸",
         steps: [
-          { id:"c5s1", emoji:"🛑", txt:"Berhenti di trotoar/zebra cross", note:"Harus berhenti di pinggir jalan dulu, tidak boleh langsung jalan." },
-          { id:"c5s2", emoji:"👀", txt:"Tengok kanan dan kiri", note:"Periksa kendaraan yang lewat sebelum melangkah." },
-          { id:"c5s3", emoji:"👂", txt:"Dengarkan suara kendaraan", note:"Pastikan situasi aman dari suara kendaraan." },
-          { id:"c5s4", emoji:"🚶", txt:"Jalan menyeberang dengan tenang", note:"Menyeberang baru dilakukan jika jalan sudah aman." },
-          { id:"c5s5", emoji:"🎉", txt:"Sampai di seberang dengan selamat", note:"Ini adalah tujuan akhir setelah menyeberang." }
+          { id:"r3c1s1", emoji:"🛑", txt:"Berhenti di trotoar tepi jalan", note:"Selalu berdiri aman di trotoar, tidak di badan jalan." },
+          { id:"r3c1s2", emoji:"🏁", txt:"Mencari fasilitas Zebra Cross", note:"Cari tempat penyeberangan resmi seperti Zebra Cross atau JPO." },
+          { id:"r3c1s3", emoji:"🔴", txt:"Menunggu lampu penyeberangan", note:"Pastikan lampu indikator penyeberang jalan berwarna hijau." },
+          { id:"r3c1s4", emoji:"👀", txt:"Menengok ke kanan dan kiri", note:"Periksa arus lalu lintas untuk memastikan tidak ada kendaraan melaju." },
+          { id:"r3c1s5", emoji:"👂", txt:"Mendengarkan suara kendaraan", note:"Dengarkan situasi sekitar untuk memastikan keamanan." },
+          { id:"r3c1s6", emoji:"🖐️", txt:"Meninggikan tangan tanda menyeberang", note:"Angkat tangan sebagai sinyal jelas kepada pengemudi." },
+          { id:"r3c1s7", emoji:"🚶", txt:"Melangkah tenang tanpa berlari", note:"Menyeberanglah dengan berjalan tegas dan fokus tanpa bermain HP." },
+          { id:"r3c1s8", emoji:"🎉", txt:"Tiba di trotoar seberang", note:"Sampai di seberang jalan dengan selamat." }
         ],
-        bugSwaps: [[1,3]]
+        bugSwaps: [[2, 6]]
       },
       {
-        tag: "RONDE 3 · KASUS 2",
-        title: "🧼 Mencuci Tangan",
-        mission: "Robot mau membersihkan tangan sebelum makan, tapi langkahnya tertukar. Betulkan urutannya!",
+        tag: "RONDE 3 · KASUS 2 (8 STEP)",
+        title: "🧼 Standar Mencuci Tangan (WHO)",
+        mission: "Urutan sanitasi mencuci tangan yang benar untuk mencegah kuman.",
         startIcon: "🤖", goalIcon: "🧼",
         steps: [
-          { id:"c6s1", emoji:"💧", txt:"Basahi tangan dengan air", note:"Tangan dibasahi dulu sebelum diberi sabun." },
-          { id:"c6s2", emoji:"🧼", txt:"Gunakan sabun secukupnya", note:"Sabun digunakan setelah tangan basah." },
-          { id:"c6s3", emoji:"🤲", txt:"Gosok sela jari & telapak", note:"Gosok tangan dengan sabun hingga berbusa." },
-          { id:"c6s4", emoji:"🚰", txt:"Bilas dengan air mengalir", note:"Bilas semua busa sabun hingga bersih." },
-          { id:"c6s5", emoji:"🧻", txt:"Keringkan dengan lap bersih", note:"Keringkan tangan setelah pembilasan selesai." }
+          { id:"r3c2s1", emoji:"💧", txt:"Membasahi kedua tangan", note:"Basahi seluruh telapak tangan dengan air mengalir." },
+          { id:"r3c2s2", emoji:"🧼", txt:"Menuangkan sabun secukupnya", note:"Gunakan sabun pembersih secukupnya di telapak tangan." },
+          { id:"r3c2s3", emoji:"🤲", txt:"Menggosok telapak tangan", note:"Gosok kedua telapak tangan hingga berbusa." },
+          { id:"r3c2s4", emoji:"🖐️", txt:"Menggosok punggung tangan", note:"Gosok punggung dan sela-sela jari tangan kiri & kanan." },
+          { id:"r3c2s5", emoji:"👏", txt:"Menggosok sela-sela jari dalam", note:"Bersihkan bagian dalam sela-sela jari secara merata." },
+          { id:"r3c2s6", emoji:"👍", txt:"Membersihkan ibu jari putar", note:"Gosok ibu jari secara berputar dalam genggaman." },
+          { id:"r3c2s7", emoji:"🚰", txt:"Membilas dengan air mengalir", note:"Bilas semua busa sabun hingga bersih total." },
+          { id:"r3c2s8", emoji:"🧻", txt:"Mengeringkan dengan tisu bersih", note:"Keringkan tangan menggunakan tisu steril atau lap bersih." }
         ],
-        bugSwaps: [[1,3]]
+        bugSwaps: [[1, 6]]
       }
     ],
 
-    // RONDE 4
+    // RONDE 4 (10 STEP)
     [
       {
-        tag: "RONDE 4 · KASUS 1",
-        title: "🎒 Bersiap Sekolah",
-        mission: "Persiapan pagi hari sebelum berangkat sekolah! Bantu robot menyusun jalannya pagi hari.",
-        startIcon: "🤖", goalIcon: "🏫",
+        tag: "RONDE 4 · KASUS 1 (10 STEP)",
+        title: "🏫 Persiapan Sekolah Pagi Hari",
+        mission: "Prosedur persiapan logis seorang siswa sebelum berangkat sekolah.",
+        startIcon: "🤖", goalIcon: "🎒",
         steps: [
-          { id:"c7s1", emoji:"⏰", txt:"Bangun tidur tepat waktu", note:"Langkah pertama memulai hari adalah bangun tidur." },
-          { id:"c7s2", emoji:"🚿", txt:"Mandi hingga bersih", note:"Mandi dilakukan setelah bangun tidur." },
-          { id:"c7s3", emoji:"👔", txt:"Pakai seragam sekolah", note:"Pakai seragam setelah selesai mandi." },
-          { id:"c7s4", emoji:"🍳", txt:"Sarapan pagi", note:"Sarapan dilakukan sebelum berangkat sekolah." },
-          { id:"c7s5", emoji:"🎒", txt:"Pakai sepatu & ambil tas", note:"Mengambil tas dilakukan tepat sebelum berangkat." }
+          { id:"r4c1s1", emoji:"⏰", txt:"Bangun tidur saat alarm berbunyi", note:"Mengawali hari tepat waktu saat pagi tiba." },
+          { id:"r4c1s2", emoji:"🛏️", txt:"Merapikan tempat tidur", note:"Merapikan sprei dan bantal setelah bangun." },
+          { id:"r4c1s3", emoji:"🚿", txt:"Mandi hingga bersih", note:"Membersihkan badan dengan sabun dan air segar." },
+          { id:"r4c1s4", emoji:"🪥", txt:"Menyikat gigi sampai bersih", note:"Menyikat gigi setelah selesai mandi." },
+          { id:"r4c1s5", emoji:"👔", txt:"Mengenakan seragam sekolah rapi", note:"Memakai pakaian seragam sesuai aturan hari tersebut." },
+          { id:"r4c1s6", emoji:"🍳", txt:"Makan sarapan bergizi", note:"Makan pagi memberikan energi untuk belajar." },
+          { id:"r4c1s7", emoji:"📚", txt:"Memeriksa buku sesuai jadwal", note:"Memasukkan buku pelajaran ke dalam tas sesuai jadwal." },
+          { id:"r4c1s8", emoji:"👟", txt:"Memakai kaos kaki & sepatu", note:"Mengenakan sepatu sebelum keluar rumah." },
+          { id:"r4c1s9", emoji:"🙏", txt:"Berpamitan pada orang tua", note:"Cium tangan dan pamit kepada orang tua." },
+          { id:"r4c1s10", emoji:"🏫", txt:"Berangkat menuju sekolah", note:"Berjalan atau naik transportasi menuju sekolah." }
         ],
-        bugSwaps: [[1,3]]
+        bugSwaps: [[2, 6]]
       },
       {
-        tag: "RONDE 4 · KASUS 2",
-        title: "🌱 Menanam Bunga",
-        mission: "Bantu robot menanam bunga di pot agar tumbuh dengan subur!",
+        tag: "RONDE 4 · KASUS 2 (10 STEP)",
+        title: "🌱 Menanam Tanaman di Pot",
+        mission: "Prosedur botanis dasar menanam benih di wadah pot.",
         startIcon: "🤖", goalIcon: "🌻",
         steps: [
-          { id:"c8s1", emoji:"🪴", txt:"Isi pot dengan tanah", note:"Siapkan wadah dan isi tanah lebih dulu." },
-          { id:"c8s2", emoji:"🌱", txt:"Masukkan benih tanaman", note:"Benih dimasukkan ke atas tanah." },
-          { id:"c8s3", emoji:"🟤", txt:"Tutup benih dengan tanah", note:"Benih ditutup sedikit tanah agar tumbuh." },
-          { id:"c8s4", emoji:"💧", txt:"Siram air secukupnya", note:"Siram air setelah benih tertanam." },
-          { id:"c8s5", emoji:"☀️", txt:"Taruh di bawah sinar matahari", note:"Jemur pot agar tanaman mendapat sinar matahari." }
+          { id:"r4c2s1", emoji:"🪴", txt:"Menyiapkan pot berlubang bawah", note:"Lubang di bawah pot penting untuk drainase air." },
+          { id:"r4c2s2", emoji:"🪨", txt:"Menaruh kerikil di dasar pot", note:"Kerikil mencegah lubang air tersumbat tanah." },
+          { id:"r4c2s3", emoji:"🪵", txt:"Mengisi setengah pot dengan tanah", note:"Isi pot awal dengan media tanah subur/kompos." },
+          { id:"r4c2s4", emoji:"🌱", txt:"Meletakkan benih di tengah tanah", note:"Posisikan benih tepat di bagian tengah pot." },
+          { id:"r4c2s5", emoji:"🟤", txt:"Menutup benih tanah tipis", note:"Tutup benih dengan sedikit tanah agar terlindungi." },
+          { id:"r4c2s6", emoji:"💧", txt:"Menyiram air secukupnya", note:"Siram dengan sprayer air lembut agar tidak merusak benih." },
+          { id:"r4c2s7", emoji:"☀️", txt:"Menaruh pot di tempat teduh", note:"Letakkan di area hangat terhindar dari hujan deras." },
+          { id:"r4c2s8", emoji:"📅", txt:"Menyiram teratur setiap pagi", note:"Jaga kelembapan tanah setiap hari." },
+          { id:"r4c2s9", emoji:"🌿", txt:"Memberikan pupuk secara berkala", note:"Pupuk diberikan saat tunas mulai tumbuh meluas." },
+          { id:"r4c2s10", emoji:"🌸", txt:"Bunga tumbuh mekar dengan indah", note:"Tanaman tumbuh sehat dan menghasilkan bunga." }
         ],
-        bugSwaps: [[0,3]]
+        bugSwaps: [[1, 5]]
       }
     ],
 
-    // RONDE 5
+    // RONDE 5 (12 STEP)
     [
       {
-        tag: "RONDE 5 · KASUS 1",
-        title: "🗑️ Membuang Sampah",
-        mission: "Pilah sampah dengan benar agar lingkungan tetap bersih dan rapi!",
-        startIcon: "🤖", goalIcon: "♻️",
+        tag: "RONDE 5 · KASUS 1 (12 STEP)",
+        title: "♻️ Pengolahan Sampah Organik & Anorganik",
+        mission: "Prosedur pengolahan limbah rumah tangga berdasarkan prinsip lingkungan.",
+        startIcon: "🤖", goalIcon: "🍃",
         steps: [
-          { id:"c9s1", emoji:"🔍", txt:"Lihat jenis sampah", note:"Identifikasi jenis sampah dulu." },
-          { id:"c9s2", emoji:"📦", txt:"Pisahkan plastik & organik", note:"Pisahkan sampah sesuai kategorinya." },
-          { id:"c9s3", emoji:"🗑️", txt:"Buang ke tempat sampah sesuai", note:"Buang ke tong sampah yang benar." },
-          { id:"c9s4", emoji:"🧼", txt:"Cuci tangan dengan sabun", note:"Selalu cuci tangan setelah membuang sampah." }
+          { id:"r5c1s1", emoji:"🔍", txt:"Mengenali jenis sampah terbuang", note:"Identifikasi material sampah yang terkumpul." },
+          { id:"r5c1s2", emoji:"📦", txt:"Memisahkan sampah organik & anorganik", note:"Pisahkan sisa makanan dengan plastik/kaleng." },
+          { id:"r5c1s3", emoji:"🍂", txt:"Cacah sampah organik kecil-kecil", note:"Sampah dedaunan/sisa buah dicacah agar cepat terurai." },
+          { id:"r5c1s4", emoji:"🗑️", txt:"Masukan organik ke wadah komposter", note:"Masukkan bahan organik ke dalam drum kompos." },
+          { id:"r5c1s5", emoji:"🧪", txt:"Tambahkan cairan em4/mikroba", note:"Cairan mikroba mempercepat proses pembusukan alami." },
+          { id:"r5c1s6", emoji:"🔒", txt:"Tutup komposter rapat-rapat", note:"Simpan dalam keadaan tertutup anaerobik selama 3 minggu." },
+          { id:"r5c1s7", emoji:"🧼", txt:"Cuci bersih sampah plastik anorganik", note:"Plastik/botol dibersihkan dari sisa kotoran." },
+          { id:"r5c1s8", emoji:"☀️", txt:"Keringkan botol plastik dijemur", note:"Keringkan wadah anorganik sebelum dipress." },
+          { id:"r5c1s9", emoji:"🗞️", txt:"Pipihkan & ikat botol plastik", note:"Ratakan botol agar tidak memakan ruang simpan." },
+          { id:"r5c1s10", emoji:"🚚", txt:"Kirim plastik ke Bank Sampah", note:"Setor sampah anorganik ke fasilitas daur ulang." },
+          { id:"r5c1s11", emoji:"🌱", txt:"Panen pupuk kompos organik matang", note:"Ambil hasil pupuk hitam gembur dari komposter." },
+          { id:"r5c1s12", emoji:"🌻", txt:"Gunakan kompos untuk menyuburkan tanah", note:"Kompos diaplikasikan ke tanaman kebun." }
         ],
-        bugSwaps: [[1,2]]
+        bugSwaps: [[2, 7]]
       },
       {
-        tag: "RONDE 5 · KASUS 2",
-        title: "😴 Tidur Malam",
-        mission: "Rutinitas malam hari sebelum tidur agar istirahat berkualitas!",
-        startIcon: "🤖", goalIcon: "🌙",
+        tag: "RONDE 5 · KASUS 2 (12 STEP)",
+        title: "📜 Siklus Daur Ulang Kertas Bekas",
+        mission: "Prosedur eksperimen ilmiah daur ulang kertas menjadi lembaran baru.",
+        startIcon: "🤖", goalIcon: "📄",
         steps: [
-          { id:"c10s1", emoji:"📺", txt:"Matikan TV / Gadget", note:"Matikan layar elektronik sebelum bersiap tidur." },
-          { id:"c10s2", emoji:"🪥", txt:"Sikat gigi malam", note:"Bersihkan gigi sebelum naik ke tempat tidur." },
-          { id:"c10s3", emoji:"🛏️", txt:"Naik ke tempat tidur", note:"Naik ke tempat tidur setelah gigi bersih." },
-          { id:"c10s4", emoji:"💡", txt:"Matikan lampu kamar", note:"Matikan lampu saat sudah berada di kasur." },
-          { id:"c10s5", emoji:"😴", txt:"Berdoa & mulai tidur", note:"Berdoa adalah langkah paling akhir sebelum tidur." }
+          { id:"r5c2s1", emoji:"🗑️", txt:"Mengumpulkan kertas bekas tidak terpakai", note:"Kumpulkan koran/kertas HVS bekas tanpa plastik." },
+          { id:"r5c2s2", emoji:"✂️", txt:"Mencopot staples & selotip", note:"Pastikan kertas bebas dari logam staples." },
+          { id:"r5c2s3", emoji:"📰", txt:"Mebocorkan kertas menjadi potongan kecil", note:"Robek kertas menjadi serpihan berukuran 1-2 cm." },
+          { id:"r5c2s4", emoji:"🪣", txt:"Meredam rendaman kertas air hangat", note:"Rendam serpihan kertas di dalam ember air selama 24 jam." },
+          { id:"r5c2s5", emoji:"🌀", txt:"Blender kertas hingga jadi bubur (pulp)", note:"Haluskan kertas basah menggunakan blender." },
+          { id:"r5c2s6", emoji:"🎨", txt:"Campurkan pewarna alami pada bubuk", note:"Tambahkan sedikit pewarna makanan jika diinginkan." },
+          { id:"r5c2s7", emoji:"🖼️", txt:"Mencelupkan kain kasa cetakan (kasa)", note:"Masukan bingkai kasa ke dalam bak bubur kertas." },
+          { id:"r5c2s8", emoji:"📐", txt:"Merapikan ratakan lembaran bubur", note:"Angkat bingkai kasa secara mendatar perlahan." },
+          { id:"r5c2s9", emoji:"🧽", txt:"Tekan spon untuk menyerap air", note:"Gunakan spons bersih untuk menyerap sisa air cetakan." },
+          { id:"r5c2s10", emoji:"👕", txt:"Balikkan lembaran kertas ke kain", note:"Pindahkan lembaran basah ke atas kain papan pelapis." },
+          { id:"r5c2s11", emoji:"☀️", txt:"Jemur lembaran kertas di matahari", note:"Keringkan lembaran di tempat berangin hingga kaku." },
+          { id:"r5c2s12", emoji:"📄", txt:"Lepaskan kertas daur ulang siap pakai", note:"Kertas daur ulang baru siap ditulis atau dbuat kerajinan." }
         ],
-        bugSwaps: [[1,3]]
+        bugSwaps: [[3, 8]]
       }
     ]
   ];
@@ -1101,7 +1272,7 @@
   }
 
 /* ============================================================
-   4. CHECK ANSWER & PERHITUNGAN SKOR (MAKSIMAL 50 PTS PER KASUS -> 1 RONDE = 100 PTS)
+   4. CHECK ANSWER & PERHITUNGAN SKOR
    ============================================================ */
   document.getElementById('btnCheck').addEventListener('click', checkAnswer);
 
@@ -1235,7 +1406,7 @@
   });
 
 /* ============================================================
-   5. WIN STATE & MODAL
+   5. WIN STATE, FINAL SCORE PAGE & MODAL
    ============================================================ */
   function showWin(){
     renderDots();
@@ -1246,8 +1417,12 @@
     const btnNext = document.getElementById('btnNext');
 
     const isLastCaseInRound = caseInRoundIndex === ROUNDS[roundIndex].length - 1;
+    const isRound5 = roundIndex === 4;
 
-    if (isLastCaseInRound) {
+    if (isRound5 && isLastCaseInRound) {
+      winText.textContent = `SELAMAT! Kelompok ${groupName} telah menuntaskan SEMUA Ronde di Detektif Kode! Klik tombol untuk melihat Skor Akhir.`;
+      btnNext.textContent = "🏆 Lihat Skor Akhir ➡️";
+    } else if (isLastCaseInRound) {
       winText.textContent = `Luar biasa! Kelompok ${groupName} berhasil menyelesaikan Ronde ${roundIndex + 1} dengan Akumulasi Skor: ${totalScore} Pts! Klik tombol di bawah untuk kembali ke Dashboard.`;
       btnNext.textContent = "🏠 Kembali ke Dashboard";
     } else {
@@ -1260,15 +1435,26 @@
     else if (attempts > 1) starCount = 2;
     winStars.textContent = "⭐".repeat(starCount) + "☆".repeat(3 - starCount);
 
-    launchConfetti();
+    launchConfetti('confettiLayer');
     winOverlay.hidden = false;
   }
 
-  function launchConfetti(){
-    const layer = document.getElementById('confettiLayer');
+  function showFinalScorePage() {
+    stopRoundTimer();
+    sendToFirebase("Selesai 5 Ronde");
+
+    document.getElementById('finalGroupName').textContent = `Kelompok: ${groupName}`;
+    document.getElementById('finalScoreDisplay').textContent = `${totalScore} Pts`;
+
+    launchConfetti('finalConfettiLayer');
+    document.getElementById('finalScoreOverlay').hidden = false;
+  }
+
+  function launchConfetti(layerId = 'confettiLayer'){
+    const layer = document.getElementById(layerId);
     layer.innerHTML = "";
     const colors = ['#F5A623', '#3FB68B', '#E8543E', '#1E2A47'];
-    for (let i = 0; i < 34; i++) {
+    for (let i = 0; i < 40; i++) {
       const piece = document.createElement('div');
       piece.className = 'confetti';
       piece.style.left = Math.random() * 100 + '%';
@@ -1292,26 +1478,89 @@
     document.getElementById('winOverlay').hidden = true;
 
     const isLastCaseInRound = caseInRoundIndex === ROUNDS[roundIndex].length - 1;
+    const isRound5 = roundIndex === 4;
 
     if (!isLastCaseInRound) {
       loadCase(roundIndex, caseInRoundIndex + 1);
+    } else if (isRound5) {
+      showFinalScorePage();
     } else {
       openDashboardOverlay();
     }
   });
 
-  /* NAVIGASI DASHBOARD WELCOME & INPUT */
+  /* NAVIGASI DARI SKOR AKHIR KEMBALI KE WELCOME SCREEN */
+  document.getElementById('btnBackToWelcome').addEventListener('click', () => {
+    document.getElementById('finalScoreOverlay').hidden = true;
+    document.getElementById('welcomeOverlay').hidden = false;
+  });
+
+  /* NAVIGASI DARI WELCOME -> LAYAR PILIH ROLE */
   document.getElementById('btnWelcomeNext').addEventListener('click', () => {
     document.getElementById('welcomeOverlay').hidden = true;
+    document.getElementById('roleOverlay').hidden = false;
+  });
+
+  /* EVENT PEMILIHAN ROLE (USER ATAU LOGIN ADMIN) */
+  document.getElementById('btnRoleUser').addEventListener('click', () => {
+    document.getElementById('roleOverlay').hidden = true;
     openDashboardOverlay();
   });
 
-  /* HOW TO PLAY MODAL */
-  const howOverlay = document.getElementById('howOverlay');
-  document.getElementById('btnStart').addEventListener('click', () => {
-    howOverlay.hidden = true;
-    startRoundTimer(); 
+  document.getElementById('btnRoleAdmin').addEventListener('click', () => {
+    document.getElementById('roleOverlay').hidden = true;
+    document.getElementById('adminLoginError').hidden = true;
+    document.getElementById('adminPasswordInput').value = "";
+    document.getElementById('adminLoginOverlay').hidden = false;
   });
+
+  /* LOGIKA MODAL LOGIN ADMIN */
+  document.getElementById('btnCancelAdminLogin').addEventListener('click', () => {
+    document.getElementById('adminLoginOverlay').hidden = true;
+    document.getElementById('roleOverlay').hidden = false;
+  });
+
+  document.getElementById('btnSubmitAdminLogin').addEventListener('click', () => {
+    const inputPass = document.getElementById('adminPasswordInput').value;
+    if (inputPass === ADMIN_PASSWORD) {
+      window.location.href = "admin.html";
+    } else {
+      document.getElementById('adminLoginError').hidden = false;
+    }
+  });
+
+  /* HOW TO PLAY MODAL & LOGIKA COUNTDOWN 3-2-1 */
+  const howOverlay = document.getElementById('howOverlay');
+  const startCountdownOverlay = document.getElementById('startCountdownOverlay');
+  const countdownBigText = document.getElementById('countdownBigText');
+
+  function triggerBigCountdown(onComplete) {
+    howOverlay.hidden = true;
+    startCountdownOverlay.hidden = false;
+    
+    let count = 3;
+    countdownBigText.textContent = count;
+
+    const countdownTimer = setInterval(() => {
+      count--;
+      if (count > 0) {
+        countdownBigText.textContent = count;
+      } else if (count === 0) {
+        countdownBigText.textContent = "MULAI! 🚀";
+      } else {
+        clearInterval(countdownTimer);
+        startCountdownOverlay.hidden = true;
+        if (onComplete) onComplete();
+      }
+    }, 900);
+  }
+
+  document.getElementById('btnStart').addEventListener('click', () => {
+    triggerBigCountdown(() => {
+      startRoundTimer(); 
+    });
+  });
+
   document.getElementById('btnHelp').addEventListener('click', () => howOverlay.hidden = false);
 
   /* UPDATE TAMPILAN SKOR SEMENTARA DI DASHBOARD KETIKA MENGETIK NAMA */
