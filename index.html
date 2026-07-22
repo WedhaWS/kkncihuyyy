@@ -504,7 +504,7 @@
     z-index: 100;
   }
 
-  #howOverlay, #startCountdownOverlay, #finalScoreOverlay {
+  #howOverlay, #gameHelpOverlay, #startCountdownOverlay, #finalScoreOverlay {
     background: var(--cream);
     z-index: 100;
   }
@@ -777,6 +777,7 @@
     <div class="timer-box" id="timerBox">⏱️ <span id="timerDisplay">10:00</span></div>
     <div class="score-chip" id="scoreDisplay">⭐ 0 Pts</div>
     <div class="progress-dots" id="progressDots"></div>
+    <!-- ✨ TOMBOL TANDA TANYA (?) -->
     <button class="icon-btn" id="btnHelp" title="Cara bermain" aria-label="Cara bermain">❓</button>
   </div>
 </div>
@@ -813,7 +814,7 @@
   Kasus dipilih dan disiapkan oleh panitia KKN.
 </footer>
 
-<!-- HOW TO PLAY MODAL -->
+<!-- HOW TO PLAY MODAL AWAL (SEBELUM MULAI) -->
 <div class="overlay" id="howOverlay" hidden>
   <div class="modal">
     <div class="big-emoji">🕵️‍♀️🤖</div>
@@ -844,6 +845,36 @@
     </ol>
     
     <button class="btn btn-primary" id="btnStart" style="width:100%; justify-content:center;">🚀 Mulai Bermain</button>
+  </div>
+</div>
+
+<!-- ✨ MODAL KHUSUS BANTUAN DI DALAM GAME (SAAT KLIK TOMBOL ?) -->
+<div class="overlay" id="gameHelpOverlay" hidden>
+  <div class="modal">
+    <div class="big-emoji">💡🤖</div>
+    <h2>Petunjuk & Peraturan Main</h2>
+    <p>Panduan singkat untuk menyelesaikan kasus debugging robot:</p>
+    
+    <ol class="how-steps">
+      <li>
+        <span class="how-num">1</span>
+        <div class="how-text">Susun kartu langkah-langkah tugas dengan cara **menyeret (drag)** atau **mengeklik dua kartu** untuk menukar posisinya.</div>
+      </li>
+      <li>
+        <span class="how-num">2</span>
+        <div class="how-text">Klik tombol **Periksa Urutan** untuk mengecek jawaban kelompokmu.</div>
+      </li>
+      <li>
+        <span class="how-num">3</span>
+        <div class="how-text">Gunakan tombol **💡 Petunjuk** jika kelompokmu memerlukan bantuan posisi kartu yang masih salah.</div>
+      </li>
+      <li>
+        <span class="how-num">4</span>
+        <div class="how-text">Waktu ronde berjalan terus selama **10 Menit** untuk menyelesaikan rangkaian soal.</div>
+      </li>
+    </ol>
+    
+    <button class="btn btn-primary" id="btnCloseGameHelp" style="width:100%; justify-content:center;"> Kembali ke Permainan</button>
   </div>
 </div>
 
@@ -1840,7 +1871,7 @@
   let checked = false;
 
   let timerInterval = null;
-  const ROUND_TIME_SECONDS = 600; // 10 Menit per Ronde (10 Kasus/Soal)
+  const ROUND_TIME_SECONDS = 600; // 10 Menit per Ronde
   let timeLeft = ROUND_TIME_SECONDS;
 
   const board = document.getElementById('board');
@@ -1877,7 +1908,7 @@
           roundStartTime = 0;
           sendToFirebase("Waktu Habis");
         }
-        alert(`⏰ Waktu Ronde telah habis (10 Menit)! Kembali ke Dashboard.`);
+        alert(`⏰ Waktu telah habis! Kembali ke Dashboard.`);
         openDashboardOverlay();
       }
     }, 1000);
@@ -2095,8 +2126,9 @@
     document.getElementById('statBugs').textContent = wrongIndexes.length;
 
     if (wrongIndexes.length === 0) {
+      stopRoundTimer();
+
       if (isSimulation) {
-        stopRoundTimer();
         alert("🎉 SELAMAT! Kamu berhasil menyelesaikan Ronde Simulasi.\n\nSekarang kamu sudah paham cara bermainnya. Kamu akan dikembalikan ke Dashboard untuk memilih Ronde Resmi!");
         openDashboardOverlay();
         return;
@@ -2116,7 +2148,6 @@
 
       const isLastCaseInRound = caseInRoundIndex === ROUNDS[roundIndex].length - 1;
       if (isLastCaseInRound) {
-        stopRoundTimer();
         let roundTimeUsed = Math.floor((Date.now() - roundStartTime) / 1000);
         totalTimeSpent += roundTimeUsed;
         roundStartTime = 0;
@@ -2310,6 +2341,7 @@
   });
 
   const howOverlay = document.getElementById('howOverlay');
+  const gameHelpOverlay = document.getElementById('gameHelpOverlay'); // ✨ MODAL KHUSUS DI DALAM GAME
   const startCountdownOverlay = document.getElementById('startCountdownOverlay');
   const countdownBigText = document.getElementById('countdownBigText');
 
@@ -2340,7 +2372,15 @@
     });
   });
 
-  document.getElementById('btnHelp').addEventListener('click', () => howOverlay.hidden = false);
+  /* ✨ KETIKA TOMBOL TANYA (?) DI KLIK, BUKA MODAL KHUSUS GAME TANPA GANGGU WAKTU */
+  document.getElementById('btnHelp').addEventListener('click', () => {
+    gameHelpOverlay.hidden = false;
+  });
+
+  /* ✨ KETIKA TOMBOL KEMBALI DI KLIK, TUTUP MODAL TANPA MEMENGARUHI COUNTDOWN / WAKTU */
+  document.getElementById('btnCloseGameHelp').addEventListener('click', () => {
+    gameHelpOverlay.hidden = true;
+  });
 
   document.getElementById("groupNameInput").addEventListener("input", (e) => {
     const inputName = e.target.value.trim();
