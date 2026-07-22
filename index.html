@@ -920,7 +920,6 @@
     if(!groupName || isSimulation) return;
     const cleanKey = groupName.replace(/[\.\#\$\[\]]/g, '_');
     
-    // Hitung durasi detik berjalan dari awal ronde ini dimulai
     let currentRoundDuration = roundStartTime > 0 ? Math.floor((Date.now() - roundStartTime) / 1000) : 0;
     let accumulatedTime = totalTimeSpent + currentRoundDuration;
 
@@ -930,7 +929,7 @@
       caseNumber: caseInRoundIndex + 1,
       totalScore: totalScore,
       timeLeft: timeLeft,
-      totalTimeSpent: accumulatedTime, // Durasi kumulatif real
+      totalTimeSpent: accumulatedTime,
       status: status,
       lastUpdate: new Date().toLocaleTimeString()
     });
