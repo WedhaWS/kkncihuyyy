@@ -258,7 +258,7 @@
   .stat-chip b{display:block; font-family:'Baloo 2'; font-size:19px;}
   .stat-chip span{font-size:11px; color:#D9D6C8;}
 
-  /* ---------- BOARD & PERBAIKAN GARIS REL PUTUS-PUTUS ---------- */
+  /* ---------- BOARD ---------- */
   .board-wrap{
     width:100%;
     max-width:1100px;
@@ -284,7 +284,7 @@
     align-items:center;
     justify-content:flex-start;
     gap:12px;
-    row-gap:28px; /* Jarak vertikal antar baris saat kartu membungkus */
+    row-gap:28px;
     flex-wrap:wrap;
     padding:10px 4px 26px;
   }
@@ -296,7 +296,7 @@
     font-size:28px;
     flex-shrink:0;
     position:relative;
-    z-index:2;
+    z-index:1;
     box-shadow: 0 6px 14px rgba(0,0,0,0.12);
   }
   .rail-marker.start{background:var(--navy); border:3px solid var(--amber);}
@@ -308,23 +308,21 @@
     flex-shrink:0;
   }
 
-  /* ✨ PENYESUAIAN GARIS PUTUS-PUTUS DENGAN ::after PRESISI KE KANAN HARMONIS */
   .slot::after, .rail-marker.start::after {
     content: "";
     position: absolute;
-    top: 56px; /* Tinggi sejajar tengah kartu */
+    top: 56px;
     left: 50%;
-    width: calc(100% + 12px); /* Menghubungkan titik tengah kartu ke kartu berikutnya */
+    width: calc(100% + 12px);
     border-top: 3px dashed #D9CBA0;
     z-index: 0;
     pointer-events: none;
   }
 
   .rail-marker.start::after {
-    top: 29px; /* Posisi tengah lingkaran Start Icon */
+    top: 29px;
   }
 
-  /* ✨ HILANGKAN GARIS DI AKHIR BARIS (ANAK KE-7 DAN GOAL ICON) SUPAYA TIDAK KELUAR AREA */
   .board > *:nth-child(7n)::after,
   .rail-marker.goal::after {
     display: none !important;
@@ -363,7 +361,7 @@
     box-shadow: 0 4px 0 var(--line), 0 6px 14px rgba(30,42,71,0.08);
     transition: transform .15s, box-shadow .15s, border-color .2s, background .2s;
     position:relative;
-    z-index:1; /* Latar putih menutup garis di belakangnya */
+    z-index:2;
   }
   .card:hover{transform:translateY(-3px);}
   .card:active{cursor:grabbing;}
@@ -444,6 +442,8 @@
   .btn:active{transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,0.18);}
   .btn-primary{background:var(--navy); color:#fff;}
   .btn-primary:hover{background:var(--navy-2);}
+  .btn-amber{background:var(--amber); color:var(--navy);}
+  .btn-amber:hover{background:var(--amber-dark);}
   .btn-ghost{background:var(--paper); color:var(--navy); border:2px solid var(--line); box-shadow:none;}
   .btn-ghost:hover{background:#F1EEE2;}
 
@@ -799,9 +799,10 @@
     <span class="hint-text">Seret kartu, lalu tukar posisinya sampai urutannya benar</span>
   </div>
   <div class="board" id="board"></div>
+  
   <div class="controls">
     <button class="btn btn-primary" id="btnCheck">🔍 Periksa Urutan</button>
-    <button class="btn btn-ghost" id="btnReset">🔄 Ulangi Kasus</button>
+    <button class="btn btn-amber" id="btnHint">💡 Petunjuk</button>
   </div>
 </div>
 
@@ -822,7 +823,7 @@
     <ol class="how-steps">
       <li>
         <span class="how-num">1</span>
-        <div class="how-text">Setiap Ronde terdiri dari <b>10 Kasus/Soal</b> dengan durasi <b>10 Menit</b>.</div>
+        <div class="how-text">Setiap Ronde terdiri dari <b>10 Kasus/Soal</b> dengan durasi total <b>10 Menit</b>.</div>
       </li>
       <li>
         <span class="how-num">2</span>
@@ -1063,7 +1064,7 @@
       },
       {
         tag: "RONDE 1 · KASUS 10 (6 STEP)",
-        title: "轨 Proses Penjernihan Air Sederhana",
+        title: "🚱 Proses Penjernihan Air Sederhana",
         mission: "Susun tahapan penyaringan air kotor menjadi air jernih menggunakan alat sederhana!",
         startIcon: "🤖", goalIcon: "💧",
         steps: [
@@ -1839,7 +1840,7 @@
   let checked = false;
 
   let timerInterval = null;
-  const ROUND_TIME_SECONDS = 600; // 10 Menit per Ronde
+  const ROUND_TIME_SECONDS = 600; // 10 Menit per Ronde (10 Kasus/Soal)
   let timeLeft = ROUND_TIME_SECONDS;
 
   const board = document.getElementById('board');
@@ -1876,7 +1877,7 @@
           roundStartTime = 0;
           sendToFirebase("Waktu Habis");
         }
-        alert(`⏰ Waktu telah habis! Kembali ke Dashboard.`);
+        alert(`⏰ Waktu Ronde telah habis (10 Menit)! Kembali ke Dashboard.`);
         openDashboardOverlay();
       }
     }, 1000);
@@ -2094,9 +2095,8 @@
     document.getElementById('statBugs').textContent = wrongIndexes.length;
 
     if (wrongIndexes.length === 0) {
-      stopRoundTimer();
-
       if (isSimulation) {
+        stopRoundTimer();
         alert("🎉 SELAMAT! Kamu berhasil menyelesaikan Ronde Simulasi.\n\nSekarang kamu sudah paham cara bermainnya. Kamu akan dikembalikan ke Dashboard untuk memilih Ronde Resmi!");
         openDashboardOverlay();
         return;
@@ -2116,6 +2116,7 @@
 
       const isLastCaseInRound = caseInRoundIndex === ROUNDS[roundIndex].length - 1;
       if (isLastCaseInRound) {
+        stopRoundTimer();
         let roundTimeUsed = Math.floor((Date.now() - roundStartTime) / 1000);
         totalTimeSpent += roundTimeUsed;
         roundStartTime = 0;
@@ -2162,17 +2163,29 @@
     feedbackEl.appendChild(box);
   }
 
-  document.getElementById('btnReset').addEventListener('click', () => {
+  /* ✨ LOGIKA PETUNJUK (HINT) */
+  document.getElementById('btnHint').addEventListener('click', () => {
     const kasus = currentKasus();
-    const { given } = buildGivenOrder(kasus);
-    currentOrder = [...given];
-    attempts = 0;
-    checked = false;
-    selectedIndex = null;
-    document.getElementById('statAttempts').textContent = "0";
-    document.getElementById('statBugs').textContent = "–";
-    feedbackEl.hidden = true;
-    renderBoard();
+    const wrongPositions = currentOrder
+      .map((id, i) => id === kasus.correctOrder[i] ? null : i + 1)
+      .filter(x => x !== null);
+
+    feedbackEl.hidden = false;
+    const box = document.createElement('div');
+    box.className = 'feedback-box';
+    box.innerHTML = `<div class="feedback-head">💡 Petunjuk</div>`;
+    const p = document.createElement('p');
+    p.style.cssText = "margin:0; font-size:13.5px; color:#7a4237;";
+    if (wrongPositions.length === 0 && checked) {
+      p.textContent = "Semua instruksi sudah berada di tempat yang benar. Coba klik Periksa Urutan!";
+    } else if (wrongPositions.length === 0) {
+      p.textContent = "Coba klik dulu tombol Periksa Urutan untuk melihat apakah ada bug.";
+    } else {
+      p.textContent = `Coba perhatikan baik-baik kartu nomor ${wrongPositions.join(" dan ")}. Apakah urutannya masuk akal?`;
+    }
+    box.appendChild(p);
+    feedbackEl.innerHTML = "";
+    feedbackEl.appendChild(box);
   });
 
   /* ============================================================
