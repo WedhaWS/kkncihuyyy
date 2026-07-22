@@ -258,7 +258,7 @@
   .stat-chip b{display:block; font-family:'Baloo 2'; font-size:19px;}
   .stat-chip span{font-size:11px; color:#D9D6C8;}
 
-  /* ---------- BOARD ---------- */
+  /* ---------- BOARD & POSISI CENTER KARTU ---------- */
   .board-wrap{
     width:100%;
     max-width:1100px;
@@ -282,7 +282,7 @@
     position:relative;
     display:flex;
     align-items:center;
-    justify-content:flex-start;
+    justify-content:center; /* ✨ KARTU DIATUR POSISI DI TENGAH (CENTER) */
     gap:12px;
     row-gap:28px;
     flex-wrap:wrap;
@@ -777,7 +777,7 @@
     <div class="timer-box" id="timerBox">⏱️ <span id="timerDisplay">10:00</span></div>
     <div class="score-chip" id="scoreDisplay">⭐ 0 Pts</div>
     <div class="progress-dots" id="progressDots"></div>
-    <!-- ✨ TOMBOL TANDA TANYA (?) -->
+    <!-- ✨ TOMBOL TANYA (?) -->
     <button class="icon-btn" id="btnHelp" title="Cara bermain" aria-label="Cara bermain">❓</button>
   </div>
 </div>
@@ -874,7 +874,7 @@
       </li>
     </ol>
     
-    <button class="btn btn-primary" id="btnCloseGameHelp" style="width:100%; justify-content:center;"> Kembali ke Permainan</button>
+    <button class="btn btn-primary" id="btnCloseGameHelp" style="width:100%; justify-content:center;">✖️ Kembali ke Permainan</button>
   </div>
 </div>
 
@@ -1804,7 +1804,7 @@
           { id:"r5c8s5", emoji:"⚪", txt:"Bulatkan adonan, diamkan dalam wadah tertutup kain", note:"Wadah tertutup menjaga suhu adonan tetap hangat." },
           { id:"r5c8s6", emoji:"⏳", txt:"Diamkan adonan 1 jam hingga mengembang dua kali", note:"Fermentasi ragi membuat adonan mengembang." },
           { id:"r5c8s7", emoji:"👊", txt:"Kempiskan adonan dengan ditinju perlahan", note:"Proses ini mengeluarkan gas berlebih dari adonan." },
-          { id:"r5c8s8", emoji:"🍞", txt:"Bentuk adonan sesuai cetakan loyang roti tawar", note:"Bentuk adonan menentukan hasil akhir roti." },
+          { id:"r5c8s8", emoji:"🍞", txt:"Bentuk adonan sesuai cetakan loyang roti tawar", note:"Bentuk adonan menentukan akhir roti." },
           { id:"r5c8s9", emoji:"⏱️", txt:"Diamkan adonan dalam loyang selama 30-40 menit", note:"Fermentasi kedua membuat roti lebih mengembang." },
           { id:"r5c8s10", emoji:"🔥", txt:"Panaskan oven terlebih dahulu sesuai suhu", note:"Oven yang panas membantu roti matang merata." },
           { id:"r5c8s11", emoji:"🍞", txt:"Panggang roti dalam oven hingga matang keemasan", note:"Warna keemasan menandakan roti sudah matang sempurna." },
@@ -2341,7 +2341,7 @@
   });
 
   const howOverlay = document.getElementById('howOverlay');
-  const gameHelpOverlay = document.getElementById('gameHelpOverlay'); // ✨ MODAL KHUSUS DI DALAM GAME
+  const gameHelpOverlay = document.getElementById('gameHelpOverlay');
   const startCountdownOverlay = document.getElementById('startCountdownOverlay');
   const countdownBigText = document.getElementById('countdownBigText');
 
@@ -2372,12 +2372,12 @@
     });
   });
 
-  /* ✨ KETIKA TOMBOL TANYA (?) DI KLIK, BUKA MODAL KHUSUS GAME TANPA GANGGU WAKTU */
+  /* ✨ TOMBOL BANTUAN TANYA (?) DI DALAM GAME */
   document.getElementById('btnHelp').addEventListener('click', () => {
     gameHelpOverlay.hidden = false;
   });
 
-  /* ✨ KETIKA TOMBOL KEMBALI DI KLIK, TUTUP MODAL TANPA MEMENGARUHI COUNTDOWN / WAKTU */
+  /* ✨ TOMBOL KEMBALI KE PERMAINAN DARI MODAL BANTUAN */
   document.getElementById('btnCloseGameHelp').addEventListener('click', () => {
     gameHelpOverlay.hidden = true;
   });
