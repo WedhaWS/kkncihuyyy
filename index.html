@@ -426,7 +426,6 @@
   .btn-primary:hover{background:var(--navy-2);}
   .btn-ghost{background:var(--paper); color:var(--navy); border:2px solid var(--line); box-shadow:none;}
   .btn-ghost:hover{background:#F1EEE2;}
-  .btn-amber{background:var(--amber); color:var(--navy);}
 
   /* ---------- FEEDBACK ---------- */
   .feedback{
@@ -503,24 +502,40 @@
   .modal h2{margin:6px 0 4px; color:var(--navy); font-size:23px;}
   .modal p{font-size:14.5px; line-height:1.6; color:#5a5346;}
   .modal .big-emoji{font-size:52px;}
-  .how-steps{
-    text-align:left;
-    display:flex; flex-direction:column; gap:12px;
-    margin:18px 0 22px;
+
+  .how-steps {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 20px 0 24px;
+    padding: 0;
   }
-  .how-steps li{
-    list-style:none;
-    display:flex; gap:12px; align-items:flex-start;
-    font-size:14px; line-height:1.5; color:var(--ink);
+  .how-steps li {
+    list-style: none;
+    display: flex;
+    gap: 12px;
+    align-items: center;
   }
-  .how-num{
-    flex-shrink:0;
-    width:26px;height:26px;
-    background:var(--amber);
-    color:var(--navy);
-    border-radius:50%;
-    font-family:'Baloo 2'; font-weight:800; font-size:13px;
-    display:flex;align-items:center;justify-content:center;
+  .how-num {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--amber);
+    color: var(--navy);
+    border-radius: 50%;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .how-text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink);
+    flex: 1;
   }
 
   .countdown-number {
@@ -662,11 +677,11 @@
 
       <label><b>Pilih Ronde</b></label>
       <select id="roundSelect" style="width:100%; margin-top:8px; padding:12px; border-radius:12px; border:2px solid #ddd; font-size:16px;">
-        <option value="0">Ronde 1 </option>
-        <option value="1">Ronde 2 </option>
-        <option value="2">Ronde 3 </option>
-        <option value="3">Ronde 4 </option>
-        <option value="4">Ronde 5 </option>
+        <option value="0">Ronde 1 (6 Step · 2 Kasus)</option>
+        <option value="1">Ronde 2 (7 Step · 2 Kasus)</option>
+        <option value="2">Ronde 3 (8 Step · 2 Kasus)</option>
+        <option value="3">Ronde 4 (10 Step · 2 Kasus)</option>
+        <option value="4">Ronde 5 (12 Step · 2 Kasus)</option>
       </select>
     </div>
 
@@ -757,7 +772,6 @@
   <div class="board" id="board"></div>
   <div class="controls">
     <button class="btn btn-primary" id="btnCheck">🔍 Periksa Urutan</button>
-    <button class="btn btn-amber" id="btnHint">💡 Petunjuk</button>
     <button class="btn btn-ghost" id="btnReset">🔄 Ulangi Kasus</button>
   </div>
 </div>
@@ -775,13 +789,30 @@
     <div class="big-emoji">🕵️‍♀️🤖</div>
     <h2>Selamat Datang, Detektif!</h2>
     <p>Robot kita mau menyelesaikan tugas sehari-hari, tapi instruksinya ada yang salah taruh (bug)! Tugas kalian: temukan bug-nya dan betulkan urutannya.</p>
+    
     <ol class="how-steps">
-      <li><span class="how-num">1</span> Setiap Ronde terdiri dari <b>2 Kasus/Soal</b> dengan durasi <b>2 Menit</b>.</li>
-      <li><span class="how-num">2</span> Diskusikan bersama kelompok, mana instruksi yang letaknya salah.</li>
-      <li><span class="how-num">3</span> Seret (drag) kartu untuk menukar posisinya sampai urutan masuk akal.</li>
-      <li><span class="how-num">4</span> Klik <b>Periksa Urutan</b>. Kartu yang masih salah akan diberi cap 🐞 BUG!</li>
-      <li><span class="how-num">5</span> Setiap kasus berhadiah hingga <b>50 Pts</b> (Maksimal 100 Pts per Ronde)!</li>
+      <li>
+        <span class="how-num">1</span>
+        <div class="how-text">Setiap Ronde terdiri dari <b>2 Kasus/Soal</b> dengan durasi <b>2 Menit</b>.</div>
+      </li>
+      <li>
+        <span class="how-num">2</span>
+        <div class="how-text">Diskusikan bersama kelompok, mana instruksi yang letaknya salah.</div>
+      </li>
+      <li>
+        <span class="how-num">3</span>
+        <div class="how-text">Seret (drag) kartu untuk menukar posisinya sampai urutan masuk akal.</div>
+      </li>
+      <li>
+        <span class="how-num">4</span>
+        <div class="how-text">Klik <b>Periksa Urutan</b>. Kartu yang masih salah akan diberi cap 🐞 <b>BUG!</b></div>
+      </li>
+      <li>
+        <span class="how-num">5</span>
+        <div class="how-text">Setiap kasus berhadiah hingga <b>50 Pts</b> (2 Soal = Maksimal <b>100 Pts</b> per Ronde)!</div>
+      </li>
     </ol>
+    
     <button class="btn btn-primary" id="btnStart" style="width:100%; justify-content:center;">🚀 Mulai Bermain</button>
   </div>
 </div>
@@ -801,7 +832,7 @@
 
 <script>
   /* ============================================================
-     1. INTEGRASI FIREBASE REALTIME DATABASE & KATA SANDI ADMIN
+     1. FIREBASE CONFIG & ADMIN PASSWORD
      ============================================================ */
   const ADMIN_PASSWORD = "admin123";
 
@@ -819,56 +850,67 @@
   const database = firebase.database();
 
   let groupName = "";
+  let totalScore = 0;
+  
+  // LOGIKA AKUMULASI WAKTU PENGERJAAN KUMULATIF
+  let totalTimeSpent = 0; 
+  let roundStartTime = 0; // Menandai detik awal dimulainya ronde
 
   function sendToFirebase(status = "Bermain") {
     if(!groupName) return;
     const cleanKey = groupName.replace(/[\.\#\$\[\]]/g, '_');
+    
+    // Hitung detik berjalan di ronde saat ini
+    let currentRoundDuration = roundStartTime > 0 ? Math.floor((Date.now() - roundStartTime) / 1000) : 0;
+    let accumulatedTime = totalTimeSpent + currentRoundDuration;
+
     database.ref('game_scores/' + cleanKey).set({
       groupName: groupName,
       round: roundIndex + 1,
       caseNumber: caseInRoundIndex + 1,
       totalScore: totalScore,
       timeLeft: timeLeft,
+      totalTimeSpent: accumulatedTime, // ✨ AKUMULASI KUMULATIF REAL-TIME DARI RONDE SEBELUMNYA + RONDE SAAT INI
       status: status,
       lastUpdate: new Date().toLocaleTimeString()
     });
   }
 
   /* ============================================================
-     2. DATA RONDE (6 DENGAN 12 STEP OBJEKTIF)
-     ============================================================ */
+   2. DATA RONDE (QA MODE: CUMA 2 KARTU YANG TERACAK/SWAP)
+   ============================================================ */
   const ROUNDS = [
     // RONDE 1 (6 STEP)
     [
       {
         tag: "RONDE 1 · KASUS 1 (6 STEP)",
-        title: "🧺 Mencuci Baju",
-        mission: "Robot mau mencuci baju dengan benar secara berurutan. Bantu rapikan instruksinya!",
-        startIcon: "🤖", goalIcon: "🧺",
+        title: "🫁 Jalur Udara Pernapasan Manusia",
+        mission: "Bantu robot menyusun alur masuknya udara (oksigen) ke dalam tubuh manusia yang benar!",
+        startIcon: "🤖", goalIcon: "🫁",
         steps: [
-          { id:"r1c1s1", emoji:"🧦", txt:"Memisahkan baju putih & berwarna", note:"Baju dipisah dulu agar warna pakaian tidak saling melunturi." },
-          { id:"r1c1s2", emoji:"🌀", txt:"Memasukkan baju ke mesin cuci", note:"Baju yang sudah dipisah dimasukkan ke dalam tabung mesin cuci." },
-          { id:"r1c1s3", emoji:"🧴", txt:"Menambahkan deterjen secukupnya", note:"Deterjen ditambahkan ke mesin sebelum siklus pencucian dimulai." },
-          { id:"r1c1s4", emoji:"⏱️", txt:"Menjalankan mesin cuci", note:"Mesin dinyalakan untuk memutar dan membersihkan pakaian." },
-          { id:"r1c1s5", emoji:"☀️", txt:"Menjemur pakaian hingga kering", note:"Pakaian basah dijemur di bawah sinar matahari setelah mesin selesai." },
-          { id:"r1c1s6", emoji:"👕", txt:"Melipat & menyetrika baju", note:"Pakaian yang telah kering diangkat lalu dilipat rapi." }
+          { id:"r1c1s1", emoji:"👃", txt:"Udara masuk melalui rongga hidung", note:"Hidung adalah gerbang utama udara masuk dan disaring oleh rambut hidung." },
+          { id:"r1c1s2", emoji:"🗣️", txt:"Melewati tenggorokan (faring & laring)", note:"Udara mengalir dari belakang rongga hidung menuju saluran tenggorokan." },
+          { id:"r1c1s3", emoji:"🫁", txt:"Masuk ke batang tenggorokan (trakea)", note:"Trakea menghubungkan tenggorokan langsung menuju ke paru-paru." },
+          { id:"r1c1s4", emoji:"🌿", txt:"Melewati percabangan bronkus", note:"Trakea bercabang dua menjadi bronkus kiri dan bronkus kanan." },
+          { id:"r1c1s5", emoji:"🔍", txt:"Menuju cabang kecil bronkiolus", note:"Di dalam paru-paru, bronkus bercabang-cabang halus menjadi bronkiolus." },
+          { id:"r1c1s6", emoji:"🔴", txt:"Pertukaran gas di alveolus", note:"Oksigen diserap dan karbon dioksida dilepas di kantong udara (alveolus)." }
         ],
-        bugSwaps: [[2, 5]]
+        bugSwaps: [[1, 2]] // QA: Cuma kartu indeks 1 dan 2 yang tertukar
       },
       {
         tag: "RONDE 1 · KASUS 2 (6 STEP)",
-        title: "🪥 Menggosok Gigi",
-        mission: "Robot mau menyikat gigi secara bersih dan higienis. Betulkan langkah yang tertukar!",
-        startIcon: "🤖", goalIcon: "😁",
+        title: "🍕 Alur Makanan pada Pencernaan Manusia",
+        mission: "Susun langkah perjalanan makanan dari awal masuk sampai diserap oleh tubuh!",
+        startIcon: "🤖", goalIcon: "🚶",
         steps: [
-          { id:"r1c2s1", emoji:"🪥", txt:"Menyiapkan sikat gigi", note:"Langkah awal adalah mengambil sikat gigi yang bersih." },
-          { id:"r1c2s2", emoji:"💧", txt:"Membasahi bulu sikat air", note:"Bulu sikat dibasahi sedikit air sebelum diberi pasta gigi." },
-          { id:"r1c2s3", emoji:"🧴", txt:"Mengenakan pasta gigi", note:"Pasta gigi dioleskan secukupnya di atas bulu sikat yang basah." },
-          { id:"r1c2s4", emoji:"⏲️", txt:"Menyikat gigi secara merata", note:"Proses menyikat seluruh permukaan gigi selama 2 menit." },
-          { id:"r1c2s5", emoji:"🚰", txt:"Berkumur dengan air bersih", note:"Berkumur dilakukan untuk membuang sisa busa pasta gigi." },
-          { id:"r1c2s6", emoji:"🧽", txt:"Membilas & menyimpan sikat", note:"Sikat gigi dibilas dengan air mengalir lalu ditaruh di tempatnya." }
+          { id:"r1c2s1", emoji:"👄", txt:"Dikunyah di rongga mulut", note:"Makanan dihancurkan oleh gigi dan dibasahi oleh air liur." },
+          { id:"r1c2s2", emoji:"🥖", txt:"Melewati kerongkongan (esofagus)", note:"Gerak peristaltik mendorong makanan turun menuju lambung." },
+          { id:"r1c2s3", emoji:"🥣", txt:"Dicerna secara kimiawi di lambung", note:"Asam lambung dan enzim memecah makanan menjadi bubur cair." },
+          { id:"r1c2s4", emoji:"🧬", txt:"Penyerapan sari makanan di usus halus", note:"Sari-sari makanan diserap masuk ke dalam pembuluh darah." },
+          { id:"r1c2s5", emoji:"💧", txt:"Penyerapan air di usus besar", note:"Sisa makanan yang tidak diserap akan diserap kandungan airnya." },
+          { id:"r1c2s6", emoji:"🚽", txt:"Pengeluaran sisa makanan via anus", note:"Sisa ampas padat (feses) dikeluarkan dari tubuh melalui anus." }
         ],
-        bugSwaps: [[1, 4]]
+        bugSwaps: [[3, 4]] // QA: Cuma kartu indeks 3 dan 4 yang tertukar
       }
     ],
 
@@ -876,35 +918,35 @@
     [
       {
         tag: "RONDE 2 · KASUS 1 (7 STEP)",
-        title: "🍫 Membuat Minuman Cokelat",
-        mission: "Prosedur penyajikan minuman cokelat hangat yang tepat. Cari bug-nya!",
-        startIcon: "🤖", goalIcon: "🥤",
+        title: "🦋 Metamorfosis Sempurna Kupu-kupu",
+        mission: "Susun tahapan daur hidup kupu-kupu secara urut dari awal hingga dewasa!",
+        startIcon: "🤖", goalIcon: "🦋",
         steps: [
-          { id:"r2c1s1", emoji:"🥛", txt:"Menyiapkan gelas bersih", note:"Mulai dengan menyiapkan cangkir/gelas yang higienis." },
-          { id:"r2c1s2", emoji:"🍫", txt:"Tuang bubuk cokelat ke gelas", note:"Bubuk cokelat dimasukkan saat gelas masih dalam keadaan kosong." },
-          { id:"r2c1s3", emoji:"🚰", txt:"Memanaskan air hingga matang", note:"Air dipanaskan di teko terlebih dahulu sebelum dituang." },
-          { id:"r2c1s4", emoji:"♨️", txt:"Mentuang air panas ke gelas", note:"Air panas dituang ke dalam gelas yang berisi bubuk cokelat." },
-          { id:"r2c1s5", emoji:"🥄", txt:"Mengaduk rata dengan sendok", note:"Aduk hingga seluruh bubuk cokelat larut sempurna." },
-          { id:"r2c1s6", emoji:"🧼", txt:"Mencuci sendok bekas pengaduk", note:"Sendok yang telah dipakai diaduk langsung dicuci bersih." },
-          { id:"r2c1s7", emoji:"😋", txt:"Menikmati minuman hangat", note:"Minuman cokelat siap dikonsumsi." }
+          { id:"r2c1s1", emoji:"🥚", txt:"Kupu-kupu betina bertelur di daun", note:"Daur hidup dimulai saat telur diletakkan di atas permukaan daun." },
+          { id:"r2c1s2", emoji:"🐣", txt:"Telur menetas menjadi ulat (larva)", note:"Setelah beberapa hari, telur menetas menjadi larva/ulat." },
+          { id:"r2c1s3", emoji:"🍃", txt:"Ulat makan daun dengan rakus", note:"Ulat makan terus menerus untuk mengumpulkan energi pertumbuhan." },
+          { id:"r2c1s4", emoji:"🧱", txt:"Ulat membuat benang pembungkus", note:"Saat cukup besar, ulat membungkus dirinya dengan serat benang." },
+          { id:"r2c1s5", emoji:"🥜", txt:"Memasuki fase kepompong (pupa)", note:"Di dalam kepompong terjadi perubahan bentuk tubuh secara drastis." },
+          { id:"r2c1s6", emoji:"🐣", txt:"Kupu-kupu muda keluar dari kepompong", note:"Kupu-kupu memecah dinding kepompong dan mengeringkan sayapnya." },
+          { id:"r2c1s7", emoji:"🦋", txt:"Kupu-kupu dewasa siap terbang", note:"Kupu-kupu terbang mencari nektar dan siap berkembang biak." }
         ],
-        bugSwaps: [[1, 5]]
+        bugSwaps: [[1, 2]] // QA: Cuma 2 kartu tertukar
       },
       {
         tag: "RONDE 2 · KASUS 2 (7 STEP)",
-        title: "🍜 Memasak Mie Instan",
-        mission: "Prosedur memasak mie instan secara terstruktur. Susun kembali urutannya!",
-        startIcon: "🤖", goalIcon: "🍜",
+        title: "🌾 Rantai Makanan Ekosistem Sawah",
+        mission: "Susun tingkatan trofik aliran energi rantai makanan dari produsen ke pengurai!",
+        startIcon: "🤖", goalIcon: "🍄",
         steps: [
-          { id:"r2c2s1", emoji:"🚰", txt:"Memanaskan air dalam panci", note:"Rebus air secukupnya hingga mendidih di atas kompor." },
-          { id:"r2c2s2", emoji:"📦", txt:"Membuka kemasan mie instan", note:"Buka bungkus mie dan keluarkan bumbunya." },
-          { id:"r2c2s3", emoji:"🍜", txt:"Memasukkan mie ke air mendidih", note:"Mie dimasukkan setelah air dalam panci benar-benar mendidih." },
-          { id:"r2c2s4", emoji:"🍽️", txt:"Menuang bumbu ke piring", note:"Tuangkan bumbu kering & minyak ke atas piring saji." },
-          { id:"r2c2s5", emoji:"🥣", txt:"Mentingkatkan mie yang matang", note:"Tiriskan mie yang telah kenyal dari air rebusan panci." },
-          { id:"r2c2s6", emoji:"🥄", txt:"Aduk mie bersama bumbu", note:"Aduk mie di atas piring hingga bumbu tercampur rata." },
-          { id:"r2c2s7", emoji:"😋", txt:"Mie siap disajikan", note:"Mie instan lezat siap dimakan." }
+          { id:"r2c2s1", emoji:"☀️", txt:"Matahari memancarkan energi cahaya", note:"Sinar matahari adalah sumber energi utama bagi ekosistem." },
+          { id:"r2c2s2", emoji:"🌾", txt:"Tanaman padi fotosintesis (produsen)", note:"Tumbuhan hijau mengolah makanan sendiri menggunakan sinar matahari." },
+          { id:"r2c2s3", emoji:"🦗", txt:"Belalang memakan daun padi (konsumen 1)", note:"Herbivora memakan tumbuhan produsen sebagai sumber energi." },
+          { id:"r2c2s4", emoji:"🐸", txt:"Katak memangsa belalang (konsumen 2)", note:"Karnivora kecil memangsa konsumen tingkat pertama." },
+          { id:"r2c2s5", emoji:"🐍", txt:"Ular memakan katak (konsumen 3)", note:"Karnivora lebih besar memangsa konsumen tingkat kedua." },
+          { id:"r2c2s6", emoji:"🦅", txt:"Burung elang memangsa ular (konsumen puncak)", note:"Predator puncak berada di bagian atas rantai makanan." },
+          { id:"r2c2s7", emoji:"🍄", txt:"Jamur mengurai elang yang mati (dekomposer)", note:"Pengurai mengembalikan zat hara ke dalam tanah." }
         ],
-        bugSwaps: [[0, 3]]
+        bugSwaps: [[4, 5]] // QA: Cuma 2 kartu tertukar
       }
     ],
 
@@ -912,37 +954,37 @@
     [
       {
         tag: "RONDE 3 · KASUS 1 (8 STEP)",
-        title: "🚶 Menyeberang Jalan Raya",
-        mission: "Langkah-langkah keselamatan standar saat menyeberang jalan raya.",
-        startIcon: "🤖", goalIcon: "🚸",
+        title: "🌧️ Siklus Hidrologi (Daur Air)",
+        mission: "Bantu susun tahapan siklus air di bumi berdasarkan proses fisika alam!",
+        startIcon: "🤖", goalIcon: "🌧️",
         steps: [
-          { id:"r3c1s1", emoji:"🛑", txt:"Berhenti di trotoar tepi jalan", note:"Selalu berdiri aman di trotoar, tidak di badan jalan." },
-          { id:"r3c1s2", emoji:"🏁", txt:"Mencari fasilitas Zebra Cross", note:"Cari tempat penyeberangan resmi seperti Zebra Cross atau JPO." },
-          { id:"r3c1s3", emoji:"🔴", txt:"Menunggu lampu penyeberangan", note:"Pastikan lampu indikator penyeberang jalan berwarna hijau." },
-          { id:"r3c1s4", emoji:"👀", txt:"Menengok ke kanan dan kiri", note:"Periksa arus lalu lintas untuk memastikan tidak ada kendaraan melaju." },
-          { id:"r3c1s5", emoji:"👂", txt:"Mendengarkan suara kendaraan", note:"Dengarkan situasi sekitar untuk memastikan keamanan." },
-          { id:"r3c1s6", emoji:"🖐️", txt:"Meninggikan tangan tanda menyeberang", note:"Angkat tangan sebagai sinyal jelas kepada pengemudi." },
-          { id:"r3c1s7", emoji:"🚶", txt:"Melangkah tenang tanpa berlari", note:"Menyeberanglah dengan berjalan tegas dan fokus tanpa bermain HP." },
-          { id:"r3c1s8", emoji:"🎉", txt:"Tiba di trotoar seberang", note:"Sampai di seberang jalan dengan selamat." }
+          { id:"r3c1s1", emoji:"☀️", txt:"Sinar matahari memanaskan air laut", note:"Energi panas matahari menjadi penggerak utama siklus air." },
+          { id:"r3c1s2", emoji:"💨", txt:"Evaporasi (air menguap ke udara)", note:"Air permukaan berubah menjadi uap air dan naik ke atmosfer." },
+          { id:"r3c1s3", emoji:"🌿", txt:"Transpirasi dari tumbuhan", note:"Pohon dan tanaman juga melepaskan uap air ke udara." },
+          { id:"r3c1s4", emoji:"☁️", txt:"Kondensasi (uap air menjadi awan)", note:"Uap air mengembun menjadi partikel es/air membentuk awan." },
+          { id:"r3c1s5", emoji:"🌬️", txt:"Awan ditiup angin ke daratan", note:"Angin membawa awan tebal menuju wilayah pegunungan/daratan." },
+          { id:"r3c1s6", emoji:"🌧️", txt:"Presipitasi (hujan turun ke bumi)", note:"Awan yang sudah jenuh mencair dan turun sebagai titik-titik hujan." },
+          { id:"r3c1s7", emoji:"⛰️", txt:"Infiltrasi (air meresap ke tanah)", note:"Sebagian air hujan diserap masuk ke dalam pori-pori tanah." },
+          { id:"r3c1s8", emoji:"🌊", txt:"Limpasan air mengalir kembali ke laut", note:"Air tanah dan sungai mengalir kembali menuju ke laut lepas." }
         ],
-        bugSwaps: [[2, 6]]
+        bugSwaps: [[2, 3]] // QA: Cuma 2 kartu tertukar
       },
       {
         tag: "RONDE 3 · KASUS 2 (8 STEP)",
-        title: "🧼 Standar Mencuci Tangan (WHO)",
-        mission: "Urutan sanitasi mencuci tangan yang benar untuk mencegah kuman.",
-        startIcon: "🤖", goalIcon: "🧼",
+        title: "🌌 Urutan Planet Tata Surya dari Matahari",
+        mission: "Susun urutan planet-planet dalam Tata Surya kita mulai dari yang terdekat dengan Matahari!",
+        startIcon: "☀️", goalIcon: "🪐",
         steps: [
-          { id:"r3c2s1", emoji:"💧", txt:"Membasahi kedua tangan", note:"Basahi seluruh telapak tangan dengan air mengalir." },
-          { id:"r3c2s2", emoji:"🧼", txt:"Menuangkan sabun secukupnya", note:"Gunakan sabun pembersih secukupnya di telapak tangan." },
-          { id:"r3c2s3", emoji:"🤲", txt:"Menggosok telapak tangan", note:"Gosok kedua telapak tangan hingga berbusa." },
-          { id:"r3c2s4", emoji:"🖐️", txt:"Menggosok punggung tangan", note:"Gosok punggung dan sela-sela jari tangan kiri & kanan." },
-          { id:"r3c2s5", emoji:"👏", txt:"Menggosok sela-sela jari dalam", note:"Bersihkan bagian dalam sela-sela jari secara merata." },
-          { id:"r3c2s6", emoji:"👍", txt:"Membersihkan ibu jari putar", note:"Gosok ibu jari secara berputar dalam genggaman." },
-          { id:"r3c2s7", emoji:"🚰", txt:"Membilas dengan air mengalir", note:"Bilas semua busa sabun hingga bersih total." },
-          { id:"r3c2s8", emoji:"🧻", txt:"Mengeringkan dengan tisu bersih", note:"Keringkan tangan menggunakan tisu steril atau lap bersih." }
+          { id:"r3c2s1", emoji:"🔴", txt:"Merkurius (Planet ke-1)", note:"Planet terdekat dari Matahari dan berukuran paling kecil." },
+          { id:"r3c2s2", emoji:"🟡", txt:"Venus (Planet ke-2)", note:"Planet paling panas yang sering disebut Bintang Fajar." },
+          { id:"r3c2s3", emoji:"🌍", txt:"Bumi (Planet ke-3)", note:"Satu-satunya planet di tata surya yang dihuni mahluk hidup." },
+          { id:"r3c2s4", emoji:"🔴", txt:"Mars (Planet ke-4)", note:"Sering dijuluki sebagai Planet Merah karena batuan besi oksida." },
+          { id:"r3c2s5", emoji:"🟠", txt:"Jupiter (Planet ke-5)", note:"Planet terbesar dalam tata surya kita." },
+          { id:"r3c2s6", emoji:"🪐", txt:"Saturnus (Planet ke-6)", note:"Planet yang terkenal memiliki cincin es yang sangat indah." },
+          { id:"r3c2s7", emoji:"🔵", txt:"Uranus (Planet ke-7)", note:"Planet dingin dengan sumbu rotasi yang sangat miring." },
+          { id:"r3c2s8", emoji:"💙", txt:"Neptunus (Planet ke-8)", note:"Planet terluar yang berwarna biru dan berangin kencang." }
         ],
-        bugSwaps: [[1, 6]]
+        bugSwaps: [[5, 6]] // QA: Cuma 2 kartu tertukar
       }
     ],
 
@@ -950,41 +992,41 @@
     [
       {
         tag: "RONDE 4 · KASUS 1 (10 STEP)",
-        title: "🏫 Persiapan Sekolah Pagi Hari",
-        mission: "Prosedur persiapan logis seorang siswa sebelum berangkat sekolah.",
-        startIcon: "🤖", goalIcon: "🎒",
+        title: "⚡ Merangkai Rangkaian Listrik Seri",
+        mission: "Langkah-langkah praktikum IPA membuat rangkaian listrik seri dengan sakelar dan lampu.",
+        startIcon: "🤖", goalIcon: "💡",
         steps: [
-          { id:"r4c1s1", emoji:"⏰", txt:"Bangun tidur saat alarm berbunyi", note:"Mengawali hari tepat waktu saat pagi tiba." },
-          { id:"r4c1s2", emoji:"🛏️", txt:"Merapikan tempat tidur", note:"Merapikan sprei dan bantal setelah bangun." },
-          { id:"r4c1s3", emoji:"🚿", txt:"Mandi hingga bersih", note:"Membersihkan badan dengan sabun dan air segar." },
-          { id:"r4c1s4", emoji:"🪥", txt:"Menyikat gigi sampai bersih", note:"Menyikat gigi setelah selesai mandi." },
-          { id:"r4c1s5", emoji:"👔", txt:"Mengenakan seragam sekolah rapi", note:"Memakai pakaian seragam sesuai aturan hari tersebut." },
-          { id:"r4c1s6", emoji:"🍳", txt:"Makan sarapan bergizi", note:"Makan pagi memberikan energi untuk belajar." },
-          { id:"r4c1s7", emoji:"📚", txt:"Memeriksa buku sesuai jadwal", note:"Memasukkan buku pelajaran ke dalam tas sesuai jadwal." },
-          { id:"r4c1s8", emoji:"👟", txt:"Memakai kaos kaki & sepatu", note:"Mengenakan sepatu sebelum keluar rumah." },
-          { id:"r4c1s9", emoji:"🙏", txt:"Berpamitan pada orang tua", note:"Cium tangan dan pamit kepada orang tua." },
-          { id:"r4c1s10", emoji:"🏫", txt:"Berangkat menuju sekolah", note:"Berjalan atau naik transportasi menuju sekolah." }
+          { id:"r4c1s1", emoji:"🔋", txt:"Menyiapkan 2 buah baterai", note:"Siapkan baterai sebagai sumber tegangan arus listrik searah." },
+          { id:"r4c1s2", emoji:"📦", txt:"Memasang baterai di dudukan", note:"Hubungkan kutub positif baterai 1 dengan kutub negatif baterai 2." },
+          { id:"r4c1s3", emoji:"✂️", txt:"Memotong kabel listrik secukupnya", note:"Potong kabel tembaga menjadi beberapa bagian untuk penyambung." },
+          { id:"r4c1s4", emoji:"🔌", txt:"Kupas ujung plastik pembungkus kabel", note:"Kupas isolator kabel agar kawat tembaga di dalamnya terlihat." },
+          { id:"r4c1s5", emoji:"🔘", txt:"Menghubungkan kabel ke sakelar", note:"Sambungkan salah satu kawat kabel ke terminal sakelar." },
+          { id:"r4c1s6", emoji:"💡", txt:"Memasang lampu bohlam kecil 1", note:"Sambungkan kawat dari sakelar ke dudukan lampu pertama." },
+          { id:"r4c1s7", emoji:"💡", txt:"Memasang lampu bohlam kecil 2", note:"Hubungkan kabel secara berurutan (sejajar) ke lampu kedua." },
+          { id:"r4c1s8", emoji:"🔄", txt:"Menghubungkan kabel ke kutub baterai", note:"Hubungkan ujung kabel terakhir kembali ke terminal baterai." },
+          { id:"r4c1s9", emoji:"👇", txt:"Tekan tombol sakelar ke posisi ON", note:"Menutup sakelar agar arus listrik dapat mengalir." },
+          { id:"r4c1s10", emoji:"✨", txt:"Kedua lampu menyala bersamaan", note:"Rangkaian seri tertutup berhasil menyalakan kedua bohlam." }
         ],
-        bugSwaps: [[2, 6]]
+        bugSwaps: [[0, 1]] // QA: Cuma 2 kartu tertukar
       },
       {
         tag: "RONDE 4 · KASUS 2 (10 STEP)",
-        title: "🌱 Menanam Tanaman di Pot",
-        mission: "Prosedur botanis dasar menanam benih di wadah pot.",
-        startIcon: "🤖", goalIcon: "🌻",
+        title: "🧲 Eksperimen Membuat Magnet Buatan (Elektromagnet)",
+        mission: "Susun prosedur percobaan membuat magnet sementara dari aliran arus listrik!",
+        startIcon: "🤖", goalIcon: "🧲",
         steps: [
-          { id:"r4c2s1", emoji:"🪴", txt:"Menyiapkan pot berlubang bawah", note:"Lubang di bawah pot penting untuk drainase air." },
-          { id:"r4c2s2", emoji:"🪨", txt:"Menaruh kerikil di dasar pot", note:"Kerikil mencegah lubang air tersumbat tanah." },
-          { id:"r4c2s3", emoji:"🪵", txt:"Mengisi setengah pot dengan tanah", note:"Isi pot awal dengan media tanah subur/kompos." },
-          { id:"r4c2s4", emoji:"🌱", txt:"Meletakkan benih di tengah tanah", note:"Posisikan benih tepat di bagian tengah pot." },
-          { id:"r4c2s5", emoji:"🟤", txt:"Menutup benih tanah tipis", note:"Tutup benih dengan sedikit tanah agar terlindungi." },
-          { id:"r4c2s6", emoji:"💧", txt:"Menyiram air secukupnya", note:"Siram dengan sprayer air lembut agar tidak merusak benih." },
-          { id:"r4c2s7", emoji:"☀️", txt:"Menaruh pot di tempat teduh", note:"Letakkan di area hangat terhindar dari hujan deras." },
-          { id:"r4c2s8", emoji:"📅", txt:"Menyiram teratur setiap pagi", note:"Jaga kelembapan tanah setiap hari." },
-          { id:"r4c2s9", emoji:"🌿", txt:"Memberikan pupuk secara berkala", note:"Pupuk diberikan saat tunas mulai tumbuh meluas." },
-          { id:"r4c2s10", emoji:"🌸", txt:"Bunga tumbuh mekar dengan indah", note:"Tanaman tumbuh sehat dan menghasilkan bunga." }
+          { id:"r4c2s1", emoji:"🔩", txt:"Siapkan paku besi besar yang bersih", note:"Paku besi berfungsi sebagai inti bahan ferromagnetik." },
+          { id:"r4c2s2", emoji:"🧶", txt:"Siapkan kawat tembaga bersalut", note:"Kawat tembaga akan digunakan sebagai kumparan penghantar arus." },
+          { id:"r4c2s3", emoji:"🌀", txt:"Lilitkan kawat tembaga melingkari paku", note:"Lilitkan kawat secara rapat dan searah pada badan paku." },
+          { id:"r4c2s4", emoji:"📐", txt:"Sisakan kedua ujung kawat 10 cm", note:"Sisa ujung kawat berguna untuk dihubungkan ke sumber listrik." },
+          { id:"r4c2s5", emoji:"🪨", txt:"Amplas bagian ujung tembaga kawat", note:"Mengamplas bertujuan membuang lapisan isolator tipis kawat." },
+          { id:"r4c2s6", emoji:"🔋", txt:"Siapkan baterai ukuran besar 1.5V", note:"Baterai berfungsi sebagai penyedia arus listrik DC." },
+          { id:"r4c2s7", emoji:"➕", txt:"Tempel ujung kawat 1 ke kutub positif", note:"Hubungkan kawat pertama ke bagian atas baterai." },
+          { id:"r4c2s8", emoji:"➖", txt:"Tempel ujung kawat 2 ke kutub negatif", note:"Hubungkan kawat kedua ke bagian bawah baterai." },
+          { id:"r4c2s9", emoji:"📎", txt:"Dekatkan paku ke klip kertas besi", note:"Uji medan magnet yang terbentuk pada paku besi." },
+          { id:"r4c2s10", emoji:"🧲", txt:"Klip kertas menempel erat pada paku", note:"Arus listrik menghasilkan gaya magnet yang menarik klip besi." }
         ],
-        bugSwaps: [[1, 5]]
+        bugSwaps: [[6, 7]] // QA: Cuma 2 kartu tertukar
       }
     ],
 
@@ -992,51 +1034,51 @@
     [
       {
         tag: "RONDE 5 · KASUS 1 (12 STEP)",
-        title: "♻️ Pengolahan Sampah Organik & Anorganik",
-        mission: "Prosedur pengolahan limbah rumah tangga berdasarkan prinsip lingkungan.",
-        startIcon: "🤖", goalIcon: "🍃",
+        title: "🍂 Pembuatan Pupuk Kompos Organik",
+        mission: "Urutkan langkah ilmiah pembuatan pupuk kompos cair/padat dari sampah sisa sayuran!",
+        startIcon: "🤖", goalIcon: "🌱",
         steps: [
-          { id:"r5c1s1", emoji:"🔍", txt:"Mengenali jenis sampah terbuang", note:"Identifikasi material sampah yang terkumpul." },
-          { id:"r5c1s2", emoji:"📦", txt:"Memisahkan sampah organik & anorganik", note:"Pisahkan sisa makanan dengan plastik/kaleng." },
-          { id:"r5c1s3", emoji:"🍂", txt:"Cacah sampah organik kecil-kecil", note:"Sampah dedaunan/sisa buah dicacah agar cepat terurai." },
-          { id:"r5c1s4", emoji:"🗑️", txt:"Masukan organik ke wadah komposter", note:"Masukkan bahan organik ke dalam drum kompos." },
-          { id:"r5c1s5", emoji:"🧪", txt:"Tambahkan cairan em4/mikroba", note:"Cairan mikroba mempercepat proses pembusukan alami." },
-          { id:"r5c1s6", emoji:"🔒", txt:"Tutup komposter rapat-rapat", note:"Simpan dalam keadaan tertutup anaerobik selama 3 minggu." },
-          { id:"r5c1s7", emoji:"🧼", txt:"Cuci bersih sampah plastik anorganik", note:"Plastik/botol dibersihkan dari sisa kotoran." },
-          { id:"r5c1s8", emoji:"☀️", txt:"Keringkan botol plastik dijemur", note:"Keringkan wadah anorganik sebelum dipress." },
-          { id:"r5c1s9", emoji:"🗞️", txt:"Pipihkan & ikat botol plastik", note:"Ratakan botol agar tidak memakan ruang simpan." },
-          { id:"r5c1s10", emoji:"🚚", txt:"Kirim plastik ke Bank Sampah", note:"Setor sampah anorganik ke fasilitas daur ulang." },
-          { id:"r5c1s11", emoji:"🌱", txt:"Panen pupuk kompos organik matang", note:"Ambil hasil pupuk hitam gembur dari komposter." },
-          { id:"r5c1s12", emoji:"🌻", txt:"Gunakan kompos untuk menyuburkan tanah", note:"Kompos diaplikasikan ke tanaman kebun." }
+          { id:"r5c1s1", emoji:"🗑️", txt:"Mengumpulkan sampah sisa dapur/daun", note:"Kumpulkan bahan organik seperti daun gugur dan sisa sayuran." },
+          { id:"r5c1s2", emoji:"📦", txt:"Memisahkan dari plastik dan kaleng", note:"Pastikan bahan non-organik tidak ikut tercampur." },
+          { id:"r5c1s3", emoji:"✂️", txt:"Cacah daun & sayur hingga ukuran kecil", note:"Memotong bahan menjadi serpihan kecil mempercepat pembusukan." },
+          { id:"r5c1s4", emoji:"🪣", txt:"Siapkan tong komposter berlubang", note:"Wadah harus memiliki sirkulasi udara di bagian dasarnya." },
+          { id:"r5c1s5", emoji:"🪵", txt:"Masukan lapisan tanah subur di dasar tong", note:"Lapisan tanah mengandung mikroorganisme pengurai awal." },
+          { id:"r5c1s6", emoji:"🍂", txt:"Masukan cacahan sampah organik", note:"Ratakan cacahan sampah di atas lapisan tanah." },
+          { id:"r5c1s7", emoji:"🧪", txt:"Siram dengan larutan gula & EM4", note:"Larutan EM4 berisi bakteri baik pembercepat pembusukan." },
+          { id:"r5c1s8", emoji:"🟤", txt:"Tutup kembali dengan lapisan tanah", note:"Lapisan tanah atas mencegah bau menyengat dan lalat." },
+          { id:"r5c1s9", emoji:"🔒", txt:"Tutup tong komposter rapat-rapat", note:"Proses fermentasi anaerobik berlangsung dalam wadah tertutup." },
+          { id:"r5c1s10", emoji:"📅", txt:"Aduk adonan seminggu sekali", note:"Pengadukan menjaga kelembapan dan meratakan pembusukan." },
+          { id:"r5c1s11", emoji:"⏳", txt:"Tunggu pembusukan selama 4 minggu", note:"Kompos matang ditandai warna hitam seperti tanah dan tidak berbau." },
+          { id:"r5c1s12", emoji:"🌻", txt:"Sebarkan kompos ke tanaman di kebun", note:"Pupuk kompos kaya zat hara siap menyuburkan tanaman." }
         ],
-        bugSwaps: [[2, 7]]
+        bugSwaps: [[0, 1]] // QA: Cuma 2 kartu tertukar
       },
       {
         tag: "RONDE 5 · KASUS 2 (12 STEP)",
-        title: "📜 Siklus Daur Ulang Kertas Bekas",
-        mission: "Prosedur eksperimen ilmiah daur ulang kertas menjadi lembaran baru.",
-        startIcon: "🤖", goalIcon: "📄",
+        title: "📄 Daur Ulang Kertas Bekas Sekolah",
+        mission: "Eksperimen membuat lembaran kertas daur ulang baru dari koran/kertas bekas.",
+        startIcon: "🤖", goalIcon: "📜",
         steps: [
-          { id:"r5c2s1", emoji:"🗑️", txt:"Mengumpulkan kertas bekas tidak terpakai", note:"Kumpulkan koran/kertas HVS bekas tanpa plastik." },
-          { id:"r5c2s2", emoji:"✂️", txt:"Mencopot staples & selotip", note:"Pastikan kertas bebas dari logam staples." },
-          { id:"r5c2s3", emoji:"📰", txt:"Mebocorkan kertas menjadi potongan kecil", note:"Robek kertas menjadi serpihan berukuran 1-2 cm." },
-          { id:"r5c2s4", emoji:"🪣", txt:"Meredam rendaman kertas air hangat", note:"Rendam serpihan kertas di dalam ember air selama 24 jam." },
-          { id:"r5c2s5", emoji:"🌀", txt:"Blender kertas hingga jadi bubur (pulp)", note:"Haluskan kertas basah menggunakan blender." },
-          { id:"r5c2s6", emoji:"🎨", txt:"Campurkan pewarna alami pada bubuk", note:"Tambahkan sedikit pewarna makanan jika diinginkan." },
-          { id:"r5c2s7", emoji:"🖼️", txt:"Mencelupkan kain kasa cetakan (kasa)", note:"Masukan bingkai kasa ke dalam bak bubur kertas." },
-          { id:"r5c2s8", emoji:"📐", txt:"Merapikan ratakan lembaran bubur", note:"Angkat bingkai kasa secara mendatar perlahan." },
-          { id:"r5c2s9", emoji:"🧽", txt:"Tekan spon untuk menyerap air", note:"Gunakan spons bersih untuk menyerap sisa air cetakan." },
-          { id:"r5c2s10", emoji:"👕", txt:"Balikkan lembaran kertas ke kain", note:"Pindahkan lembaran basah ke atas kain papan pelapis." },
-          { id:"r5c2s11", emoji:"☀️", txt:"Jemur lembaran kertas di matahari", note:"Keringkan lembaran di tempat berangin hingga kaku." },
-          { id:"r5c2s12", emoji:"📄", txt:"Lepaskan kertas daur ulang siap pakai", note:"Kertas daur ulang baru siap ditulis atau dbuat kerajinan." }
+          { id:"r5c2s1", emoji:"📰", txt:"Kumpulkan kertas/koran bekas tidak terpakai", note:"Gunakan kertas bekas tulis yang tidak berlapis plastik." },
+          { id:"r5c2s2", emoji:"✂️", txt:"Cabut kawat staples dari kertas", note:"Pastikan kertas bersih dari isolat tembaga atau klip." },
+          { id:"r5c2s3", emoji:"🖐️", txt:"Sobek kertas menjadi potongan kecil 1 cm", note:"Menyobek kertas mempermudah penyerapan air." },
+          { id:"r5c2s4", emoji:"🪣", txt:"Rendam sobekan kertas di ember air 24 jam", note:"Perendaman melunakkan serat-serat kayu pada kertas." },
+          { id:"r5c2s5", emoji:"🌀", txt:"Blender kertas basah hingga menjadi bubur", note:"Haluskan rendaman kertas menggunakan blender menjadi bubur (pulp)." },
+          { id:"r5c2s6", emoji:"🎨", txt:"Tuang bubur kertas ke bak berisi air & pewarna", note:"Campurkan bubur kertas dalam bak air yang diberi pewarna makanan." },
+          { id:"r5c2s7", emoji:"🖼️", txt:"Masukkan bingkai skrin kasa ke dasar bak", note:"Gunakan bingkai cetakan kasa kain untuk menyaring." },
+          { id:"r5c2s8", emoji:"📐", txt:"Angkat bingkai kasa secara mendatar perlahan", note:"Ratakan adonan bubur kertas di atas jaring kasa." },
+          { id:"r5c2s9", emoji:"🧽", txt:"Tekan spons untuk menyerap sisa air", note:"Spons menyerap kelebihan air agar adonan kertas memadat." },
+          { id:"r5c2s10", emoji:"👕", txt:"Balikkan lembaran kertas ke atas kain papan", note:"Pindahkan cetakan kertas basah ke papan pengering." },
+          { id:"r5c2s11", emoji:"☀️", txt:"Jemur lembaran kertas di bawah matahari", note:"Keringkan lembaran di tempat berangin hingga kaku." },
+          { id:"r5c2s12", emoji:"📄", txt:"Lepaskan kertas daur ulang baru siap pakai", note:"Kertas baru siap digunakan untuk menulis atau melukis." }
         ],
-        bugSwaps: [[3, 8]]
+        bugSwaps: [[10, 11]] // QA: Cuma 2 kartu tertukar
       }
     ]
   ];
 
   /* ============================================================
-     3. STATE GAME, TIMER & SKOR
+     3. STATE GAME & TIMER REALTIME
      ============================================================ */
   let roundIndex = 0;
   let caseInRoundIndex = 0;
@@ -1048,7 +1090,6 @@
   let justDragged = false;
   let checked = false;
 
-  let totalScore = 0;
   let timerInterval = null;
   let timeLeft = 120;
 
@@ -1061,12 +1102,18 @@
   function startRoundTimer() {
     stopRoundTimer();
     timeLeft = 120;
+    
+    // Mulai timestamp pengerjaan ronde jika baru masuk Soal 1
+    if (caseInRoundIndex === 0) {
+      roundStartTime = Date.now();
+    }
+
     updateTimerDisplay();
 
     timerInterval = setInterval(() => {
       timeLeft--;
       updateTimerDisplay();
-      sendToFirebase("Bermain");
+      sendToFirebase("Bermain"); // ✨ KIRIM WAKTU AKUMULASI SECARA LIVE KE FIREBASE
 
       if (timeLeft <= 30) {
         timerBox.classList.add('warning');
@@ -1076,6 +1123,9 @@
 
       if (timeLeft <= 0) {
         stopRoundTimer();
+        // Simpan sisa waktu pengerjaan ronde walau waktu habis
+        totalTimeSpent += Math.floor((Date.now() - roundStartTime) / 1000);
+        roundStartTime = 0;
         sendToFirebase("Waktu Habis");
         alert(`⏰ Waktu untuk Ronde ${roundIndex + 1} telah habis! Kembali ke Dashboard.`);
         openDashboardOverlay();
@@ -1256,7 +1306,7 @@
   }
 
   /* ============================================================
-     4. CHECK ANSWER & SKOR
+     4. CHECK ANSWER & PERHITUNGAN SKOR (2 SOAL = 100 PTS)
      ============================================================ */
   document.getElementById('btnCheck').addEventListener('click', checkAnswer);
 
@@ -1294,6 +1344,7 @@
     document.getElementById('statBugs').textContent = wrongIndexes.length;
 
     if (wrongIndexes.length === 0) {
+      // 1 Soal = Max 50 Pts (2 Soal / 1 Ronde = Max 100 Pts)
       let timeBonus = Math.floor((timeLeft / 120) * 25);
       let accuracyScore = Math.max(5, 25 - ((attempts - 1) * 5));
       
@@ -1310,6 +1361,12 @@
       const isLastCaseInRound = caseInRoundIndex === ROUNDS[roundIndex].length - 1;
       if (isLastCaseInRound) {
         stopRoundTimer();
+        
+        // ACCUMULATE FINISHED ROUND DURATION
+        let roundTimeUsed = Math.floor((Date.now() - roundStartTime) / 1000);
+        totalTimeSpent += roundTimeUsed;
+        roundStartTime = 0; // Reset penanda ronde baru
+
         sendToFirebase("Ronde " + (roundIndex + 1) + " Selesai");
       } else {
         sendToFirebase("Kasus " + (caseInRoundIndex + 1) + " Selesai");
@@ -1351,30 +1408,6 @@
     feedbackEl.innerHTML = "";
     feedbackEl.appendChild(box);
   }
-
-  document.getElementById('btnHint').addEventListener('click', () => {
-    const kasus = currentKasus();
-    const wrongPositions = currentOrder
-      .map((id, i) => id === kasus.correctOrder[i] ? null : i + 1)
-      .filter(x => x !== null);
-
-    feedbackEl.hidden = false;
-    const box = document.createElement('div');
-    box.className = 'feedback-box';
-    box.innerHTML = `<div class="feedback-head">💡 Petunjuk</div>`;
-    const p = document.createElement('p');
-    p.style.cssText = "margin:0; font-size:13.5px; color:#7a4237;";
-    if (wrongPositions.length === 0 && checked) {
-      p.textContent = "Semua instruksi sudah berada di tempat yang benar. Coba klik Periksa Urutan!";
-    } else if (wrongPositions.length === 0) {
-      p.textContent = "Coba klik dulu tombol Periksa Urutan untuk melihat apakah ada bug.";
-    } else {
-      p.textContent = `Coba perhatikan baik-baik kartu nomor ${wrongPositions.join(" dan ")}. Apakah urutannya masuk akal?`;
-    }
-    box.appendChild(p);
-    feedbackEl.innerHTML = "";
-    feedbackEl.appendChild(box);
-  });
 
   document.getElementById('btnReset').addEventListener('click', () => {
     const kasus = currentKasus();
@@ -1563,10 +1596,11 @@
     if(confirm(`Apakah Anda yakin ingin MERESET skor ${namaInput} kembali menjadi 0?`)) {
       localStorage.removeItem('score_' + namaInput);
       totalScore = 0;
+      totalTimeSpent = 0;
+      roundStartTime = 0;
       document.getElementById('scoreDisplay').textContent = "⭐ 0 Pts";
       document.getElementById("tempScoreValue").textContent = "0 Pts";
       
-      /* SYNC RESET KE FIREBASE SEKETIKA */
       sendToFirebase("Mereset Skor"); 
       
       alert(`Skor untuk ${namaInput} telah di-reset ke 0.`);
@@ -1588,6 +1622,8 @@
 
     if (selectedRound === 0) {
       totalScore = 0;
+      totalTimeSpent = 0; // Reset akumulasi jika main dari Ronde 1
+      roundStartTime = 0;
       localStorage.setItem('score_' + groupName, 0);
     } else {
       const savedScore = localStorage.getItem('score_' + groupName);

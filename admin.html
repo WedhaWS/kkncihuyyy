@@ -30,8 +30,7 @@
 
   *{box-sizing:border-box;}
   body {
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
     font-family: 'Quicksand', sans-serif;
     background: 
       linear-gradient(rgba(255, 248, 234, 0.92), rgba(255, 248, 234, 0.92)),
@@ -40,44 +39,28 @@
     min-height: 100vh;
   }
 
-  /* ============================================================
-     HEADER ADMIN
-     ============================================================ */
+  /* HEADER ADMIN */
   .admin-header {
     width: 100%;
     background: linear-gradient(135deg, var(--navy), var(--navy-2));
-    color: #fff;
-    padding: 14px 28px;
-    box-shadow: var(--shadow);
-    border-bottom: 4px solid var(--amber);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 16px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    color: #fff; padding: 14px 28px; box-shadow: var(--shadow);
+    border-bottom: 4px solid var(--amber); display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 16px; position: sticky; top: 0; z-index: 100;
   }
 
   .admin-brand { display: flex; align-items: center; gap: 14px; }
-
   .admin-logo-box {
-    display: flex; align-items: center; gap: 10px;
-    background: rgba(255, 255, 255, 0.1); padding: 6px 12px;
-    border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.1);
+    padding: 6px 12px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.2);
   }
-
   .admin-logo-img { height: 36px; width: auto; object-fit: contain; }
 
   .admin-title h1 {
     font-family: 'Baloo 2', sans-serif; font-size: 20px; font-weight: 800;
     margin: 0; line-height: 1.1; color: #fff; display: flex; align-items: center; gap: 8px;
   }
-
   .admin-title span { font-size: 11.5px; color: #D9D6C8; font-weight: 600; }
 
-  /* TAB NAVIGASI HEADER */
   .header-nav {
     display: flex; gap: 8px; background: rgba(0, 0, 0, 0.25);
     padding: 5px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.15);
@@ -89,7 +72,6 @@
     padding: 8px 18px; border-radius: 10px; cursor: pointer;
     transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;
   }
-
   .nav-tab-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
   .nav-tab-btn.active { background: var(--amber); color: var(--navy); box-shadow: 0 4px 10px rgba(245,166,35,0.3); }
 
@@ -112,9 +94,7 @@
   }
   .btn-header-logout:hover { background: var(--amber); color: var(--navy); }
 
-  /* ============================================================
-     CONTAINER PANEL
-     ============================================================ */
+  /* CONTAINER PANEL */
   .main-container { max-width: 1050px; margin: 28px auto; padding: 0 16px; }
 
   .card-panel {
@@ -127,31 +107,15 @@
     margin-bottom: 24px; border-bottom: 2px dashed var(--line);
     padding-bottom: 16px; flex-wrap: wrap; gap: 10px;
   }
-  .panel-header h2 {
-    font-family: 'Baloo 2', sans-serif; margin: 0; font-size: 24px; color: var(--navy);
-  }
+  .panel-header h2 { font-family: 'Baloo 2', sans-serif; margin: 0; font-size: 24px; color: var(--navy); }
 
-  /* ============================================================
-     1. TAB BAR CHART (EFEK NAIK/TURUN)
-     ============================================================ */
-  .leaderboard-list {
-    position: relative; 
-    transition: height 0.4s ease;
-    min-height: 100px;
-  }
+  /* TAB BAR CHART */
+  .leaderboard-list { position: relative; transition: height 0.4s ease; min-height: 100px; }
 
   .group-row {
-    background: #fff;
-    border: 2px solid var(--line);
-    border-radius: 18px;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-    position: absolute;
-    left: 0; right: 0;
-    height: 76px;
+    background: #fff; border: 2px solid var(--line); border-radius: 18px; padding: 0 20px;
+    display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    position: absolute; left: 0; right: 0; height: 76px;
     transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
   }
 
@@ -159,7 +123,6 @@
     width: 38px; height: 38px; border-radius: 50%; background: var(--navy);
     color: #fff; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 16px;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    transition: background 0.3s ease, border 0.3s ease;
   }
 
   .rank-1 .rank-badge { background: var(--amber); color: var(--navy); border: 2px solid var(--amber-dark); font-size: 18px; }
@@ -170,33 +133,14 @@
   .group-name { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 17px; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .group-status-badge { font-size: 11.5px; color: #7a7060; font-weight: 600; }
 
-  .bar-wrapper {
-    flex: 1; background: #F1EFE4; height: 26px; border-radius: 999px;
-    overflow: hidden; border: 1px solid var(--line);
-  }
-  .bar-fill {
-    height: 100%; width: 0%; background: linear-gradient(90deg, var(--navy-2), var(--navy));
-    border-radius: 999px; transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.4s ease;
-  }
+  .bar-wrapper { flex: 1; background: #F1EFE4; height: 26px; border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+  .bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--navy-2), var(--navy)); border-radius: 999px; transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
   .rank-1 .bar-fill { background: linear-gradient(90deg, var(--amber), var(--amber-dark)); }
 
-  .score-text {
-    font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 20px; color: var(--navy);
-    width: 90px; text-align: right; flex-shrink: 0; transition: transform 0.2s ease, color 0.2s;
-  }
-
-  .score-bump { animation: bump 0.5s ease-out forwards; }
-  @keyframes bump {
-    0% { transform: scale(1); }
-    40% { transform: scale(1.25) translateY(-2px); color: var(--mint-dark); }
-    100% { transform: scale(1); color: var(--navy); }
-  }
-
+  .score-text { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 20px; color: var(--navy); width: 90px; text-align: right; flex-shrink: 0; }
   .empty-state { text-align: center; padding: 40px 20px; color: #8a7f68; font-weight: 700; }
 
-  /* ============================================================
-     2. TAB DETAIL PERMAINAN (TABEL GAYA ASLI)
-     ============================================================ */
+  /* TAB DETAIL PERMAINAN */
   .table-responsive { width: 100%; overflow-x: auto; }
   .detail-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); }
   .detail-table th { background: var(--navy); color: #fff; font-family: 'Baloo 2', sans-serif; font-size: 15px; font-weight: 700; padding: 14px 16px; text-align: left; }
@@ -251,11 +195,11 @@
       <div class="leaderboard-list" id="leaderboardList"></div>
     </div>
 
-    <!-- TAB 2: DETAIL PERMAINAN (MENGGUNAKAN STRUKTUR DOKUMEN/TABEL ASLI) -->
+    <!-- TAB 2: DETAIL PERMAINAN -->
     <div class="card-panel" id="panelDetail" style="display: none;">
       <div class="panel-header">
         <h2>📋 Rincian Permainan Live</h2>
-        <span style="font-size: 13px; color: #8a7f68; font-weight: 600;">Pantau sisa menit/detik dari layar pemain secara akurat</span>
+        <span style="font-size: 13px; color: #8a7f68; font-weight: 600;">Pantau durasi pengerjaan kumulatif dan status pengerjaan secara akurat</span>
       </div>
       <div class="table-responsive">
         <table class="detail-table">
@@ -265,7 +209,7 @@
               <th>Nama Kelompok</th>
               <th>Ronde</th>
               <th>Soal</th>
-              <th>Sisa Waktu</th>
+              <th>Total Waktu (Ronde 1 - 5)</th>
               <th>Total Skor</th>
               <th>Status</th>
               <th>Update Terakhir</th>
@@ -280,7 +224,7 @@
 
 <script>
   /* ============================================================
-     1. KONFIGURASI FIREBASE
+     1. FIREBASE CONFIG
      ============================================================ */
   const firebaseConfig = {
     apiKey: "AIzaSy...",
@@ -298,7 +242,7 @@
   const GAP_HEIGHT = 16; 
 
   /* ============================================================
-     2. SYNC REALTIME FIREBASE (MENGGUNAKAN STRUKTUR DATA ASLI)
+     2. SYNC REALTIME FIREBASE
      ============================================================ */
   database.ref('game_scores').on('value', (snapshot) => {
     const data = snapshot.val();
@@ -308,7 +252,6 @@
       list = Object.values(data);
     }
 
-    // Urutkan berdasarkan Skor Tertinggi (Support properti `item.score` atau `item.totalScore`)
     list.sort((a, b) => {
       const scoreA = (a.score !== undefined) ? a.score : (a.totalScore || 0);
       const scoreB = (b.score !== undefined) ? b.score : (b.totalScore || 0);
@@ -320,7 +263,7 @@
   });
 
   /* ============================================================
-     3. RENDER TABEL DETAIL (100% STRUKTUR DATA DOKUMEN ASLI)
+     3. RENDER TABEL DETAIL (MENAMPILKAN TOTAL WAKTU KUMULATIF)
      ============================================================ */
   function renderTable(list) {
     const tbody = document.getElementById('tbody');
@@ -331,14 +274,14 @@
     }
 
     tbody.innerHTML = list.map((item, idx) => {
-      // Mendukung kunci data asli (item.score, item.question, item.caseNumber)
       const currentScore = (item.score !== undefined) ? item.score : (item.totalScore || 0);
       const questionNum = (item.question !== undefined) ? item.question : (item.caseNumber || 1);
-      const timeLeft = item.timeLeft || 0;
 
-      const min = Math.floor(timeLeft / 60);
-      const sec = timeLeft % 60;
-      const formattedTime = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+      /* FORMAT TOTAL WAKTU AKUMULASI KUMULATIF (MM:SS) */
+      const totalSec = item.totalTimeSpent || 0;
+      const totalMin = Math.floor(totalSec / 60);
+      const totalRemainSec = totalSec % 60;
+      const formattedTotalDuration = `${totalMin < 10 ? '0' : ''}${totalMin}:${totalRemainSec < 10 ? '0' : ''}${totalRemainSec}`;
 
       return `
         <tr>
@@ -346,7 +289,7 @@
           <td style="font-weight:bold; font-size:16px; color:var(--navy);">${item.groupName}</td>
           <td>Ronde ${item.round || 1}</td>
           <td>Soal ${questionNum}</td>
-          <td style="font-family:monospace; font-weight:800; color:var(--amber-dark);">${formattedTime}</td>
+          <td style="font-family:monospace; font-weight:800; color:#F5A623; font-size:15px;">⏱️ ${formattedTotalDuration}</td>
           <td class="score">${currentScore} Pts</td>
           <td><span class="status">${item.status || 'Bermain'}</span></td>
           <td style="color:#7a7060; font-size:12px;">${item.lastUpdate || '-'}</td>
@@ -356,7 +299,7 @@
   }
 
   /* ============================================================
-     4. RENDER ANIMASI BAR CHART (SLIDING POSISI)
+     4. RENDER ANIMASI BAR CHART
      ============================================================ */
   function renderChart(list) {
     const leaderboardList = document.getElementById('leaderboardList');
@@ -421,13 +364,7 @@
       row.querySelector('.bar-fill').style.width = `${percentage}%`;
 
       const scoreEl = row.querySelector('.score-text');
-      const currentScoreText = `${currentScore} Pts`;
-      if (scoreEl.textContent !== currentScoreText && scoreEl.textContent !== '') {
-         scoreEl.classList.remove('score-bump');
-         void scoreEl.offsetWidth;
-         scoreEl.classList.add('score-bump');
-      }
-      scoreEl.textContent = currentScoreText;
+      scoreEl.textContent = `${currentScore} Pts`;
     });
   }
 
