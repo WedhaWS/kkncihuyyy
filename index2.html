@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Kontrol Admin — Detektif Kode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+<!-- Firebase SDK Compat -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<style>
+  :root{
+    --navy:#1E2A47;
+    --navy-2:#2C3D66;
+    --cream:#FFF8EA;
+    --paper:#FFFDF8;
+    --amber:#F5A623;
+    --amber-dark:#D6860C;
+    --coral:#E8543E;
+    --coral-dark:#C13F2C;
+    --mint:#3FB68B;
+    --mint-dark:#2C8F6B;
+    --ink:#26241E;
+    --line:#E6D8B8;
+    --shadow: 0 10px 24px rgba(30,42,71,0.18);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 8% 12%, rgba(245,166,35,0.14), transparent 40%),
+      radial-gradient(circle at 92% 88%, rgba(63,182,139,0.14), transparent 40%),
+      var(--cream);
+    font-family:'Quicksand', sans-serif;
+    color:var(--ink);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:18px 16px 40px;
+  }
+
+  h1,h2,h3,.display{font-family:'Baloo 2', sans-serif;}
+
+  button{font-family:inherit; cursor:pointer;}
+  button:focus-visible, [tabindex]:focus-visible{
+    outline:3px solid var(--navy);
+    outline-offset:3px;
+  }
+
+  /* ---------- HEADER ADMIN SAMAKAN DENGAN STYLE TOPBAR ---------- */
+  .admin-header {
+    width: 100%;
+    max-width: 1100px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-2));
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    border: 3px solid var(--amber);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  .admin-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .admin-logo-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .admin-logo-img {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .admin-title h1 {
+    font-size: 20px;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.1;
+    color: #fff;
+  }
+
+  .admin-title span {
+    font-size: 11.5px;
+    color: #D9D6C8;
+    font-weight: 600;
+  }
+
+  /* NAVIGASI MENU TAB DI HEADER */
+  .header-nav {
+    display: flex;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 5px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .nav-tab-btn {
+    background: transparent;
+    border: none;
+    color: #D9D6C8;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 7px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-tab-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-tab-btn.active {
+    background: var(--amber);
+    color: var(--navy);
+    box-shadow: 0 4px 10px rgba(245,166,35,0.3);
+  }
+
+  .admin-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .live-status {
+    background: rgba(63, 182, 139, 0.18);
+    border: 1.5px solid var(--mint);
+    color: #BFE9D6;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--mint);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--mint);
+    animation: blink 1.5s infinite alternate;
+  }
+
+  @keyframes blink {
+    from { opacity: 0.4; }
+    to { opacity: 1; }
+  }
+
+  .btn-header-logout {
+    background: var(--paper);
+    color: var(--navy);
+    border: 2px solid var(--amber);
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-header-logout:hover {
+    background: var(--amber);
+    color: var(--navy);
+    transform: translateY(-2px);
+  }
+
+  /* ---------- MAIN CONTAINER PANEL ---------- */
+  .main-container {
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  .card-panel {
+    background: var(--paper);
+    border: 2px solid var(--line);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+    border-bottom: 2px dashed var(--line);
+    padding-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .panel-header h2 {
+    margin: 0;
+    font-size: 22px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* ---------- 1. TAB BAR CHART STYLES ---------- */
+  .leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+  }
+
+  .group-row {
+    background: #fff;
+    border: 2.5px solid var(--line);
+    border-radius: 18px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 0 var(--line), 0 6px 14px rgba(30,42,71,0.06);
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .rank-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: #fff;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .rank-1 .rank-badge { background: var(--amber); color: var(--navy); border: 2px solid var(--amber-dark); font-size: 18px; }
+  .rank-2 .rank-badge { background: #C0C0C0; color: #333; }
+  .rank-3 .rank-badge { background: #CD7F32; color: #fff; }
+
+  .group-info {
+    width: 170px;
+    flex-shrink: 0;
+  }
+
+  .group-name {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: 16.5px;
+    color: var(--navy);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .group-status-badge {
+    font-size: 11.5px;
+    color: #7a7060;
+    font-weight: 600;
+  }
+
+  .bar-wrapper {
+    flex: 1;
+    background: #F1EFE4;
+    height: 24px;
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+
+  .bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--navy-2), var(--navy));
+    border-radius: 999px;
+    transition: width 0.8s ease-in-out;
+  }
+
+  .rank-1 .bar-fill {
+    background: linear-gradient(90deg, var(--amber), var(--amber-dark));
+  }
+
+  .score-text {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: 19px;
+    color: var(--navy);
+    width: 85px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* ---------- 2. TAB DETAIL TABEL STYLES ---------- */
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 2px solid var(--line);
+  }
+
+  .detail-table th {
+    background: var(--navy);
+    color: #fff;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 14.5px;
+    font-weight: 700;
+    padding: 12px 14px;
+    text-align: left;
+  }
+
+  .detail-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    font-size: 13.5px;
+  }
+
+  .detail-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .status-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    background: #E8F5E9;
+    color: var(--mint-dark);
+    border: 1px solid var(--mint);
+  }
+
+  footer{
+    margin-top:30px;
+    font-size:12px;
+    color:#6b7280;
+    text-align:center;
+    max-width:600px;
+    line-height:1.6;
+    background: rgba(255, 255, 255, 0.75);
+    padding: 8px 16px;
+    border-radius: 12px;
+  }
+
+  @media (max-width: 768px) {
+    .admin-header { flex-direction: column; align-items: stretch; text-align: center; }
+    .admin-brand { justify-content: center; }
+    .header-nav { justify-content: center; }
+    .admin-actions { justify-content: center; }
+    .group-info { width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- HEADER CONTROL PANEL ADMIN -->
+  <header class="admin-header">
+    <div class="admin-brand">
+      <div class="admin-logo-box">
+        <img src="asset/Logo Branding UNAIR (Biru).png" alt="Logo UNAIR" class="admin-logo-img">
+        <img src="asset/logobbk.jpeg" alt="Maskot GaruDA" class="admin-logo-img">
+      </div>
+
+      <div class="admin-title">
+        <h1>Panel Admin</h1>
+        <span>Detektif Kode · KKN SDN Caruban 1</span>
+      </div>
+    </div>
+
+    <!-- MENU TAB TAMPILAN -->
+    <nav class="header-nav">
+      <button class="nav-tab-btn active" id="tabBtnChart" onclick="switchTab('chart')">
+        📊 Bar Chart Skor
+      </button>
+      <button class="nav-tab-btn" id="tabBtnDetail" onclick="switchTab('detail')">
+        📋 Detail Permainan
+      </button>
+    </nav>
+
+    <div class="admin-actions">
+      <div class="live-status">
+        <span class="status-dot"></span>
+        <span>Realtime Live</span>
+      </div>
+
+      <a href="index.html" class="btn-header-logout">
+        🏠 Ke Game
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="main-container">
+
+    <!-- TAB 1: BAR CHART SKOR -->
+    <div class="card-panel" id="panelChart">
+      <div class="panel-header">
+        <h2>📊 Grafik Skor & Peringkat Kelompok</h2>
+        <span style="font-size: 13px; color: #8a7f68; font-weight: 600;">
+          Posisi dan panjang bar beranimasi naik-turun saat poin saling mengejar
+        </span>
+      </div>
+
+      <div class="leaderboard-list" id="leaderboardList">
+        <!-- RENDER DENGAN JAVASCRIPT -->
+      </div>
+    </div>
+
+    <!-- TAB 2: DETAIL PERMAINAN TABEL -->
+    <div class="card-panel" id="panelDetail" style="display: none;">
+      <div class="panel-header">
+        <h2>📋 Rincian Detail Permainan Kelompok</h2>
+        <span style="font-size: 13px; color: #8a7f68; font-weight: 600;">
+          Pantau ronde, kasus, sisa waktu, dan total durasi pengerjaan kumulatif
+        </span>
+      </div>
+
+      <div class="table-responsive">
+        <table class="detail-table">
+          <thead>
+            <tr>
+              <th style="text-align:center;">Peringkat</th>
+              <th>Nama Kelompok</th>
+              <th>Ronde</th>
+              <th>Soal / Kasus</th>
+              <th>Sisa Waktu</th>
+              <th>Total Waktu Main</th>
+              <th>Total Skor</th>
+              <th>Status</th>
+              <th>Update Terakhir</th>
+            </tr>
+          </thead>
+          <tbody id="detailTableBody">
+            <!-- RENDER DENGAN JAVASCRIPT -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    Dibuat untuk kegiatan KKN Universitas Airlangga — Debugging Game: Code Detective · SDN Caruban 1<br>
+    Panel Kontrol Admin Real-Time.
+  </footer>
+
+<script>
+  /* ============================================================
+     1. FIREBASE CONFIG REALTIME DATABASE
+     ============================================================ */
+  const firebaseConfig = {
+    apiKey: "AIzaSy...",
+    authDomain: "kkncihuyyy.firebaseapp.com",
+    databaseURL: "https://kkncihuyyy-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "kkncihuyyy",
+    storageBucket: "kkncihuyyy.appspot.com",
+    messagingSenderId: "123456789...",
+    appId: "1:123456789...:web:abcde..."
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+
+  /* DATA DEFAULT 4 KELOMPOK AWAL */
+  let groupsData = {
+    "Kelompok_1": { groupName: "Kelompok 1", totalScore: 0, round: 1, caseNumber: 1, timeLeft: 120, totalTimeSpent: 0, status: "Menunggu", lastUpdate: "-" },
+    "Kelompok_2": { groupName: "Kelompok 2", totalScore: 0, round: 1, caseNumber: 1, timeLeft: 120, totalTimeSpent: 0, status: "Menunggu", lastUpdate: "-" },
+    "Kelompok_3": { groupName: "Kelompok 3", totalScore: 0, round: 1, caseNumber: 1, timeLeft: 120, totalTimeSpent: 0, status: "Menunggu", lastUpdate: "-" },
+    "Kelompok_4": { groupName: "Kelompok 4", totalScore: 0, round: 1, caseNumber: 1, timeLeft: 120, totalTimeSpent: 0, status: "Menunggu", lastUpdate: "-" }
+  };
+
+  /* ============================================================
+     2. SYNC REALTIME FIREBASE
+     ============================================================ */
+  database.ref('game_scores').on('value', (snapshot) => {
+    const firebaseVal = snapshot.val();
+    if (firebaseVal) {
+      Object.keys(firebaseVal).forEach(key => {
+        groupsData[key] = firebaseVal[key];
+      });
+    }
+    renderAllViews();
+  });
+
+  /* ============================================================
+     3. RENDER TAMPILAN CHART & TABEL
+     ============================================================ */
+  function renderAllViews() {
+    let sortedGroups = Object.values(groupsData).sort((a, b) => (b.totalScore || 0) - (a.totalScore || 0));
+
+    // --- TAB 1: BAR CHART (TOP 4) ---
+    const top4Groups = sortedGroups.slice(0, 4);
+    const maxScore = Math.max(...top4Groups.map(g => g.totalScore || 0), 100);
+    const leaderboardList = document.getElementById('leaderboardList');
+    leaderboardList.innerHTML = "";
+
+    top4Groups.forEach((group, index) => {
+      const rank = index + 1;
+      const score = group.totalScore || 0;
+      const percentage = Math.min(100, Math.max(8, (score / maxScore) * 100));
+
+      const row = document.createElement('div');
+      row.className = `group-row rank-${rank}`;
+      row.innerHTML = `
+        <div class="rank-badge">${rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank}</div>
+        <div class="group-info">
+          <div class="group-name" title="${group.groupName}">${group.groupName}</div>
+          <div class="group-status-badge">Ronde ${group.round || 1} · Kasus ${group.caseNumber || 1}</div>
+        </div>
+        <div class="bar-wrapper">
+          <div class="bar-fill" style="width: ${percentage}%;"></div>
+        </div>
+        <div class="score-text">${score} Pts</div>
+      `;
+      leaderboardList.appendChild(row);
+    });
+
+    // --- TAB 2: DETAIL TABEL ---
+    const tbody = document.getElementById('detailTableBody');
+    tbody.innerHTML = sortedGroups.map((item, idx) => {
+      // Sisa Waktu Ronde Saat Ini
+      const minLeft = Math.floor((item.timeLeft || 0) / 60);
+      const secLeft = (item.timeLeft || 0) % 60;
+      const formattedTimeLeft = `${minLeft}:${secLeft < 10 ? '0' : ''}${secLeft}`;
+
+      // Akumulasi Total Durasi Bermain Kumulatif
+      const totalSec = item.totalTimeSpent || 0;
+      const minSpent = Math.floor(totalSec / 60);
+      const secSpent = totalSec % 60;
+      const formattedTimeSpent = `${minSpent}m ${secSpent < 10 ? '0' : ''}${secSpent}s`;
+
+      return `
+        <tr>
+          <td style="font-weight: bold; text-align: center;">#${idx + 1}</td>
+          <td style="font-weight: bold; font-size: 15px; color: var(--navy);">${item.groupName}</td>
+          <td>Ronde ${item.round || 1}</td>
+          <td>Kasus ${item.caseNumber || 1}</td>
+          <td style="font-family: monospace; font-size: 14px; font-weight: 700; color: var(--amber-dark);">${formattedTimeLeft}</td>
+          <td style="font-family: monospace; font-size: 13px; font-weight: 600; color: #5a5346;">⏱️ ${formattedTimeSpent}</td>
+          <td style="font-weight: 800; font-size: 15px; color: var(--navy);">${item.totalScore || 0} Pts</td>
+          <td><span class="status-pill">${item.status || 'Bermain'}</span></td>
+          <td style="color: #7a7060; font-size: 12px;">${item.lastUpdate || '-'}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  /* ============================================================
+     4. LOGIKA SWITCHING TAB MENU
+     ============================================================ */
+  function switchTab(tabName) {
+    const panelChart = document.getElementById('panelChart');
+    const panelDetail = document.getElementById('panelDetail');
+    const btnChart = document.getElementById('tabBtnChart');
+    const btnDetail = document.getElementById('tabBtnDetail');
+
+    if (tabName === 'chart') {
+      panelChart.style.display = 'block';
+      panelDetail.style.display = 'none';
+      btnChart.classList.add('active');
+      btnDetail.classList.remove('active');
+    } else {
+      panelChart.style.display = 'none';
+      panelDetail.style.display = 'block';
+      btnDetail.classList.add('active');
+      btnChart.classList.remove('active');
+    }
+  }
+
+  // Initial Render
+  renderAllViews();
+</script>
+</body>
+</html>
