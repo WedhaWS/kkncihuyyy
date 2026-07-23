@@ -138,13 +138,13 @@
   .rank-1 .bar-fill { background: linear-gradient(90deg, var(--amber), var(--amber-dark)); }
 
   .score-text { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 20px; color: var(--navy); width: 90px; text-align: right; flex-shrink: 0; }
-  .empty-state { text-align: center; padding: 40px 20px; color: var(--ink); font-weight: 700; }
+  .empty-state { text-align: center; padding: 40px 20px; color: #8a7f68; font-weight: 700; }
 
   /* TAB DETAIL PERMAINAN */
   .table-responsive { width: 100%; overflow-x: auto; }
   .detail-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); }
   .detail-table th { background: var(--navy); color: #fff; font-family: 'Baloo 2', sans-serif; font-size: 15px; font-weight: 700; padding: 14px 16px; text-align: left; }
-  .detail-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: 14px; transition: background 0.3s; color: var(--ink); }
+  .detail-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: 14px; transition: background 0.3s; }
   .detail-table tr:hover td { background: #FDFDF8; }
   .detail-table tr:last-child td { border-bottom: none; }
   
@@ -190,7 +190,7 @@
     <div class="card-panel" id="panelChart">
       <div class="panel-header">
         <h2>📊 Grafik Skor & Peringkat Kelompok</h2>
-        <span style="font-size: 13px; color: var(--ink); font-weight: 600;">Animasi peringkat akan bergeser naik turun jika posisi mengejar!</span>
+        <span style="font-size: 13px; color: #8a7f68; font-weight: 600;">Animasi peringkat akan bergeser naik turun jika posisi mengejar!</span>
       </div>
       <div class="leaderboard-list" id="leaderboardList"></div>
     </div>
@@ -199,7 +199,7 @@
     <div class="card-panel" id="panelDetail" style="display: none;">
       <div class="panel-header">
         <h2>📋 Rincian Permainan Live</h2>
-        <span style="font-size: 13px; color: var(--ink); font-weight: 600;">Pantau durasi pengerjaan kumulatif dan status pengerjaan secara akurat</span>
+        <span style="font-size: 13px; color: #8a7f68; font-weight: 600;">Pantau durasi pengerjaan kumulatif dan status pengerjaan secara akurat</span>
       </div>
       <div class="table-responsive">
         <table class="detail-table">
@@ -241,49 +241,31 @@
   const ROW_HEIGHT = 76; 
   const GAP_HEIGHT = 16; 
 
-  let globalLiveData = {};
-
-  // Ambil data real-time dari Firebase
+  /* ============================================================
+     2. SYNC REALTIME FIREBASE
+     ============================================================ */
   database.ref('game_scores').on('value', (snapshot) => {
     const data = snapshot.val();
-    globalLiveData = data ? data : {};
-    processAndRender();
-  });
-
-  function processAndRender() {
-    let list = Object.values(globalLiveData);
+    let list = [];
+    
+    if (data) {
+      list = Object.values(data);
+    }
 
     list.sort((a, b) => {
-      const scoreA = (a.totalScore !== undefined) ? a.totalScore : (a.score || 0);
-      const scoreB = (b.totalScore !== undefined) ? b.totalScore : (b.score || 0);
+      const scoreA = (a.score !== undefined) ? a.score : (a.totalScore || 0);
+      const scoreB = (b.score !== undefined) ? b.score : (b.totalScore || 0);
       return scoreB - scoreA;
     });
 
     renderChart(list);
     renderTable(list);
-  }
-
-  // Interval real-time timer per detik untuk kelompok yang sedang bermain
-  setInterval(() => {
-    let hasActive = false;
-    for (let key in globalLiveData) {
-      let item = globalLiveData[key];
-      if (item.status && (item.status === "Bermain" || item.status.includes("Bermain"))) {
-        item.totalTimeSpent = (item.totalTimeSpent || 0) + 1;
-        hasActive = true;
-      }
-    }
-    if (hasActive) {
-      let list = Object.values(globalLiveData);
-      list.sort((a, b) => (b.totalScore || 0) - (a.totalScore || 0));
-      renderTable(list);
-    }
-  }, 1000);
+  });
 
   /* ============================================================
-     2. RENDER TABEL DETAIL PERMAINAN
+     3. RENDER TABEL DETAIL (MENAMPILKAN TOTAL WAKTU KUMULATIF)
      ============================================================ */
-  function renderTable(list) {
+ function renderTable(list) {
     const tbody = document.getElementById('tbody');
     
     if (list.length === 0) {
@@ -295,11 +277,22 @@
       const currentScore = (item.totalScore !== undefined) ? item.totalScore : (item.score || 0);
       const caseNum = item.caseNumber || 1;
 
-      // Format total waktu akumulatif (MM:SS)
-      const totalSec = item.totalTimeSpent || 0;
+      // Format total waktu akumulatif (MM:SS) - Batasi agar tidak error jika angka terlanjur besar
+      const totalSec = Math.max(0, item.totalTimeSpent || 0);
       const totalMin = Math.floor(totalSec / 60);
       const totalRemainSec = totalSec % 60;
       const formattedTotalDuration = `${totalMin < 10 ? '0' : ''}${totalMin}:${totalRemainSec < 10 ? '0' : ''}${totalRemainSec}`;
+
+      // ✨ Konversi Timestamp Firebase ke Jam Lokal yang Rapi
+      let formattedLastUpdate = '-';
+      if (item.lastUpdate) {
+        if (typeof item.lastUpdate === 'number') {
+          const dateObj = new Date(item.lastUpdate);
+          formattedLastUpdate = dateObj.toLocaleTimeString();
+        } else {
+          formattedLastUpdate = item.lastUpdate;
+        }
+      }
 
       return `
         <tr>
@@ -310,14 +303,14 @@
           <td style="font-family:monospace; font-weight:800; color:var(--amber-dark); font-size:15px;">⏱️ ${formattedTotalDuration}</td>
           <td class="score">${currentScore} Pts</td>
           <td><span class="status">${item.status || 'Bermain'}</span></td>
-          <td style="color:var(--ink); font-size:12px;">${item.lastUpdate || '-'}</td>
+          <td style="color:var(--ink); font-size:12px;">${formattedLastUpdate}</td>
         </tr>
       `;
     }).join('');
   }
 
   /* ============================================================
-     3. RENDER ANIMASI BAR CHART
+     4. RENDER ANIMASI BAR CHART
      ============================================================ */
   function renderChart(list) {
     const leaderboardList = document.getElementById('leaderboardList');
@@ -333,8 +326,8 @@
 
     leaderboardList.style.height = `${list.length * (ROW_HEIGHT + GAP_HEIGHT)}px`;
 
-    const maxScore = Math.max(...list.map(g => (g.totalScore !== undefined ? g.totalScore : g.score) || 0), 100);
-    const activeGroupIds = list.map(g => "group_" + (g.groupName || '').replace(/[\.\#\$\[\]\s]+/g, '_'));
+    const maxScore = Math.max(...list.map(g => (g.score !== undefined ? g.score : g.totalScore) || 0), 100);
+    const activeGroupIds = list.map(g => "group_" + g.groupName.replace(/[\.\#\$\[\]\s]+/g, '_'));
 
     Array.from(leaderboardList.children).forEach(child => {
       if (child.id && !activeGroupIds.includes(child.id)) {
@@ -344,12 +337,12 @@
 
     list.forEach((item, index) => {
       const rank = index + 1;
-      const currentScore = (item.totalScore !== undefined) ? item.totalScore : (item.score || 0);
-      const caseNum = item.caseNumber || 1;
+      const currentScore = (item.score !== undefined) ? item.score : (item.totalScore || 0);
+      const questionNum = (item.question !== undefined) ? item.question : (item.caseNumber || 1);
       
       const percentage = Math.min(100, Math.max(5, (currentScore / maxScore) * 100));
       const targetY = index * (ROW_HEIGHT + GAP_HEIGHT);
-      const groupId = "group_" + (item.groupName || '').replace(/[\.\#\$\[\]\s]+/g, '_');
+      const groupId = "group_" + item.groupName.replace(/[\.\#\$\[\]\s]+/g, '_');
       
       let row = document.getElementById(groupId);
 
@@ -377,8 +370,8 @@
       row.style.transform = `translateY(${targetY}px)`;
 
       row.querySelector('.rank-badge').textContent = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
-      row.querySelector('.group-name').textContent = item.groupName || 'Kelompok';
-      row.querySelector('.group-status-badge').textContent = `Ronde ${item.round || 1} · Soal ${caseNum}`;
+      row.querySelector('.group-name').textContent = item.groupName;
+      row.querySelector('.group-status-badge').textContent = `Ronde ${item.round || 1} · Soal ${questionNum}`;
       row.querySelector('.bar-fill').style.width = `${percentage}%`;
 
       const scoreEl = row.querySelector('.score-text');
@@ -387,7 +380,7 @@
   }
 
   /* ============================================================
-     4. TOMBOL RESET DATA FIREBASE
+     5. FUNGSI HAPUS DATA FIREBASE
      ============================================================ */
   document.getElementById('btnDeleteAllData').addEventListener('click', () => {
     if (confirm("⚠️ APAKAH ANDA YAKIN?\n\nSemua data skor kelompok yang tersimpan di database Firebase akan DIHAPUS PERMANEN.")) {
@@ -398,7 +391,7 @@
   });
 
   /* ============================================================
-     5. SWITCH TAB NAVIGASI
+     6. SWITCH TAB NAVIGASI
      ============================================================ */
   function switchTab(tabName) {
     const panelChart = document.getElementById('panelChart');

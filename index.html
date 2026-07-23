@@ -931,12 +931,12 @@
       timeLeft: timeLeft,
       totalTimeSpent: accumulatedTime,
       status: status,
-      lastUpdate: new Date().toLocaleTimeString()
+      lastUpdate: firebase.database.ServerValue.TIMESTAMP 
     });
   }
 
   /* ============================================================
-     2. DATA RONDE SIMULASI & RONDE RESMI (1-5)
+     2. DATA RONDE SIMULASI & RONDE RESMI (1-5) - MINIMAL 4 BUG PER SOAL
      ============================================================ */
   const SIMULATION_ROUND = [
     {
@@ -950,911 +950,845 @@
         { id:"sim_s3", emoji:"🚰", txt:"Bilas busa sabun hingga bersih", note:"Bilas semua sisa sabun sampai tidak licin." },
         { id:"sim_s4", emoji:"🧻", txt:"Keringkan tangan dengan lap bersih", note:"Langkah terakhir mengeringkan tangan." }
       ],
-      bugSwaps: [[1, 2]]
+      bugSwaps: [[0, 1], [2, 3]]
     }
   ];
 
   const ROUNDS = [
-    // RONDE 1 (6 STEP)
-    [
-      {
-        tag: "RONDE 1 · KASUS 1 (6 STEP)",
-        title: "🫁 Jalur Udara Pernapasan Manusia",
-        mission: "Bantu robot menyusun alur masuknya udara (oksigen) ke dalam tubuh manusia yang benar!",
-        startIcon: "🤖", goalIcon: "🫁",
-        steps: [
-          { id:"r1c1s1", emoji:"👃", txt:"Udara masuk melalui rongga hidung", note:"Hidung adalah gerbang utama udara masuk dan disaring oleh rambut hidung." },
-          { id:"r1c1s2", emoji:"🗣️", txt:"Melewati tenggorokan (faring & laring)", note:"Udara mengalir dari belakang rongga hidung menuju saluran tenggorokan." },
-          { id:"r1c1s3", emoji:"🫁", txt:"Masuk ke batang tenggorokan (trakea)", note:"Trakea menghubungkan tenggorokan langsung menuju ke paru-paru." },
-          { id:"r1c1s4", emoji:"🌿", txt:"Melewati percabangan bronkus", note:"Trakea bercabang dua menjadi bronkus kiri dan bronkus kanan." },
-          { id:"r1c1s5", emoji:"🔍", txt:"Menuju cabang kecil bronkiolus", note:"Di dalam paru-paru, bronkus bercabang-cabang halus menjadi bronkiolus." },
-          { id:"r1c1s6", emoji:"🔴", txt:"Pertukaran gas di alveolus", note:"Oksigen diserap dan karbon dioksida dilepas di kantong udara (alveolus)." }
-        ],
-        bugSwaps: [[1, 2]]
-      },
-      {
-        tag: "RONDE 1 · KASUS 2 (6 STEP)",
-        title: "🍕 Alur Makanan pada Pencernaan Manusia",
-        mission: "Susun langkah perjalanan makanan dari awal masuk sampai diserap oleh tubuh!",
-        startIcon: "🤖", goalIcon: "🚶",
-        steps: [
-          { id:"r1c2s1", emoji:"👄", txt:"Dikunyah di rongga mulut", note:"Makanan dihancurkan oleh gigi dan dibasahi oleh air liur." },
-          { id:"r1c2s2", emoji:"🥖", txt:"Melewati kerongkongan (esofagus)", note:"Gerak peristaltik mendorong makanan turun menuju lambung." },
-          { id:"r1c2s3", emoji:"🥣", txt:"Dicerna secara kimiawi di lambung", note:"Asam lambung dan enzim memecah makanan menjadi bubur cair." },
-          { id:"r1c2s4", emoji:"🧬", txt:"Penyerapan sari makanan di usus halus", note:"Sari-sari makanan diserap masuk ke dalam pembuluh darah." },
-          { id:"r1c2s5", emoji:"💧", txt:"Penyerapan air di usus besar", note:"Sisa makanan yang tidak diserap akan diserap kandungan airnya." },
-          { id:"r1c2s6", emoji:"🚽", txt:"Pengeluaran sisa makanan via anus", note:"Sisa ampas padat (feses) dikeluarkan dari tubuh melalui anus." }
-        ],
-        bugSwaps: [[3, 4]]
-      },
-      {
-        tag: "RONDE 1 · KASUS 3 (6 STEP)",
-        title: "❤️ Peredaran Darah Kecil (Jantung–Paru-paru)",
-        mission: "Susun alur peredaran darah kecil dari jantung menuju paru-paru dan kembali lagi!",
-        startIcon: "🤖", goalIcon: "❤️",
-        steps: [
-          { id:"r1c3s1", emoji:"🫀", txt:"Bilik kanan jantung memompa darah kotor", note:"Darah kotor (kaya CO2) dipompa menuju paru-paru." },
-          { id:"r1c3s2", emoji:"➡️", txt:"Darah mengalir lewat arteri pulmonalis", note:"Pembuluh ini membawa darah kotor menuju paru-paru." },
-          { id:"r1c3s3", emoji:"🫁", txt:"Pertukaran gas terjadi di alveolus paru-paru", note:"CO2 dilepas dan O2 diikat oleh darah di alveolus." },
-          { id:"r1c3s4", emoji:"⬅️", txt:"Darah bersih mengalir lewat vena pulmonalis", note:"Darah yang kaya oksigen dibawa kembali ke jantung." },
-          { id:"r1c3s5", emoji:"🫀", txt:"Darah bersih masuk ke serambi kiri jantung", note:"Serambi kiri menampung darah bersih dari paru-paru." },
-          { id:"r1c3s6", emoji:"💗", txt:"Darah bersih dipompa ke bilik kiri", note:"Dari bilik kiri, darah siap diedarkan ke seluruh tubuh." }
-        ],
-        bugSwaps: [[1, 2]]
-      },
-      {
-        tag: "RONDE 1 · KASUS 4 (6 STEP)",
-        title: "🩸 Peredaran Darah Besar (Jantung–Seluruh Tubuh)",
-        mission: "Susun alur peredaran darah besar dari jantung ke seluruh tubuh dan kembali lagi!",
-        startIcon: "🤖", goalIcon: "🩸",
-        steps: [
-          { id:"r1c4s1", emoji:"💗", txt:"Bilik kiri jantung memompa darah bersih ke aorta", note:"Aorta adalah pembuluh darah terbesar dalam tubuh." },
-          { id:"r1c4s2", emoji:"➡️", txt:"Darah mengalir lewat arteri ke seluruh tubuh", note:"Arteri menyalurkan oksigen dan nutrisi ke seluruh sel." },
-          { id:"r1c4s3", emoji:"🧫", txt:"Sel-sel tubuh menyerap oksigen di kapiler", note:"Pertukaran zat terjadi di pembuluh kapiler yang sangat kecil." },
-          { id:"r1c4s4", emoji:"⬅️", txt:"Darah kotor mengandung CO2 masuk ke vena", note:"Vena membawa darah kotor kembali menuju jantung." },
-          { id:"r1c4s5", emoji:"🫀", txt:"Darah kotor masuk ke serambi kanan jantung", note:"Serambi kanan menampung darah kotor dari seluruh tubuh." },
-          { id:"r1c4s6", emoji:"🫁", txt:"Darah kotor dipompa ke bilik kanan menuju paru-paru", note:"Dari bilik kanan, darah kembali dibersihkan di paru-paru." }
-        ],
-        bugSwaps: [[2, 3]]
-      },
-      {
-        tag: "RONDE 1 · KASUS 5 (6 STEP)",
-        title: "🚰 Proses Pembentukan Urine di Ginjal",
-        mission: "Bantu robot menyusun tahapan pembentukan urine di dalam ginjal secara berurutan!",
-        startIcon: "🤖", goalIcon: "🚽",
-        steps: [
-          { id:"r1c5s1", emoji:"🩸", txt:"Darah mengalir masuk ke ginjal", note:"Darah membawa zat sisa metabolisme untuk disaring ginjal." },
-          { id:"r1c5s2", emoji:"🔍", txt:"Penyaringan darah (filtrasi) di glomerulus", note:"Glomerulus menyaring darah menjadi urine primer." },
-          { id:"r1c5s3", emoji:"🧪", txt:"Terbentuk urine primer yang masih mengandung zat berguna", note:"Urine primer masih memiliki glukosa dan asam amino." },
-          { id:"r1c5s4", emoji:"♻️", txt:"Penyerapan kembali (reabsorpsi) zat berguna di tubulus", note:"Zat yang masih dibutuhkan tubuh diserap kembali." },
-          { id:"r1c5s5", emoji:"➕", txt:"Augmentasi menambahkan zat sisa yang tak diperlukan", note:"Tahap ini menghasilkan urine sesungguhnya." },
-          { id:"r1c5s6", emoji:"🚽", txt:"Urine dialirkan menuju kandung kemih", note:"Urine ditampung sementara sebelum dikeluarkan tubuh." }
-        ],
-        bugSwaps: [[3, 4]]
-      },
-      {
-        tag: "RONDE 1 · KASUS 6 (6 STEP)",
-        title: "🐸 Metamorfosis Sempurna Katak",
-        mission: "Susun tahapan daur hidup katak dari telur hingga menjadi katak dewasa!",
-        startIcon: "🤖", goalIcon: "🐸",
-        steps: [
-          { id:"r1c6s1", emoji:"🥚", txt:"Katak betina bertelur di air/kolam", note:"Telur katak diletakkan berkelompok di permukaan air." },
-          { id:"r1c6s2", emoji:"🐠", txt:"Telur menetas menjadi berudu berekor", note:"Berudu (kecebong) bernapas menggunakan insang." },
-          { id:"r1c6s3", emoji:"🦵", txt:"Berudu tumbuh kaki belakang lebih dulu", note:"Kaki belakang tumbuh sebelum kaki depan." },
-          { id:"r1c6s4", emoji:"🦿", txt:"Berudu tumbuh kaki depan, ekor menyusut", note:"Ekor berudu perlahan mengecil seiring pertumbuhan kaki." },
-          { id:"r1c6s5", emoji:"🐸", txt:"Berudu berubah jadi katak muda berekor pendek", note:"Katak muda mulai bisa hidup di darat maupun air." },
-          { id:"r1c6s6", emoji:"🟢", txt:"Katak dewasa hidup sebagai hewan amfibi", note:"Katak dewasa bernapas dengan paru-paru dan kulit." }
-        ],
-        bugSwaps: [[1, 2]]
-      },
-      {
-        tag: "RONDE 1 · KASUS 7 (6 STEP)",
-        title: "🌿 Proses Fotosintesis pada Daun",
-        mission: "Susun tahapan proses fotosintesis pada tumbuhan hijau secara berurutan!",
-        startIcon: "🤖", goalIcon: "🍃",
-        steps: [
-          { id:"r1c7s1", emoji:"🌱", txt:"Akar menyerap air dan mineral dari tanah", note:"Air adalah bahan baku utama proses fotosintesis." },
-          { id:"r1c7s2", emoji:"🌳", txt:"Air diangkut ke daun lewat pembuluh xilem", note:"Xilem pada batang mengalirkan air menuju daun." },
-          { id:"r1c7s3", emoji:"💨", txt:"Daun menyerap gas CO2 lewat stomata", note:"Karbondioksida masuk melalui pori-pori kecil di daun." },
-          { id:"r1c7s4", emoji:"☀️", txt:"Klorofil menangkap energi cahaya matahari", note:"Klorofil berperan menangkap energi untuk reaksi kimia." },
-          { id:"r1c7s5", emoji:"🧪", txt:"Air dan CO2 diubah menjadi glukosa", note:"Reaksi kimia menghasilkan zat gula sebagai makanan." },
-          { id:"r1c7s6", emoji:"🌬️", txt:"Oksigen dilepaskan sebagai hasil sampingan", note:"Oksigen dilepas ke udara melalui stomata daun." }
-        ],
-        bugSwaps: [[2, 3]]
-      },
-      {
-        tag: "RONDE 1 · KASUS 8 (6 STEP)",
-        title: "🦟 Siklus Hidup Nyamuk",
-        mission: "Susun tahapan daur hidup nyamuk dari telur hingga menjadi nyamuk dewasa!",
-        startIcon: "🤖", goalIcon: "🦟",
-        steps: [
-          { id:"r1c8s1", emoji:"🥚", txt:"Nyamuk betina bertelur di genangan air", note:"Telur diletakkan berkelompok di permukaan air tenang." },
-          { id:"r1c8s2", emoji:"🐛", txt:"Telur menetas menjadi jentik-jentik (larva)", note:"Jentik bergerak aktif di dalam air dan bernapas di permukaan." },
-          { id:"r1c8s3", emoji:"🌀", txt:"Jentik berkembang menjadi pupa (kepompong)", note:"Pupa masih dapat bergerak lincah di dalam air." },
-          { id:"r1c8s4", emoji:"🫧", txt:"Pupa nyamuk aktif bergerak di dalam air", note:"Di tahap ini nyamuk mulai terbentuk sempurna di dalam pupa." },
-          { id:"r1c8s5", emoji:"🦟", txt:"Nyamuk dewasa keluar dari pupa", note:"Nyamuk dewasa hinggap sejenak di permukaan air." },
-          { id:"r1c8s6", emoji:"🌬️", txt:"Nyamuk dewasa terbang mencari makanan", note:"Nyamuk dewasa siap terbang dan berkembang biak." }
-        ],
-        bugSwaps: [[2, 3]]
-      },
-      {
-        tag: "RONDE 1 · KASUS 9 (6 STEP)",
-        title: "🧼 Langkah Mencuci Tangan yang Benar",
-        mission: "Bantu robot menyusun 6 langkah mencuci tangan yang benar sesuai anjuran kesehatan!",
-        startIcon: "🤖", goalIcon: "🧼",
-        steps: [
-          { id:"r1c9s1", emoji:"💧", txt:"Basahi tangan dengan air lalu tuangkan sabun", note:"Air mengalir membantu melarutkan kotoran dan sabun." },
-          { id:"r1c9s2", emoji:"🤲", txt:"Gosok telapak tangan dengan telapak lainnya", note:"Gosokan awal meratakan sabun ke seluruh tangan." },
-          { id:"r1c9s3", emoji:"🖐️", txt:"Gosok punggung tangan dan sela-sela jari", note:"Sela jari sering menjadi tempat kuman bersembunyi." },
-          { id:"r1c9s4", emoji:"👆", txt:"Gosok ujung jari dan kuku pada telapak tangan", note:"Bagian kuku rentan menyimpan kotoran dan kuman." },
-          { id:"r1c9s5", emoji:"🚿", txt:"Bilas tangan dengan air mengalir hingga bersih", note:"Bilasan menghilangkan sisa sabun dan kotoran yang terangkat." },
-          { id:"r1c9s6", emoji:"🧻", txt:"Keringkan tangan dengan tisu/handuk bersih", note:"Tangan yang kering mencegah kuman menempel kembali." }
-        ],
-        bugSwaps: [[2, 3]]
-      },
-      {
-        tag: "RONDE 1 · KASUS 10 (6 STEP)",
-        title: "🚱 Proses Penjernihan Air Sederhana",
-        mission: "Susun tahapan penyaringan air kotor menjadi air jernih menggunakan alat sederhana!",
-        startIcon: "🤖", goalIcon: "💧",
-        steps: [
-          { id:"r1c10s1", emoji:"🪣", txt:"Air kotor dituang ke wadah penyaring bertingkat", note:"Wadah penyaring disusun dari beberapa lapisan bahan." },
-          { id:"r1c10s2", emoji:"🪨", txt:"Lapisan kerikil menyaring kotoran berukuran besar", note:"Kerikil menjadi penyaring pertama partikel kasar." },
-          { id:"r1c10s3", emoji:"⏳", txt:"Lapisan pasir menyaring partikel yang lebih halus", note:"Pasir menyaring kotoran berukuran lebih kecil dari kerikil." },
-          { id:"r1c10s4", emoji:"⬛", txt:"Lapisan arang aktif menyerap bau dan zat berbahaya", note:"Arang aktif efektif menyerap bau dan zat kimia." },
-          { id:"r1c10s5", emoji:"🧵", txt:"Lapisan ijuk/kain menyaring sisa partikel halus", note:"Ijuk menjadi penyaring akhir sebelum air keluar." },
-          { id:"r1c10s6", emoji:"💧", txt:"Air jernih hasil penyaringan siap ditampung", note:"Air yang keluar sudah lebih jernih dari sebelumnya." }
-        ],
-        bugSwaps: [[1, 2]]
-      }
-    ],
+  // ==========================================
+  // RONDE 1 (10 SOAL)
+  // ==========================================
+  [
+    {
+      tag: "RONDE 1 · SOAL 1 (IPA)",
+      title: "🦋 Metamorfosis Kupu-Kupu",
+      mission: "Urutkan daur hidup kupu-kupu dari awal sampai akhir!",
+      steps: [
+        { id:"r1_1_1", emoji:"🥚", txt:"Telur di atas daun", note:"Dimulai dari telur." },
+        { id:"r1_1_2", emoji:"🐛", txt:"Ulat (Larva) makan daun", note:"Telur menetas jadi ulat." },
+        { id:"r1_1_3", emoji:"🥜", txt:"Kepompong (Pupa)", note:"Ulat membungkus diri." },
+        { id:"r1_1_4", emoji:"🐣", txt:"Kupu-kupu keluar kepompong", note:"Kupu-kupu muda keluar." },
+        { id:"r1_1_5", emoji:"🦋", txt:"Kupu-kupu Dewasa", note:"Kupu-kupu siap terbang." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [0, 4], [1, 3]]
+    },
+    {
+      tag: "RONDE 1 · SOAL 2 (MATEMATIKA)",
+      title: "🔢 Susun Persamaan Matematika",
+      mission: "Urutkan kartu berikut agar membentuk persamaan yang benar!",
+      steps: [
+        { id:"r1_2_1", emoji:"", txt:"(", note:"Kurung buka" },
+        { id:"r1_2_2", emoji:"", txt:"12", note:"Angka 12" },
+        { id:"r1_2_3", emoji:"", txt:"+", note:"Simbol tambah" },
+        { id:"r1_2_4", emoji:"", txt:"8", note:"Angka 8" },
+        { id:"r1_2_5", emoji:"", txt:")", note:"Kurung tutup" },
+        { id:"r1_2_6", emoji:"", txt:"×", note:"Simbol kali" },
+        { id:"r1_2_7", emoji:"", txt:"5", note:"Angka 5" },
+        { id:"r1_2_8", emoji:"", txt:"=", note:"Sama dengan" },
+        { id:"r1_2_9", emoji:"", txt:"100", note:"Hasil 100" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    },
+    {
+      tag: "RONDE 1 · SOAL 3 (B. INGGRIS)",
+      title: "☕ How to Make Hot Tea",
+      mission: "Order the steps to make a cup of hot tea!",
+      steps: [
+        { id:"r1_3_1", emoji:"🫖", txt:"Boil water in the kettle", note:"Boil water first." },
+        { id:"r1_3_2", emoji:"☕", txt:"Put a teabag into the cup", note:"Put teabag in cup." },
+        { id:"r1_3_3", emoji:"🫗", txt:"Pour hot water into the cup", note:"Pour hot water." },
+        { id:"r1_3_4", emoji:"🧂", txt:"Add sugar and stir well", note:"Add sugar & stir." },
+        { id:"r1_3_5", emoji:"😋", txt:"Hot tea is ready to drink", note:"Enjoy your tea!" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [0, 2], [1, 4]]
+    },
+    {
+      tag: "RONDE 1 · SOAL 4 (IPA)",
+      title: "🌱 Daur Hidup Kacang Hijau",
+      mission: "Urutkan tahap pertumbuhan tanaman kacang hijau!",
+      steps: [
+        { id:"r1_4_1", emoji:"🫘", txt:"Biji ditanam di tanah basah", note:"Awal penanaman." },
+        { id:"r1_4_2", emoji:"🌰", txt:"Biji berkecambah keluar akar", note:"Tumbuh akar." },
+        { id:"r1_4_3", emoji:"🌱", txt:"Tumbuh batang dan daun kecil", note:"Tunas tumbuh." },
+        { id:"r1_4_4", emoji:"🌸", txt:"Tanaman berbunga", note:"Bunga bermekaran." },
+        { id:"r1_4_5", emoji:"🫛", txt:"Menghasilkan polong kacang", note:"Siap dipanen." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [1, 4], [0, 3]]
+    },
+    {
+      tag: "RONDE 1 · SOAL 5 (MATEMATIKA)",
+      title: "🔢 Susun Persamaan Matematika",
+      mission: "Urutkan kartu berikut agar membentuk persamaan yang benar!",
+      steps: [
+        { id:"r1_5_1", emoji:"", txt:"50", note:"Angka 50" },
+        { id:"r1_5_2", emoji:"", txt:"-", note:"Simbol kurang" },
+        { id:"r1_5_3", emoji:"", txt:"10", note:"Angka 10" },
+        { id:"r1_5_4", emoji:"", txt:"÷", note:"Simbol bagi" },
+        { id:"r1_5_5", emoji:"", txt:"2", note:"Angka 2" },
+        { id:"r1_5_6", emoji:"", txt:"=", note:"Sama dengan" },
+        { id:"r1_5_7", emoji:"", txt:"45", note:"Hasil 45" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 6]]
+    },
+    {
+      tag: "RONDE 1 · SOAL 6 (B. INGGRIS)",
+      title: "🏫 Daily Morning Routine",
+      mission: "Order the daily morning steps before school!",
+      steps: [
+        { id:"r1_6_1", emoji:"⏰", txt:"Wake up early in the morning", note:"Wake up first." },
+        { id:"r1_6_2", emoji:"🛏️", txt:"Make and clean the bed", note:"Clean the bed." },
+        { id:"r1_6_3", emoji:"🚿", txt:"Take a shower and brush teeth", note:"Take a bath." },
+        { id:"r1_6_4", emoji:"👔", txt:"Wear the school uniform", note:"Wear uniform." },
+        { id:"r1_6_5", emoji:"🍳", txt:"Eat breakfast with family", note:"Eat breakfast." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [1, 4], [0, 2]]
+    },
+    {
+      tag: "RONDE 1 · SOAL 7 (IPA)",
+      title: "🍕 Pencernaan Makanan",
+      mission: "Urutkan jalur awal pencernaan makanan dalam tubuh!",
+      steps: [
+        { id:"r1_7_1", emoji:"👄", txt:"Makanan dikunyah di mulut", note:"Gigi mengunyah." },
+        { id:"r1_7_2", emoji:"🥖", txt:"Masuk ke kerongkongan", note:"Mendorong ke bawah." },
+        { id:"r1_7_3", emoji:"🥣", txt:"Dicerna di dalam lambung", note:"Diolah asam lambung." },
+        { id:"r1_7_4", emoji:"🧬", txt:"Penyerapan sari di usus halus", note:"Diserap darah." },
+        { id:"r1_7_5", emoji:"🚽", txt:"Sisa dibuang lewat anus", note:"Pengeluaran sisa." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [1, 4], [0, 3]]
+    },
+    {
+      tag: "RONDE 1 · SOAL 8 (MATEMATIKA)",
+      title: "🔢 Susun Persamaan Matematika",
+      mission: "Urutkan kartu berikut agar membentuk persamaan yang benar!",
+      steps: [
+        { id:"r1_8_1", emoji:"", txt:"15", note:"Angka 15" },
+        { id:"r1_8_2", emoji:"", txt:"+", note:"Simbol tambah" },
+        { id:"r1_8_3", emoji:"", txt:"4", note:"Angka 4" },
+        { id:"r1_8_4", emoji:"", txt:"×", note:"Simbol kali" },
+        { id:"r1_8_5", emoji:"", txt:"5", note:"Angka 5" },
+        { id:"r1_8_6", emoji:"", txt:"=", note:"Sama dengan" },
+        { id:"r1_8_7", emoji:"", txt:"35", note:"Hasil 35" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 6]]
+    },
+    {
+      tag: "RONDE 1 · SOAL 9 (B. INGGRIS)",
+      title: "📚 How to Borrow a Book",
+      mission: "Order the steps to borrow a book at the library!",
+      steps: [
+        { id:"r1_9_1", emoji:"🚶", txt:"Enter the school library", note:"Enter library." },
+        { id:"r1_9_2", emoji:"📖", txt:"Choose a book to read", note:"Pick a book." },
+        { id:"r1_9_3", emoji:"💳", txt:"Show your library card", note:"Show card." },
+        { id:"r1_9_4", emoji:"📝", txt:"Librarian records the book", note:"Recorded." },
+        { id:"r1_9_5", emoji:"🏫", txt:"Bring the book home safely", note:"Take it home." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [0, 4], [1, 3]]
+    },
+    {
+      tag: "RONDE 1 · SOAL 10 (IPA)",
+      title: "🐸 Metamorfosis Katak",
+      mission: "Urutkan daur hidup katak dari telur hingga dewasa!",
+      steps: [
+        { id:"r1_10_1", emoji:"🥚", txt:"Telur katak di dalam air", note:"Bertelur di air." },
+        { id:"r1_10_2", emoji:"🐠", txt:"Berudu berekor (Kecebong)", note:"Menetas jadi kecebong." },
+        { id:"r1_10_3", emoji:"🦵", txt:"Berudu tumbuh kaki", note:"Tumbuh kaki." },
+        { id:"r1_10_4", emoji:"🐸", txt:"Katak muda berekor pendek", note:"Ekor menyusut." },
+        { id:"r1_10_5", emoji:"🟢", txt:"Katak dewasa bernapas paru-paru", note:"Katak dewasa." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [0, 4], [1, 3]]
+    }
+  ],
 
-    // RONDE 2 (7 STEP)
-    [
-      {
-        tag: "RONDE 2 · KASUS 1 (7 STEP)",
-        title: "🦋 Metamorfosis Sempurna Kupu-kupu",
-        mission: "Susun tahapan daur hidup kupu-kupu secara urut dari awal hingga dewasa!",
-        startIcon: "🤖", goalIcon: "🦋",
-        steps: [
-          { id:"r2c1s1", emoji:"🥚", txt:"Kupu-kupu betina bertelur di daun", note:"Daur hidup dimulai saat telur diletakkan di atas permukaan daun." },
-          { id:"r2c1s2", emoji:"🐣", txt:"Telur menetas menjadi ulat (larva)", note:"Setelah beberapa hari, telur menetas menjadi larva/ulat." },
-          { id:"r2c1s3", emoji:"🍃", txt:"Ulat makan daun dengan rakus", note:"Ulat makan terus menerus untuk mengumpulkan energi pertumbuhan." },
-          { id:"r2c1s4", emoji:"🧱", txt:"Ulat membuat benang pembungkus", note:"Saat cukup besar, ulat membungkus dirinya dengan serat benang." },
-          { id:"r2c1s5", emoji:"🥜", txt:"Memasuki fase kepompong (pupa)", note:"Di dalam kepompong terjadi perubahan bentuk tubuh secara drastis." },
-          { id:"r2c1s6", emoji:"🐣", txt:"Kupu-kupu muda keluar dari kepompong", note:"Kupu-kupu memecah dinding kepompong dan mengeringkan sayapnya." },
-          { id:"r2c1s7", emoji:"🦋", txt:"Kupu-kupu dewasa siap terbang", note:"Kupu-kupu terbang mencari nektar dan siap berkembang biak." }
-        ],
-        bugSwaps: [[1, 2]]
-      },
-      {
-        tag: "RONDE 2 · KASUS 2 (7 STEP)",
-        title: "🌾 Rantai Makanan Ekosistem Sawah",
-        mission: "Susun tingkatan trofik aliran energi rantai makanan dari produsen ke pengurai!",
-        startIcon: "🤖", goalIcon: "🍄",
-        steps: [
-          { id:"r2c2s1", emoji:"☀️", txt:"Matahari memancarkan energi cahaya", note:"Sinar matahari adalah sumber energi utama bagi ekosistem." },
-          { id:"r2c2s2", emoji:"🌾", txt:"Tanaman padi fotosintesis (produsen)", note:"Tumbuhan hijau mengolah makanan sendiri menggunakan sinar matahari." },
-          { id:"r2c2s3", emoji:"🦗", txt:"Belalang memakan daun padi (konsumen 1)", note:"Herbivora memakan tumbuhan produsen sebagai sumber energi." },
-          { id:"r2c2s4", emoji:"🐸", txt:"Katak memangsa belalang (konsumen 2)", note:"Karnivora kecil memangsa konsumen tingkat pertama." },
-          { id:"r2c2s5", emoji:"🐍", txt:"Ular memakan katak (konsumen 3)", note:"Karnivora lebih besar memangsa konsumen tingkat kedua." },
-          { id:"r2c2s6", emoji:"🦅", txt:"Burung elang memangsa ular (konsumen puncak)", note:"Predator puncak berada di bagian atas rantai makanan." },
-          { id:"r2c2s7", emoji:"🍄", txt:"Jamur mengurai elang yang mati (dekomposer)", note:"Pengurai mengembalikan zat hara ke dalam tanah." }
-        ],
-        bugSwaps: [[4, 5]]
-      },
-      {
-        tag: "RONDE 2 · KASUS 3 (7 STEP)",
-        title: "🐝 Metamorfosis Sempurna Lebah Madu",
-        mission: "Susun tahapan daur hidup lebah madu dari telur hingga menjadi lebah pekerja dewasa!",
-        startIcon: "🤖", goalIcon: "🐝",
-        steps: [
-          { id:"r2c3s1", emoji:"🥚", txt:"Ratu lebah bertelur di dalam sel sarang", note:"Telur diletakkan satu per satu di tiap sel sarang." },
-          { id:"r2c3s2", emoji:"🐛", txt:"Telur menetas menjadi larva kecil berwarna putih", note:"Larva belum memiliki mata maupun kaki." },
-          { id:"r2c3s3", emoji:"🍯", txt:"Larva diberi makan royal jelly oleh lebah pekerja", note:"Royal jelly membantu pertumbuhan larva menjadi cepat besar." },
-          { id:"r2c3s4", emoji:"📦", txt:"Larva membesar dan sel sarang ditutup lilin", note:"Penutupan sel menandai larva siap berubah bentuk." },
-          { id:"r2c3s5", emoji:"🌀", txt:"Larva berubah menjadi pupa di dalam sel tertutup", note:"Di dalam pupa terjadi perubahan bentuk tubuh total." },
-          { id:"r2c3s6", emoji:"🐣", txt:"Pupa berubah menjadi lebah muda", note:"Bentuk tubuh lebah mulai sempurna di tahap ini." },
-          { id:"r2c3s7", emoji:"🐝", txt:"Lebah dewasa keluar dan mulai bekerja", note:"Lebah dewasa langsung membantu tugas di sarang." }
-        ],
-        bugSwaps: [[2, 3]]
-      },
-      {
-        tag: "RONDE 2 · KASUS 4 (7 STEP)",
-        title: "🦗 Metamorfosis Tidak Sempurna Belalang",
-        mission: "Susun tahapan daur hidup belalang dari telur hingga menjadi belalang dewasa bersayap!",
-        startIcon: "🤖", goalIcon: "🦗",
-        steps: [
-          { id:"r2c4s1", emoji:"🥚", txt:"Belalang betina bertelur di dalam tanah/batang", note:"Telur belalang biasanya diletakkan berkelompok." },
-          { id:"r2c4s2", emoji:"🐛", txt:"Telur menetas menjadi nimfa tanpa sayap", note:"Nimfa mirip belalang dewasa namun berukuran kecil." },
-          { id:"r2c4s3", emoji:"🔄", txt:"Nimfa mengalami pergantian kulit (molting)", note:"Molting terjadi berkali-kali seiring pertumbuhan tubuh." },
-          { id:"r2c4s4", emoji:"🌱", txt:"Nimfa membesar, tunas sayap mulai terlihat", note:"Tunas sayap kecil muncul di bagian punggung nimfa." },
-          { id:"r2c4s5", emoji:"🔄", txt:"Nimfa terus berganti kulit mendekati dewasa", note:"Ukuran tubuh semakin mendekati belalang dewasa." },
-          { id:"r2c4s6", emoji:"🪽", txt:"Sayap nimfa berkembang penuh menjelang dewasa", note:"Sayap mulai terlihat sempurna sebelum tahap akhir." },
-          { id:"r2c4s7", emoji:"🦗", txt:"Belalang dewasa bersayap siap terbang", note:"Belalang dewasa dapat terbang dan berkembang biak." }
-        ],
-        bugSwaps: [[3, 4]]
-      },
-      {
-        tag: "RONDE 2 · KASUS 5 (7 STEP)",
-        title: "🐟 Rantai Makanan Ekosistem Laut",
-        mission: "Susun tingkatan trofik rantai makanan dari produsen hingga pengurai di ekosistem laut!",
-        startIcon: "🤖", goalIcon: "🦈",
-        steps: [
-          { id:"r2c5s1", emoji:"🦠", txt:"Fitoplankton berfotosintesis (produsen)", note:"Fitoplankton menghasilkan energi menggunakan sinar matahari." },
-          { id:"r2c5s2", emoji:"🔬", txt:"Zooplankton memakan fitoplankton", note:"Zooplankton menjadi konsumen tingkat pertama di laut." },
-          { id:"r2c5s3", emoji:"🐠", txt:"Ikan kecil memakan zooplankton", note:"Ikan kecil menjadi konsumen tingkat kedua." },
-          { id:"r2c5s4", emoji:"🐟", txt:"Ikan sedang memangsa ikan kecil", note:"Ikan sedang menjadi konsumen tingkat ketiga." },
-          { id:"r2c5s5", emoji:"🐡", txt:"Ikan besar seperti tuna memangsa ikan sedang", note:"Ikan besar menempati konsumen tingkat keempat." },
-          { id:"r2c5s6", emoji:"🦈", txt:"Hiu sebagai predator puncak memangsa ikan besar", note:"Hiu berada di puncak rantai makanan laut." },
-          { id:"r2c5s7", emoji:"🦠", txt:"Bakteri laut menguraikan organisme yang mati", note:"Bakteri pengurai mengembalikan zat hara ke laut." }
-        ],
-        bugSwaps: [[1, 2]]
-      },
-      {
-        tag: "RONDE 2 · KASUS 6 (7 STEP)",
-        title: "🌳 Rantai Makanan Ekosistem Hutan",
-        mission: "Susun tingkatan trofik rantai makanan dari produsen hingga pengurai di ekosistem hutan!",
-        startIcon: "🤖", goalIcon: "🍄",
-        steps: [
-          { id:"r2c6s1", emoji:"🌳", txt:"Pohon berfotosintesis sebagai produsen", note:"Pohon dan tumbuhan hijau menghasilkan energi sendiri." },
-          { id:"r2c6s2", emoji:"🦌", txt:"Rusa memakan dedaunan (konsumen 1)", note:"Rusa adalah herbivora pemakan tumbuhan hutan." },
-          { id:"r2c6s3", emoji:"🐅", txt:"Harimau memangsa rusa (konsumen 2)", note:"Harimau menjadi predator utama di ekosistem hutan." },
-          { id:"r2c6s4", emoji:"💀", txt:"Harimau mati secara alami", note:"Setiap makhluk hidup pada akhirnya akan mati." },
-          { id:"r2c6s5", emoji:"🦅", txt:"Bangkai dimakan hewan pemakan bangkai", note:"Hewan pemakan bangkai membantu membersihkan hutan." },
-          { id:"r2c6s6", emoji:"🍄", txt:"Jamur dan bakteri mengurai sisa organisme mati", note:"Pengurai memecah sisa jasad menjadi zat sederhana." },
-          { id:"r2c6s7", emoji:"🌱", txt:"Zat hara hasil penguraian menyuburkan tanah hutan", note:"Zat hara ini akan diserap kembali oleh tumbuhan." }
-        ],
-        bugSwaps: [[2, 3]]
-      },
-      {
-        tag: "RONDE 2 · KASUS 7 (7 STEP)",
-        title: "👶 Tahapan Pertumbuhan Manusia",
-        mission: "Susun tahapan pertumbuhan dan perkembangan manusia dari bayi hingga lanjut usia!",
-        startIcon: "🤖", goalIcon: "🧓",
-        steps: [
-          { id:"r2c7s1", emoji:"👶", txt:"Tahap bayi (0-2 tahun) belajar merangkak & berjalan", note:"Bayi mulai mengembangkan kemampuan motorik dasar." },
-          { id:"r2c7s2", emoji:"🧒", txt:"Tahap kanak-kanak (2-6 tahun) belajar bicara & bermain", note:"Anak mulai aktif berkomunikasi dan bersosialisasi." },
-          { id:"r2c7s3", emoji:"🎒", txt:"Tahap anak-anak (6-12 tahun) mulai bersekolah", note:"Anak mulai belajar mandiri dan bersekolah formal." },
-          { id:"r2c7s4", emoji:"🧑", txt:"Tahap remaja awal (12-15 tahun) mengalami pubertas", note:"Tubuh mengalami banyak perubahan hormonal." },
-          { id:"r2c7s5", emoji:"👦", txt:"Tahap remaja akhir (15-18 tahun) menuju kematangan", note:"Remaja mulai mencari jati diri dan kematangan emosi." },
-          { id:"r2c7s6", emoji:"🧑‍💼", txt:"Tahap dewasa (18-60 tahun) puncak produktivitas", note:"Masa dewasa menjadi periode paling produktif." },
-          { id:"r2c7s7", emoji:"🧓", txt:"Tahap lanjut usia (60 tahun ke atas) mengalami penuaan", note:"Tubuh mengalami penurunan fungsi seiring usia." }
-        ],
-        bugSwaps: [[3, 4]]
-      },
-      {
-        tag: "RONDE 2 · KASUS 8 (7 STEP)",
-        title: "🌈 Proses Terjadinya Pelangi",
-        mission: "Susun tahapan terbentuknya pelangi setelah hujan turun bersamaan sinar matahari!",
-        startIcon: "🤖", goalIcon: "🌈",
-        steps: [
-          { id:"r2c8s1", emoji:"🌧️", txt:"Hujan turun bersamaan munculnya sinar matahari", note:"Pelangi hanya muncul saat hujan dan matahari bersamaan." },
-          { id:"r2c8s2", emoji:"☀️", txt:"Cahaya matahari mengenai tetesan air hujan", note:"Tetesan air di udara bertindak sebagai prisma alami." },
-          { id:"r2c8s3", emoji:"↩️", txt:"Cahaya dibiaskan saat masuk ke tetesan air", note:"Pembiasan membelokkan arah rambat cahaya matahari." },
-          { id:"r2c8s4", emoji:"🎨", txt:"Cahaya putih terurai menjadi berbagai warna", note:"Warna-warna spektrum muncul akibat penguraian cahaya." },
-          { id:"r2c8s5", emoji:"🪞", txt:"Cahaya warna-warni dipantulkan di dalam tetesan air", note:"Pemantulan terjadi di bagian dalam tetesan air hujan." },
-          { id:"r2c8s6", emoji:"↪️", txt:"Cahaya dibiaskan kembali saat keluar dari tetesan", note:"Pembiasan kedua membelokkan lagi arah cahaya keluar." },
-          { id:"r2c8s7", emoji:"🌈", txt:"Mata melihat lengkungan warna-warni sebagai pelangi", note:"Susunan warna itulah yang tampak sebagai pelangi." }
-        ],
-        bugSwaps: [[2, 3]]
-      },
-      {
-        tag: "RONDE 2 · KASUS 9 (7 STEP)",
-        title: "🐔 Perkembangbiakan Ayam dari Telur",
-        mission: "Susun tahapan perkembangbiakan ayam dari telur dierami hingga tumbuh dewasa!",
-        startIcon: "🤖", goalIcon: "🐔",
-        steps: [
-          { id:"r2c9s1", emoji:"🥚", txt:"Induk ayam bertelur setelah dibuahi", note:"Telur yang dibuahi memiliki embrio di dalamnya." },
-          { id:"r2c9s2", emoji:"🐓", txt:"Telur dierami induk ayam sekitar 21 hari", note:"Suhu tubuh induk menjaga embrio tetap hangat." },
-          { id:"r2c9s3", emoji:"🧬", txt:"Embrio berkembang menyerap sari telur", note:"Embrio memperoleh nutrisi dari kuning telur." },
-          { id:"r2c9s4", emoji:"🐣", txt:"Anak ayam mematuk cangkang telur", note:"Anak ayam berusaha memecah cangkang dari dalam." },
-          { id:"r2c9s5", emoji:"🐥", txt:"Anak ayam (kutuk) menetas keluar dari cangkang", note:"Anak ayam yang baru menetas masih lemah dan basah." },
-          { id:"r2c9s6", emoji:"🐤", txt:"Anak ayam dijaga induk & belajar mencari makan", note:"Induk melindungi anak ayam dari bahaya sekitarnya." },
-          { id:"r2c9s7", emoji:"🐔", txt:"Anak ayam tumbuh berkembang menjadi ayam dewasa", note:"Ayam dewasa siap berkembang biak kembali." }
-        ],
-        bugSwaps: [[3, 4]]
-      },
-      {
-        tag: "RONDE 2 · KASUS 10 (7 STEP)",
-        title: "🫘 Proses Pembuatan Tempe dari Kedelai",
-        mission: "Susun langkah-langkah pembuatan tempe dari kedelai hingga siap dikonsumsi!",
-        startIcon: "🤖", goalIcon: "🫘",
-        steps: [
-          { id:"r2c10s1", emoji:"💧", txt:"Kedelai direndam dalam air semalaman", note:"Perendaman melunakkan kedelai sebelum direbus." },
-          { id:"r2c10s2", emoji:"🍲", txt:"Kedelai direbus hingga empuk & dikupas kulitnya", note:"Kulit ari kedelai dibuang agar fermentasi lebih baik." },
-          { id:"r2c10s3", emoji:"🧊", txt:"Kedelai ditiriskan & didinginkan hingga suhu ruang", note:"Suhu ruang penting agar ragi tidak mati saat dicampur." },
-          { id:"r2c10s4", emoji:"🧂", txt:"Kedelai dicampur ragi tempe secara merata", note:"Ragi mengandung jamur Rhizopus yang memfermentasi kedelai." },
-          { id:"r2c10s5", emoji:"📦", txt:"Kedelai berragi dibungkus daun/plastik berlubang", note:"Bungkus berlubang membantu sirkulasi udara saat fermentasi." },
-          { id:"r2c10s6", emoji:"⏳", txt:"Bungkusan difermentasi selama kurang lebih 2 hari", note:"Jamur tumbuh membentuk serabut putih mengikat kedelai." },
-          { id:"r2c10s7", emoji:"🫘", txt:"Kedelai berubah menjadi tempe padat berselaput putih", note:"Tempe siap diolah menjadi berbagai masakan." }
-        ],
-        bugSwaps: [[4, 5]]
-      }
-    ],
+  // ==========================================
+  // RONDE 2 (10 SOAL)
+  // ==========================================
+  [
+    {
+      tag: "RONDE 2 · SOAL 1 (IPA)",
+      title: "🌾 Rantai Makanan Sawah",
+      mission: "Urutkan rantai makanan dari produsen hingga pengurai!",
+      steps: [
+        { id:"r2_1_1", emoji:"☀️", txt:"Matahari memberi energi cahaya", note:"Energi utama." },
+        { id:"r2_1_2", emoji:"🌾", txt:"Tanaman Padi (Produsen)", note:"Membuat makanan." },
+        { id:"r2_1_3", emoji:"🦗", txt:"Belalang makan padi (Konsumen 1)", note:"Herbivora." },
+        { id:"r2_1_4", emoji:"🐸", txt:"Katak makan belalang (Konsumen 2)", note:"Karnivora." },
+        { id:"r2_1_5", emoji:"🐍", txt:"Ular makan katak (Konsumen 3)", note:"Predator." },
+        { id:"r2_1_6", emoji:"🍄", txt:"Jamur mengurai ular mati", note:"Pengurai." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 4]]
+    },
+    {
+      tag: "RONDE 2 · SOAL 2 (MATEMATIKA)",
+      title: "🔢 Susun Persamaan Matematika",
+      mission: "Urutkan kartu berikut agar membentuk persamaan yang benar!",
+      steps: [
+        { id:"r2_2_1", emoji:"", txt:"100", note:"100" },
+        { id:"r2_2_2", emoji:"", txt:"-", note:"-" },
+        { id:"r2_2_3", emoji:"", txt:"(", note:"(" },
+        { id:"r2_2_4", emoji:"", txt:"20", note:"20" },
+        { id:"r2_2_5", emoji:"", txt:"+", note:"+" },
+        { id:"r2_2_6", emoji:"", txt:"5", note:"5" },
+        { id:"r2_2_7", emoji:"", txt:")", note:")" },
+        { id:"r2_2_8", emoji:"", txt:"×", note:"×" },
+        { id:"r2_2_9", emoji:"", txt:"3", note:"3" },
+        { id:"r2_2_10", emoji:"", txt:"=", note:"=" },
+        { id:"r2_2_11", emoji:"", txt:"25", note:"25" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [5, 6], [8, 9]]
+    },
+    {
+      tag: "RONDE 2 · SOAL 3 (B. INGGRIS)",
+      title: "🌱 How to Plant a Seed",
+      mission: "Order the simple instructions to plant a seed!",
+      steps: [
+        { id:"r2_3_1", emoji:"🪴", txt:"Fill a pot with fresh soil", note:"Fill pot with soil." },
+        { id:"r2_3_2", emoji:"🕳️", txt:"Make a small hole in soil", note:"Make a hole." },
+        { id:"r2_3_3", emoji:"🌻", txt:"Put the seed into the hole", note:"Put seed in." },
+        { id:"r2_3_4", emoji:"🤎", txt:"Cover the seed with soil", note:"Cover seed." },
+        { id:"r2_3_5", emoji:"💧", txt:"Water the plant gently", note:"Water plant." },
+        { id:"r2_3_6", emoji:"☀️", txt:"Put pot under sunlight", note:"Put in sunlight." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 4]]
+    },
+    {
+      tag: "RONDE 2 · SOAL 4 (IPA)",
+      title: "🫁 Jalur Pernapasan Manusia",
+      mission: "Urutkan perjalanan udara masuk ke dalam paru-paru!",
+      steps: [
+        { id:"r2_4_1", emoji:"👃", txt:"Udara masuk rongga hidung", note:"Disaring hidung." },
+        { id:"r2_4_2", emoji:"🗣️", txt:"Melewati tenggorokan (faring)", note:"Lewat faring." },
+        { id:"r2_4_3", emoji:"🫁", txt:"Masuk ke batang tenggorokan (trakea)", note:"Masuk trakea." },
+        { id:"r2_4_4", emoji:"🌿", txt:"Masuk ke cabang bronkus", note:"Lewat bronkus." },
+        { id:"r2_4_5", emoji:"🔍", txt:"Menuju cabang bronkiolus", note:"Lewat bronkiolus." },
+        { id:"r2_4_6", emoji:"🔴", txt:"Pertukaran gas di alveolus", note:"Diserap alveolus." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 4]]
+    },
+    {
+      tag: "RONDE 2 · SOAL 5 (MATEMATIKA)",
+      title: "🔢 Urutkan Pecahan dari Terkecil",
+      mission: "Urutkan kartu pecahan ini dari nilai paling kecil ke yang paling besar!",
+      steps: [
+        { id:"r2_5_1", emoji:"", txt:"1/8", note:"Nilai 0,125" },
+        { id:"r2_5_2", emoji:"", txt:"1/4", note:"Nilai 0,25" },
+        { id:"r2_5_3", emoji:"", txt:"1/2", note:"Nilai 0,5" },
+        { id:"r2_5_4", emoji:"", txt:"3/4", note:"Nilai 0,75" },
+        { id:"r2_5_5", emoji:"", txt:"1", note:"Nilai 1 utuh" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [0, 4], [1, 3]]
+    },
+    {
+      tag: "RONDE 2 · SOAL 6 (B. INGGRIS)",
+      title: "🍳 How to Make Fried Egg",
+      mission: "Order the steps to cook a simple fried egg!",
+      steps: [
+        { id:"r2_6_1", emoji:"🍳", txt:"Heat oil in the frying pan", note:"Heat pan with oil." },
+        { id:"r2_6_2", emoji:"🥚", txt:"Crack the egg into the pan", note:"Crack egg." },
+        { id:"r2_6_3", emoji:"🧂", txt:"Add a pinch of salt", note:"Add salt." },
+        { id:"r2_6_4", emoji:"🔥", txt:"Cook for two minutes", note:"Cook it." },
+        { id:"r2_6_5", emoji:"🍽️", txt:"Put the egg on a plate", note:"Move to plate." },
+        { id:"r2_6_6", emoji:"😋", txt:"Enjoy your fried egg", note:"Ready to eat!" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 4]]
+    },
+    {
+      tag: "RONDE 2 · SOAL 7 (IPA)",
+      title: "🐝 Metamorfosis Lebah Madu",
+      mission: "Urutkan daur hidup lebah madu dari telur hingga lebah!",
+      steps: [
+        { id:"r2_7_1", emoji:"🥚", txt:"Ratu lebah bertelur di sarang", note:"Ratu bertelur." },
+        { id:"r2_7_2", emoji:"🐛", txt:"Telur menetas jadi larva", note:"Menetas larva." },
+        { id:"r2_7_3", emoji:"🍯", txt:"Larva diberi makan royal jelly", note:"Diberi makan." },
+        { id:"r2_7_4", emoji:"📦", txt:"Sel sarang ditutup lilin", note:"Ditutup lilin." },
+        { id:"r2_7_5", emoji:"🌀", txt:"Berubah menjadi pupa", note:"Fase pupa." },
+        { id:"r2_7_6", emoji:"🐝", txt:"Lebah dewasa keluar bekerja", note:"Lebah pekerja." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 4]]
+    },
+    {
+      tag: "RONDE 2 · SOAL 8 (MATEMATIKA)",
+      title: "🔢 Susun Persamaan Matematika",
+      mission: "Urutkan kartu berikut agar membentuk persamaan yang benar!",
+      steps: [
+        { id:"r2_8_1", emoji:"", txt:"80", note:"80" },
+        { id:"r2_8_2", emoji:"", txt:"-", note:"-" },
+        { id:"r2_8_3", emoji:"", txt:"(", note:"(" },
+        { id:"r2_8_4", emoji:"", txt:"24", note:"24" },
+        { id:"r2_8_5", emoji:"", txt:"÷", note:"÷" },
+        { id:"r2_8_6", emoji:"", txt:"6", note:"6" },
+        { id:"r2_8_7", emoji:"", txt:")", note:")" },
+        { id:"r2_8_8", emoji:"", txt:"×", note:"×" },
+        { id:"r2_8_9", emoji:"", txt:"3", note:"3" },
+        { id:"r2_8_10", emoji:"", txt:"=", note:"=" },
+        { id:"r2_8_11", emoji:"", txt:"68", note:"68" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [5, 6], [8, 9]]
+    },
+    {
+      tag: "RONDE 2 · SOAL 9 (B. INGGRIS)",
+      title: "🧼 How to Wash Hands Properly",
+      mission: "Order the correct steps to wash your hands!",
+      steps: [
+        { id:"r2_9_1", emoji:"💧", txt:"Wet hands with clean water", note:"Wet hands." },
+        { id:"r2_9_2", emoji:"🧼", txt:"Apply soap on your palms", note:"Use soap." },
+        { id:"r2_9_3", emoji:"🤲", txt:"Rub palms and fingers together", note:"Rub well." },
+        { id:"r2_9_4", emoji:"⏱️", txt:"Scrub for 20 seconds", note:"Scrub 20 sec." },
+        { id:"r2_9_5", emoji:"🚰", txt:"Rinse off soap with water", note:"Rinse water." },
+        { id:"r2_9_6", emoji:"🧻", txt:"Dry hands with clean towel", note:"Dry hands." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 4]]
+    },
+    {
+      tag: "RONDE 2 · SOAL 10 (IPA)",
+      title: "🍃 Proses Fotosintesis",
+      mission: "Urutkan tahapan pembuatan makanan pada tumbuhan!",
+      steps: [
+        { id:"r2_10_1", emoji:"🌱", txt:"Akar menyerap air dari tanah", note:"Air dari tanah." },
+        { id:"r2_10_2", emoji:"🌳", txt:"Air diangkut ke daun lewat xilem", note:"Diangkut ke daun." },
+        { id:"r2_10_3", emoji:"💨", txt:"Daun menyerap CO2 dari udara", note:"CO2 masuk." },
+        { id:"r2_10_4", emoji:"☀️", txt:"Klorofil menangkap sinar matahari", note:"Energi cahaya." },
+        { id:"r2_10_5", emoji:"🧪", txt:"Air & CO2 diubah jadi Karbohidrat", note:"Hasil makanan." },
+        { id:"r2_10_6", emoji:"🌬️", txt:"Oksigen dilepas ke udara", note:"Oksigen dilepas." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 4]]
+    }
+  ],
 
-    // RONDE 3 (8 STEP)
-    [
-      {
-        tag: "RONDE 3 · KASUS 1 (8 STEP)",
-        title: "🌧️ Siklus Hidrologi (Daur Air)",
-        mission: "Bantu susun tahapan siklus air di bumi berdasarkan proses fisika alam!",
-        startIcon: "🤖", goalIcon: "🌧️",
-        steps: [
-          { id:"r3c1s1", emoji:"☀️", txt:"Sinar matahari memanaskan air laut", note:"Energi panas matahari menjadi penggerak utama siklus air." },
-          { id:"r3c1s2", emoji:"💨", txt:"Evaporasi (air menguap ke udara)", note:"Air permukaan berubah menjadi uap air dan naik ke atmosfer." },
-          { id:"r3c1s3", emoji:"🌿", txt:"Transpirasi dari tumbuhan", note:"Pohon dan tanaman juga melepaskan uap air ke udara." },
-          { id:"r3c1s4", emoji:"☁️", txt:"Kondensasi (uap air menjadi awan)", note:"Uap air mengembun menjadi partikel es/air membentuk awan." },
-          { id:"r3c1s5", emoji:"🌬️", txt:"Awan ditiup angin ke daratan", note:"Angin membawa awan tebal menuju wilayah pegunungan/daratan." },
-          { id:"r3c1s6", emoji:"🌧️", txt:"Presipitasi (hujan turun ke bumi)", note:"Awan yang sudah jenuh mencair dan turun sebagai titik-titik hujan." },
-          { id:"r3c1s7", emoji:"⛰️", txt:"Infiltrasi (air meresap ke tanah)", note:"Sebagian air hujan diserap masuk ke dalam pori-pori tanah." },
-          { id:"r3c1s8", emoji:"🌊", txt:"Limpasan air mengalir kembali ke laut", note:"Air tanah dan sungai mengalir kembali menuju ke laut lepas." }
-        ],
-        bugSwaps: [[2, 3]]
-      },
-      {
-        tag: "RONDE 3 · KASUS 2 (8 STEP)",
-        title: "🌌 Urutan Planet Tata Surya dari Matahari",
-        mission: "Susun urutan planet-planet dalam Tata Surya kita mulai dari yang terdekat dengan Matahari!",
-        startIcon: "☀️", goalIcon: "🪐",
-        steps: [
-          { id:"r3c2s1", emoji:"🔴", txt:"Merkurius (Planet ke-1)", note:"Planet terdekat dari Matahari dan berukuran paling kecil." },
-          { id:"r3c2s2", emoji:"🟡", txt:"Venus (Planet ke-2)", note:"Planet paling panas yang sering disebut Bintang Fajar." },
-          { id:"r3c2s3", emoji:"🌍", txt:"Bumi (Planet ke-3)", note:"Satu-satunya planet di tata surya yang dihuni mahluk hidup." },
-          { id:"r3c2s4", emoji:"🔴", txt:"Mars (Planet ke-4)", note:"Sering dijuluki sebagai Planet Merah karena batuan besi oksida." },
-          { id:"r3c2s5", emoji:"🟠", txt:"Jupiter (Planet ke-5)", note:"Planet terbesar dalam tata surya kita." },
-          { id:"r3c2s6", emoji:"🪐", txt:"Saturnus (Planet ke-6)", note:"Planet yang terkenal memiliki cincin es yang sangat indah." },
-          { id:"r3c2s7", emoji:"🔵", txt:"Uranus (Planet ke-7)", note:"Planet dingin dengan sumbu rotasi yang sangat miring." },
-          { id:"r3c2s8", emoji:"💙", txt:"Neptunus (Planet ke-8)", note:"Planet terluar yang berwarna biru dan berangin kencang." }
-        ],
-        bugSwaps: [[5, 6]]
-      },
-      {
-        tag: "RONDE 3 · KASUS 3 (8 STEP)",
-        title: "🐄 Sistem Pencernaan Hewan Ruminansia (Sapi)",
-        mission: "Susun tahapan pencernaan makanan pada sapi yang mengunyah makanannya dua kali!",
-        startIcon: "🤖", goalIcon: "🐄",
-        steps: [
-          { id:"r3c3s1", emoji:"🌾", txt:"Sapi mengunyah rumput secara kasar lalu ditelan", note:"Kunyahan pertama masih kasar dan cepat." },
-          { id:"r3c3s2", emoji:"🫘", txt:"Makanan masuk ke rumen untuk difermentasi", note:"Rumen adalah perut terbesar tempat fermentasi bakteri." },
-          { id:"r3c3s3", emoji:"🔵", txt:"Makanan dipindah ke retikulum membentuk bolus", note:"Retikulum membentuk gumpalan makanan (bolus)." },
-          { id:"r3c3s4", emoji:"🔁", txt:"Bolus dimuntahkan ke mulut untuk dikunyah ulang", note:"Proses ini disebut memamah biak (ruminasi)." },
-          { id:"r3c3s5", emoji:"⬇️", txt:"Makanan halus ditelan kembali menuju omasum", note:"Omasum menerima makanan yang sudah dikunyah ulang." },
-          { id:"r3c3s6", emoji:"💧", txt:"Omasum menyerap sebagian air dari makanan", note:"Penyerapan air terjadi sebelum masuk ke perut sejati." },
-          { id:"r3c3s7", emoji:"🧪", txt:"Makanan diteruskan ke abomasum (perut sejati)", note:"Abomasum mencerna makanan dengan enzim pencernaan." },
-          { id:"r3c3s8", emoji:"🌱", txt:"Sari makanan diserap di usus halus", note:"Sisa yang tak terserap akan dibuang sebagai kotoran." }
-        ],
-        bugSwaps: [[3, 4]]
-      },
-      {
-        tag: "RONDE 3 · KASUS 4 (8 STEP)",
-        title: "🌑 Proses Terjadinya Gerhana Bulan",
-        mission: "Susun tahapan terjadinya gerhana bulan saat bumi berada di antara matahari dan bulan!",
-        startIcon: "🌕", goalIcon: "🌑",
-        steps: [
-          { id:"r3c4s1", emoji:"☀️", txt:"Matahari, bumi, dan bulan segaris lurus", note:"Kondisi ini disebut fase konjungsi/oposisi khusus." },
-          { id:"r3c4s2", emoji:"🌍", txt:"Bumi berada tepat di antara matahari dan bulan", note:"Posisi bumi menghalangi cahaya menuju bulan." },
-          { id:"r3c4s3", emoji:"🚫", txt:"Bumi menghalangi sebagian cahaya matahari ke bulan", note:"Cahaya matahari mulai terhalang oleh bayangan bumi." },
-          { id:"r3c4s4", emoji:"🌘", txt:"Bayangan bumi (umbra) mulai menutupi bulan", note:"Umbra adalah bayangan inti yang paling gelap." },
-          { id:"r3c4s5", emoji:"🌑", txt:"Bulan masuk sepenuhnya ke bayangan umbra bumi", note:"Tahap ini disebut gerhana bulan total." },
-          { id:"r3c4s6", emoji:"🔴", txt:"Permukaan bulan tampak gelap kemerahan", note:"Warna merah muncul akibat pembiasan cahaya atmosfer bumi." },
-          { id:"r3c4s7", emoji:"🌒", txt:"Bulan mulai bergerak keluar dari bayangan umbra", note:"Bagian bulan yang terang mulai terlihat kembali." },
-          { id:"r3c4s8", emoji:"🌕", txt:"Bulan kembali tampak bersinar terang seperti semula", note:"Gerhana berakhir dan bulan kembali normal." }
-        ],
-        bugSwaps: [[4, 5]]
-      },
-      {
-        tag: "RONDE 3 · KASUS 5 (8 STEP)",
-        title: "🪷 Piramida Makanan Ekosistem Kolam",
-        mission: "Susun tingkatan trofik rantai makanan dari produsen hingga pengurai di ekosistem kolam!",
-        startIcon: "🤖", goalIcon: "🦢",
-        steps: [
-          { id:"r3c5s1", emoji:"🌿", txt:"Alga & tumbuhan air berfotosintesis (produsen)", note:"Alga menjadi sumber energi utama ekosistem kolam." },
-          { id:"r3c5s2", emoji:"🐌", txt:"Siput air memakan alga (konsumen 1)", note:"Siput air merupakan herbivora pemakan alga." },
-          { id:"r3c5s3", emoji:"🐟", txt:"Ikan kecil memakan siput air (konsumen 2)", note:"Ikan kecil menjadi konsumen tingkat kedua." },
-          { id:"r3c5s4", emoji:"🐠", txt:"Ikan sedang memangsa ikan kecil (konsumen 3)", note:"Ikan sedang menjadi konsumen tingkat ketiga." },
-          { id:"r3c5s5", emoji:"🦢", txt:"Burung bangau memangsa ikan sedang (puncak)", note:"Burung bangau menjadi predator puncak di kolam." },
-          { id:"r3c5s6", emoji:"💀", txt:"Burung bangau mati secara alami", note:"Kematian alami adalah bagian dari siklus ekosistem." },
-          { id:"r3c5s7", emoji:"🦠", txt:"Bakteri pengurai menguraikan bangkai burung", note:"Pengurai memecah bangkai menjadi zat sederhana." },
-          { id:"r3c5s8", emoji:"🌱", txt:"Zat hara hasil penguraian menyuburkan air kolam", note:"Zat hara diserap kembali oleh tumbuhan air." }
-        ],
-        bugSwaps: [[2, 3]]
-      },
-      {
-        tag: "RONDE 3 · KASUS 6 (8 STEP)",
-        title: "🪳 Metamorfosis Tidak Sempurna Kecoa",
-        mission: "Susun tahapan daur hidup kecoa dari telur hingga menjadi kecoa dewasa bersayap!",
-        startIcon: "🤖", goalIcon: "🪳",
-        steps: [
-          { id:"r3c6s1", emoji:"🥚", txt:"Kecoa betina menghasilkan kapsul telur (ooteka)", note:"Ooteka berisi banyak telur yang terlindungi cangkang." },
-          { id:"r3c6s2", emoji:"🐛", txt:"Ooteka menetas menjadi nimfa tanpa sayap", note:"Nimfa kecoa mirip induknya namun berukuran kecil." },
-          { id:"r3c6s3", emoji:"🔄", txt:"Nimfa berganti kulit tahap pertama", note:"Pergantian kulit membantu pertumbuhan tubuh nimfa." },
-          { id:"r3c6s4", emoji:"🌱", txt:"Nimfa berganti kulit tahap kedua, tunas sayap muncul", note:"Tunas sayap kecil mulai tampak di punggung nimfa." },
-          { id:"r3c6s5", emoji:"🔄", txt:"Nimfa berganti kulit tahap ketiga mendekati dewasa", note:"Ukuran tubuh semakin membesar tiap pergantian kulit." },
-          { id:"r3c6s6", emoji:"🪽", txt:"Nimfa berganti kulit tahap terakhir, sayap penuh", note:"Sayap nimfa sudah terlihat hampir sempurna." },
-          { id:"r3c6s7", emoji:"🐞", txt:"Kecoa muda bersayap namun belum matang sempurna", note:"Kecoa muda masih perlu waktu untuk matang total." },
-          { id:"r3c6s8", emoji:"🪳", txt:"Kecoa dewasa siap terbang dan berkembang biak", note:"Kecoa dewasa memiliki sayap yang berfungsi penuh." }
-        ],
-        bugSwaps: [[3, 4]]
-      },
-      {
-        tag: "RONDE 3 · KASUS 7 (8 STEP)",
-        title: "🥛 Percobaan Pembuatan Yogurt Sederhana",
-        mission: "Susun langkah percobaan pembuatan yogurt dari susu segar hingga siap disantap!",
-        startIcon: "🤖", goalIcon: "🥛",
-        steps: [
-          { id:"r3c7s1", emoji:"🔥", txt:"Susu segar dipanaskan hingga hampir mendidih", note:"Pemanasan membunuh bakteri jahat dalam susu." },
-          { id:"r3c7s2", emoji:"🧊", txt:"Susu panas didinginkan hingga suhu hangat kuku", note:"Suhu yang tepat penting agar bakteri baik tidak mati." },
-          { id:"r3c7s3", emoji:"🧫", txt:"Bibit bakteri yogurt (starter) dicampurkan", note:"Starter berisi bakteri baik pengubah susu jadi yogurt." },
-          { id:"r3c7s4", emoji:"🥄", txt:"Campuran susu diaduk hingga merata", note:"Pengadukan memastikan bakteri tersebar merata." },
-          { id:"r3c7s5", emoji:"🫙", txt:"Campuran susu dituang ke wadah tertutup", note:"Wadah tertutup menjaga suhu tetap stabil." },
-          { id:"r3c7s6", emoji:"⏳", txt:"Wadah disimpan hangat selama 6-8 jam", note:"Waktu fermentasi memengaruhi tingkat kekentalan yogurt." },
-          { id:"r3c7s7", emoji:"🦠", txt:"Bakteri mengubah susu jadi kental dan asam", note:"Proses fermentasi menghasilkan rasa asam khas yogurt." },
-          { id:"r3c7s8", emoji:"❄️", txt:"Yogurt jadi didinginkan sebelum disantap", note:"Pendinginan menghentikan proses fermentasi lebih lanjut." }
-        ],
-        bugSwaps: [[2, 3]]
-      },
-      {
-        tag: "RONDE 3 · KASUS 8 (8 STEP)",
-        title: "⛈️ Proses Terbentuknya Petir dan Guntur",
-        mission: "Susun tahapan terjadinya petir dan guntur pada awan kumulonimbus!",
-        startIcon: "☁️", goalIcon: "⚡",
-        steps: [
-          { id:"r3c8s1", emoji:"☁️", txt:"Awan kumulonimbus terbentuk membawa muatan listrik", note:"Awan ini biasa muncul menjelang hujan deras." },
-          { id:"r3c8s2", emoji:"❄️", txt:"Gesekan partikel air dan es di awan timbulkan muatan", note:"Gesekan ini menghasilkan pemisahan muatan listrik." },
-          { id:"r3c8s3", emoji:"➖", txt:"Muatan negatif berkumpul di bagian bawah awan", note:"Muatan negatif cenderung berada di dasar awan." },
-          { id:"r3c8s4", emoji:"➕", txt:"Muatan positif berkumpul di permukaan bumi", note:"Muatan positif terinduksi di bawah awan bermuatan negatif." },
-          { id:"r3c8s5", emoji:"⚡", txt:"Perbedaan muatan menimbulkan medan listrik besar", note:"Medan listrik yang kuat memicu loncatan listrik." },
-          { id:"r3c8s6", emoji:"🌩️", txt:"Loncatan listrik menghubungkan awan dan bumi (petir)", note:"Petir adalah pelepasan muatan listrik secara tiba-tiba." },
-          { id:"r3c8s7", emoji:"🔥", txt:"Udara di sekitar loncatan memuai sangat cepat", note:"Panas dari petir membuat udara memuai mendadak." },
-          { id:"r3c8s8", emoji:"💥", txt:"Pemuaian udara menimbulkan suara guntur", note:"Guntur terdengar sesaat setelah kilatan petir terlihat." }
-        ],
-        bugSwaps: [[3, 4]]
-      },
-      {
-        tag: "RONDE 3 · KASUS 9 (8 STEP)",
-        title: "🌍 Urutan Lapisan Bumi dari Inti ke Permukaan",
-        mission: "Susun urutan lapisan bumi mulai dari inti dalam hingga lapisan pelindung atmosfer!",
-        startIcon: "🔴", goalIcon: "🌍",
-        steps: [
-          { id:"r3c9s1", emoji:"🔴", txt:"Inti dalam bumi berupa logam padat sangat panas", note:"Inti dalam adalah bagian terpanas dari bumi." },
-          { id:"r3c9s2", emoji:"🟠", txt:"Inti luar bumi berupa logam cair", note:"Inti luar mengelilingi inti dalam yang padat." },
-          { id:"r3c9s3", emoji:"🟤", txt:"Mantel bawah berupa batuan pijar sangat panas", note:"Mantel bawah menyimpan panas dari inti bumi." },
-          { id:"r3c9s4", emoji:"🟫", txt:"Mantel atas berupa batuan panas bergerak lambat", note:"Pergerakan mantel memicu pergerakan lempeng bumi." },
-          { id:"r3c9s5", emoji:"⬛", txt:"Litosfer berupa lempeng batuan keras dan padat", note:"Litosfer menjadi dasar tempat benua bergerak." },
-          { id:"r3c9s6", emoji:"🌍", txt:"Kerak bumi menjadi permukaan tempat manusia tinggal", note:"Kerak bumi adalah lapisan terluar yang paling tipis." },
-          { id:"r3c9s7", emoji:"🌤️", txt:"Atmosfer menyelimuti bumi & menahan panas matahari", note:"Atmosfer menjaga suhu bumi tetap layak dihuni." },
-          { id:"r3c9s8", emoji:"🛡️", txt:"Lapisan ozon melindungi bumi dari radiasi UV", note:"Ozon menyaring sinar ultraviolet berbahaya dari matahari." }
-        ],
-        bugSwaps: [[4, 5]]
-      },
-      {
-        tag: "RONDE 3 · KASUS 10 (8 STEP)",
-        title: "🐞 Metamorfosis Sempurna Kumbang",
-        mission: "Susun tahapan daur hidup kumbang dari telur hingga menjadi kumbang dewasa bersayap keras!",
-        startIcon: "🤖", goalIcon: "🐞",
-        steps: [
-          { id:"r3c10s1", emoji:"🥚", txt:"Kumbang betina bertelur di tanah/kayu lapuk", note:"Telur diletakkan di tempat lembap yang aman." },
-          { id:"r3c10s2", emoji:"🐛", txt:"Telur menetas menjadi larva (uret)", note:"Larva kumbang sering disebut uret atau gayas." },
-          { id:"r3c10s3", emoji:"🍃", txt:"Larva makan bahan organik dan tumbuh membesar", note:"Larva memakan sisa tumbuhan atau kayu lapuk." },
-          { id:"r3c10s4", emoji:"🔄", txt:"Larva berganti kulit beberapa kali", note:"Pergantian kulit mengiringi pertumbuhan tubuh larva." },
-          { id:"r3c10s5", emoji:"🌀", txt:"Larva berubah menjadi pupa di dalam tanah", note:"Pupa kumbang biasanya terbentuk di tempat tersembunyi." },
-          { id:"r3c10s6", emoji:"🧬", txt:"Di dalam pupa terjadi perubahan bentuk total", note:"Perubahan bentuk tubuh terjadi secara menyeluruh." },
-          { id:"r3c10s7", emoji:"🐣", txt:"Kumbang muda keluar, sayap masih lunak", note:"Sayap kumbang muda perlu waktu untuk mengeras." },
-          { id:"r3c10s8", emoji:"🐞", txt:"Kumbang dewasa mengeraskan sayap dan siap terbang", note:"Sayap keras melindungi tubuh kumbang saat terbang." }
-        ],
-        bugSwaps: [[3, 4]]
-      }
-    ],
+  // ==========================================
+  // RONDE 3 (10 SOAL)
+  // ==========================================
+  [
+    {
+      tag: "RONDE 3 · SOAL 1 (IPA)",
+      title: "🦟 Metamorfosis Nyamuk",
+      mission: "Urutkan daur hidup nyamuk dari telur sampai nyamuk dewasa!",
+      steps: [
+        { id:"r3_1_1", emoji:"🥚", txt:"Nyamuk bertelur di atas air tenang", note:"Telur di air." },
+        { id:"r3_1_2", emoji:"🐛", txt:"Telur menetas jadi jentik-jentik", note:"Jentik (larva)." },
+        { id:"r3_1_3", emoji:"🏊", txt:"Jentik-jentik bergerak di air", note:"Makan di air." },
+        { id:"r3_1_4", emoji:"🥜", txt:"Berubah menjadi pupa nyamuk", note:"Fase pupa." },
+        { id:"r3_1_5", emoji:"🦟", txt:"Nyamuk muda keluar dari pupa", note:"Mulai berwujud nyamuk." },
+        { id:"r3_1_6", emoji:"🪵", txt:"Hinggap sebentar pengeringan sayap", note:"Mengeringkan sayap." },
+        { id:"r3_1_7", emoji:"🪰", txt:"Nyamuk dewasa siap terbang", note:"Nyamuk dewasa." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 6]]
+    },
+    {
+      tag: "RONDE 3 · SOAL 2 (MATEMATIKA)",
+      title: "🔢 Susun Persamaan Matematika",
+      mission: "Urutkan kartu berikut agar membentuk persamaan yang benar!",
+      steps: [
+        { id:"r3_2_1", emoji:"", txt:"45", note:"45" },
+        { id:"r3_2_2", emoji:"", txt:"+", note:"+" },
+        { id:"r3_2_3", emoji:"", txt:"(", note:"(" },
+        { id:"r3_2_4", emoji:"", txt:"15", note:"15" },
+        { id:"r3_2_5", emoji:"", txt:"-", note:"-" },
+        { id:"r3_2_6", emoji:"", txt:"5", note:"5" },
+        { id:"r3_2_7", emoji:"", txt:")", note:")" },
+        { id:"r3_2_8", emoji:"", txt:"×", note:"×" },
+        { id:"r3_2_9", emoji:"", txt:"4", note:"4" },
+        { id:"r3_2_10", emoji:"", txt:"÷", note:"÷" },
+        { id:"r3_2_11", emoji:"", txt:"2", note:"2" },
+        { id:"r3_2_12", emoji:"", txt:"=", note:"=" },
+        { id:"r3_2_13", emoji:"", txt:"65", note:"65" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [6, 7], [9, 10]]
+    },
+    {
+      tag: "RONDE 3 · SOAL 3 (B. INGGRIS)",
+      title: "🧺 How to Wash Clothes",
+      mission: "Order the correct steps to wash clothes manually!",
+      steps: [
+        { id:"r3_3_1", emoji:"🧺", txt:"Separate white and colored clothes", note:"Separate clothes." },
+        { id:"r3_3_2", emoji:"🪣", txt:"Fill bucket with water and detergent", note:"Fill bucket." },
+        { id:"r3_3_3", emoji:"👕", txt:"Soak clothes for 15 minutes", note:"Soak clothes." },
+        { id:"r3_3_4", emoji:"🧼", txt:"Scrub clothes gently with hands", note:"Scrub clothes." },
+        { id:"r3_3_5", emoji:"🚰", txt:"Rinse clothes with clean water", note:"Rinse clothes." },
+        { id:"r3_3_6", emoji:"🌀", txt:"Squeeze water out from clothes", note:"Squeeze water." },
+        { id:"r3_3_7", emoji:"☀️", txt:"Hang clothes under sunlight to dry", note:"Dry in sun." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 6]]
+    },
+    {
+      tag: "RONDE 3 · SOAL 4 (IPA)",
+      title: "🌊 Daur Air (Siklus Hidrologi)",
+      mission: "Urutkan siklus perputaran air di bumi!",
+      steps: [
+        { id:"r3_4_1", emoji:"☀️", txt:"Matahari memanaskan air laut", note:"Energi panas." },
+        { id:"r3_4_2", emoji:"💨", txt:"Evaporasi: Air menguap ke atas", note:"Penguapan." },
+        { id:"r3_4_3", emoji:"☁️", txt:"Kondensasi: Uap membentuk awan", note:"Pengembunan." },
+        { id:"r3_4_4", emoji:"🌧️", txt:"Presipitasi: Hujan turun ke bumi", note:"Hujan." },
+        { id:"r3_4_5", emoji:"🏔️", txt:"Air mengalir di permukaan tanah", note:"Aliran air." },
+        { id:"r3_4_6", emoji:"🌱", txt:"Infiltrasi: Air meresap ke tanah", note:"Penyerapan tanah." },
+        { id:"r3_4_7", emoji:"🌊", txt:"Air kembali mengalir ke laut", note:"Kembali ke laut." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 6]]
+    },
+    {
+      tag: "RONDE 3 · SOAL 5 (MATEMATIKA)",
+      title: "🔢 Urutkan Desimal dari Terbesar",
+      mission: "Urutkan kartu desimal ini dari nilai TERBESAR ke terkecil!",
+      steps: [
+        { id:"r3_5_1", emoji:"", txt:"2,50", note:"2,50" },
+        { id:"r3_5_2", emoji:"", txt:"1,75", note:"1,75" },
+        { id:"r3_5_3", emoji:"", txt:"1,25", note:"1,25" },
+        { id:"r3_5_4", emoji:"", txt:"0,85", note:"0,85" },
+        { id:"r3_5_5", emoji:"", txt:"0,50", note:"0,50" },
+        { id:"r3_5_6", emoji:"", txt:"0,12", note:"0,12" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 4]]
+    },
+    {
+      tag: "RONDE 3 · SOAL 6 (B. INGGRIS)",
+      title: "🍜 How to Make Instant Noodles",
+      mission: "Order the correct steps to cook instant noodles!",
+      steps: [
+        { id:"r3_6_1", emoji:"🫖", txt:"Boil water in a small pot", note:"Boil water." },
+        { id:"r3_6_2", emoji:"🍜", txt:"Put instant noodles into boiling water", note:"Put noodles." },
+        { id:"r3_6_3", emoji:"⏱️", txt:"Cook noodles for 3 minutes", note:"Cook 3 mins." },
+        { id:"r3_6_4", emoji:"🍽️", txt:"Prepare seasonings on a plate", note:"Prepare seasoning." },
+        { id:"r3_6_5", emoji:"🫗", txt:"Drain water and pour noodles to plate", note:"Drain water." },
+        { id:"r3_6_6", emoji:"🥢", txt:"Mix noodles thoroughly with seasoning", note:"Mix well." },
+        { id:"r3_6_7", emoji:"😋", txt:"Delicious noodles are ready to eat", note:"Ready to eat!" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 6]]
+    },
+    {
+      tag: "RONDE 3 · SOAL 7 (IPA)",
+      title: "🫀 Peredaran Darah Kecil",
+      mission: "Urutkan siklus aliran darah kecil (Jantung - Paru-paru - Jantung)!",
+      steps: [
+        { id:"r3_7_1", emoji:"❤️", txt:"Bilik Kanan jantung memompa darah", note:"Awal pemompaan." },
+        { id:"r3_7_2", emoji:"🔴", txt:"Darah kaya CO2 mengalir ke Arteri Pulmonalis", note:"Arteri pulmonalis." },
+        { id:"r3_7_3", emoji:"🫁", txt:"Darah masuk ke Paru-Paru", note:"Masuk paru-paru." },
+        { id:"r3_7_4", emoji:"🔄", txt:"Tukar CO2 dengan Oksigen segar", note:"Pertukaran gas." },
+        { id:"r3_7_5", emoji:"🩸", txt:"Darah kaya Oksigen mengalir ke Vena Pulmonalis", note:"Vena pulmonalis." },
+        { id:"r3_7_6", emoji:"💖", txt:"Darah masuk ke Serambi Kiri jantung", note:"Masuk serambi kiri." },
+        { id:"r3_7_7", emoji:"✅", txt:"Siklus Peredaran Darah Kecil Selesai!", note:"Selesai." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 6]]
+    },
+    {
+      tag: "RONDE 3 · SOAL 8 (MATEMATIKA)",
+      title: "🔢 Susun Persamaan Matematika",
+      mission: "Urutkan kartu berikut agar membentuk persamaan yang benar!",
+      steps: [
+        { id:"r3_8_1", emoji:"", txt:"(", note:"(" },
+        { id:"r3_8_2", emoji:"", txt:"50", note:"50" },
+        { id:"r3_8_3", emoji:"", txt:"+", note:"+" },
+        { id:"r3_8_4", emoji:"", txt:"30", note:"30" },
+        { id:"r3_8_5", emoji:"", txt:")", note:")" },
+        { id:"r3_8_6", emoji:"", txt:"÷", note:"÷" },
+        { id:"r3_8_7", emoji:"", txt:"10", note:"10" },
+        { id:"r3_8_8", emoji:"", txt:"×", note:"×" },
+        { id:"r3_8_9", emoji:"", txt:"6", note:"6" },
+        { id:"r3_8_10", emoji:"", txt:"-", note:"-" },
+        { id:"r3_8_11", emoji:"", txt:"8", note:"8" },
+        { id:"r3_8_12", emoji:"", txt:"=", note:"=" },
+        { id:"r3_8_13", emoji:"", txt:"40", note:"40" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [6, 7], [9, 10]]
+    },
+    {
+      tag: "RONDE 3 · SOAL 9 (B. INGGRIS)",
+      title: "🧼 How to Clean Your Bedroom",
+      mission: "Order the steps to clean up your bedroom!",
+      steps: [
+        { id:"r3_9_1", emoji:"🪟", txt:"Open windows to refresh air", note:"Open window." },
+        { id:"r3_9_2", emoji:"🛏️", txt:"Tidy up blankets and pillows", note:"Tidy bed." },
+        { id:"r3_9_3", emoji:"🧸", txt:"Put toys and books in right place", note:"Put away items." },
+        { id:"r3_9_4", emoji:"🧹", txt:"Sweep floor with a broom", note:"Sweep floor." },
+        { id:"r3_9_5", emoji:"🪣", txt:"Mop floor with clean water", note:"Mop floor." },
+        { id:"r3_9_6", emoji:"🗑️", txt:"Throw trash into trash bin", note:"Throw trash." },
+        { id:"r3_9_7", emoji:"✨", txt:"Enjoy your clean and fresh room", note:"Clean room!" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 6]]
+    },
+    {
+      tag: "RONDE 3 · SOAL 10 (IPA)",
+      title: "⚡ Cara Kerja Pembangkit Listrik (PLTA)",
+      mission: "Urutkan proses perubahan energi di PLTA!",
+      steps: [
+        { id:"r3_10_1", emoji:"🏞️", txt:"Air waduk ditampung di bendungan", note:"Air ditampung." },
+        { id:"r3_10_2", emoji:"🌊", txt:"Air dialirkan lewat pipa pesat", note:"Air mengalir." },
+        { id:"r3_10_3", emoji:"⚙️", txt:"Aliran air memutar kincir turbin", note:"Turbin berputar." },
+        { id:"r3_10_4", emoji:"🔄", txt:"Turbin memutar rotor generator", note:"Generator berputar." },
+        { id:"r3_10_5", emoji:"⚡", txt:"Generator mengubah energi jadi listrik", note:"Hasilkan listrik." },
+        { id:"r3_10_6", emoji:"🔌", txt:"Listrik disalurkan ke kabel trafo", note:"Disalurkan trafo." },
+        { id:"r3_10_7", emoji:"🏠", txt:"Listrik sampai ke rumah warga", note:"Sampai rumah." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 6]]
+    }
+  ],
 
-    // RONDE 4 (10 STEP)
-    [
-      {
-        tag: "RONDE 4 · KASUS 1 (10 STEP)",
-        title: "⚡ Merangkai Rangkaian Listrik Seri",
-        mission: "Langkah-langkah praktikum IPA membuat rangkaian listrik seri dengan sakelar dan lampu.",
-        startIcon: "🤖", goalIcon: "💡",
-        steps: [
-          { id:"r4c1s1", emoji:"🔋", txt:"Menyiapkan 2 buah baterai", note:"Siapkan baterai sebagai sumber tegangan arus listrik searah." },
-          { id:"r4c1s2", emoji:"📦", txt:"Memasang baterai di dudukan", note:"Hubungkan kutub positif baterai 1 dengan kutub negatif baterai 2." },
-          { id:"r4c1s3", emoji:"✂️", txt:"Memotong kabel listrik secukupnya", note:"Potong kabel tembaga menjadi beberapa bagian untuk penyambung." },
-          { id:"r4c1s4", emoji:"🔌", txt:"Kupas ujung plastik pembungkus kabel", note:"Kupas isolator kabel agar kawat tembaga di dalamnya terlihat." },
-          { id:"r4c1s5", emoji:"🔘", txt:"Menghubungkan kabel ke sakelar", note:"Sambungkan salah satu kawat kabel ke terminal sakelar." },
-          { id:"r4c1s6", emoji:"💡", txt:"Memasang lampu bohlam kecil 1", note:"Sambungkan kawat dari sakelar ke dudukan lampu pertama." },
-          { id:"r4c1s7", emoji:"💡", txt:"Memasang lampu bohlam kecil 2", note:"Hubungkan kabel secara berurutan (sejajar) ke lampu kedua." },
-          { id:"r4c1s8", emoji:"🔄", txt:"Menghubungkan kabel ke kutub baterai", note:"Hubungkan ujung kabel terakhir kembali ke terminal baterai." },
-          { id:"r4c1s9", emoji:"👇", txt:"Tekan tombol sakelar ke posisi ON", note:"Menutup sakelar agar arus listrik dapat mengalir." },
-          { id:"r4c1s10", emoji:"✨", txt:"Kedua lampu menyala bersamaan", note:"Rangkaian seri tertutup berhasil menyalakan kedua bohlam." }
-        ],
-        bugSwaps: [[0, 1]]
-      },
-      {
-        tag: "RONDE 4 · KASUS 2 (10 STEP)",
-        title: "🧲 Eksperimen Membuat Magnet Buatan (Elektromagnet)",
-        mission: "Susun prosedur percobaan membuat magnet sementara dari aliran arus listrik!",
-        startIcon: "🤖", goalIcon: "🧲",
-        steps: [
-          { id:"r4c2s1", emoji:"🔩", txt:"Siapkan paku besi besar yang bersih", note:"Paku besi berfungsi sebagai inti bahan ferromagnetik." },
-          { id:"r4c2s2", emoji:"🧶", txt:"Siapkan kawat tembaga bersalut", note:"Kawat tembaga akan digunakan sebagai kumparan penghantar arus." },
-          { id:"r4c2s3", emoji:"🌀", txt:"Lilitkan kawat tembaga melingkari paku", note:"Lilitkan kawat secara rapat dan searah pada badan paku." },
-          { id:"r4c2s4", emoji:"📐", txt:"Sisakan kedua ujung kawat 10 cm", note:"Sisa ujung kawat berguna untuk dihubungkan ke sumber listrik." },
-          { id:"r4c2s5", emoji:"🪨", txt:"Amplas bagian ujung tembaga kawat", note:"Mengamplas bertujuan membuang lapisan isolator tipis kawat." },
-          { id:"r4c2s6", emoji:"🔋", txt:"Siapkan baterai ukuran besar 1.5V", note:"Baterai berfungsi sebagai penyedia arus listrik DC." },
-          { id:"r4c2s7", emoji:"➕", txt:"Tempel ujung kawat 1 ke kutub positif", note:"Hubungkan kawat pertama ke bagian atas baterai." },
-          { id:"r4c2s8", emoji:"➖", txt:"Tempel ujung kawat 2 ke kutub negatif", note:"Hubungkan kawat kedua ke bagian bawah baterai." },
-          { id:"r4c2s9", emoji:"📎", txt:"Dekatkan paku ke klip kertas besi", note:"Uji medan magnet yang terbentuk pada paku besi." },
-          { id:"r4c2s10", emoji:"🧲", txt:"Klip kertas menempel erat pada paku", note:"Arus listrik menghasilkan gaya magnet yang menarik klip besi." }
-        ],
-        bugSwaps: [[6, 7]]
-      },
-      {
-        tag: "RONDE 4 · KASUS 3 (10 STEP)",
-        title: "🧭 Percobaan Membuat Kompas Sederhana",
-        mission: "Susun langkah percobaan IPA membuat kompas sederhana dari jarum dan magnet!",
-        startIcon: "🤖", goalIcon: "🧭",
-        steps: [
-          { id:"r4c3s1", emoji:"🪡", txt:"Siapkan jarum jahit besi dan magnet batang", note:"Jarum besi akan dijadikan penunjuk arah kompas." },
-          { id:"r4c3s2", emoji:"🧲", txt:"Gosokkan ujung magnet searah pada jarum", note:"Gosokan searah membuat jarum bersifat magnetis." },
-          { id:"r4c3s3", emoji:"🔁", txt:"Gosokkan magnet ke jarum 20-30 kali", note:"Semakin sering digosok, sifat magnet jarum makin kuat." },
-          { id:"r4c3s4", emoji:"➡️", txt:"Gosokan dilakukan hanya searah", note:"Gosokan berlawanan arah akan menghilangkan sifat magnet." },
-          { id:"r4c3s5", emoji:"🪣", txt:"Siapkan wadah berisi air dan gabus tipis", note:"Gabus akan menjadi tempat mengapungkan jarum." },
-          { id:"r4c3s6", emoji:"📌", txt:"Tusukkan jarum bermagnet ke tengah gabus", note:"Posisi jarum harus tepat di tengah gabus." },
-          { id:"r4c3s7", emoji:"🫳", txt:"Letakkan gabus di atas air secara perlahan", note:"Gabus harus mengapung bebas tanpa terbalik." },
-          { id:"r4c3s8", emoji:"🌊", txt:"Biarkan gabus mengambang tanpa menyentuh wadah", note:"Sentuhan pada dinding wadah akan mengganggu arah jarum." },
-          { id:"r4c3s9", emoji:"👀", txt:"Amati jarum berputar dan berhenti mengarah tertentu", note:"Jarum akan berhenti pada arah medan magnet bumi." },
-          { id:"r4c3s10", emoji:"🧭", txt:"Ujung jarum menunjukkan arah utara-selatan", note:"Inilah prinsip kerja kompas sederhana buatan sendiri." }
-        ],
-        bugSwaps: [[2, 3]]
-      },
-      {
-        tag: "RONDE 4 · KASUS 4 (10 STEP)",
-        title: "🌱 Percobaan Mengamati Pertumbuhan Kacang Hijau",
-        mission: "Susun langkah percobaan menanam dan mengamati pertumbuhan kacang hijau!",
-        startIcon: "🤖", goalIcon: "🌿",
-        steps: [
-          { id:"r4c4s1", emoji:"💧", txt:"Pilih biji kacang hijau yang baik lalu rendam semalaman", note:"Perendaman mempercepat proses perkecambahan biji." },
-          { id:"r4c4s2", emoji:"🧵", txt:"Siapkan kapas basah di dalam wadah bening", note:"Kapas basah menjaga kelembapan yang dibutuhkan biji." },
-          { id:"r4c4s3", emoji:"🌰", txt:"Letakkan biji kacang hijau di atas kapas basah", note:"Biji diletakkan agar mudah diamati pertumbuhannya." },
-          { id:"r4c4s4", emoji:"☀️", txt:"Simpan wadah di tempat terkena cahaya cukup", note:"Cahaya dibutuhkan untuk pertumbuhan tanaman selanjutnya." },
-          { id:"r4c4s5", emoji:"🚿", txt:"Siram kapas dengan air secukupnya setiap hari", note:"Kelembapan kapas harus dijaga agar biji tidak kering." },
-          { id:"r4c4s6", emoji:"🌰", txt:"Hari kedua biji mulai berkecambah keluarkan akar", note:"Akar pertama muncul menembus kulit biji." },
-          { id:"r4c4s7", emoji:"🌱", txt:"Akar kecil tumbuh menembus kapas mencari air", note:"Akar tumbuh mengarah ke sumber air terdekat." },
-          { id:"r4c4s8", emoji:"🌿", txt:"Batang dan daun mulai muncul dari kecambah", note:"Tunas batang tumbuh ke atas mencari cahaya matahari." },
-          { id:"r4c4s9", emoji:"🍃", txt:"Daun tumbuh melebar dan berwarna hijau", note:"Warna hijau daun berasal dari klorofil yang terbentuk." },
-          { id:"r4c4s10", emoji:"🪴", txt:"Tanaman kacang hijau siap dipindah ke media tanah", note:"Tanaman yang sudah cukup kuat dapat dipindah tanam." }
-        ],
-        bugSwaps: [[5, 6]]
-      },
-      {
-        tag: "RONDE 4 · KASUS 5 (10 STEP)",
-        title: "🍋 Percobaan Membuat Baterai dari Buah Lemon",
-        mission: "Susun langkah percobaan membuat sumber listrik sederhana dari buah lemon!",
-        startIcon: "🤖", goalIcon: "💡",
-        steps: [
-          { id:"r4c5s1", emoji:"🍋", txt:"Siapkan beberapa buah lemon segar berukuran besar", note:"Asam sitrat pada lemon berperan sebagai elektrolit." },
-          { id:"r4c5s2", emoji:"🔩", txt:"Siapkan lempeng tembaga dan lempeng seng", note:"Kedua logam ini bertindak sebagai elektroda." },
-          { id:"r4c5s3", emoji:"➕", txt:"Tusukkan lempeng tembaga ke salah satu sisi lemon", note:"Tembaga menjadi elektroda kutub positif." },
-          { id:"r4c5s4", emoji:"➖", txt:"Tusukkan lempeng seng ke sisi lain lemon", note:"Seng menjadi elektroda kutub negatif." },
-          { id:"r4c5s5", emoji:"🔗", txt:"Hubungkan seng lemon pertama ke tembaga lemon kedua", note:"Sambungan ini membuat rangkaian seri antar lemon." },
-          { id:"r4c5s6", emoji:"🔁", txt:"Ulangi sambungan kabel antar buah lemon", note:"Semakin banyak lemon tersambung, tegangan makin besar." },
-          { id:"r4c5s7", emoji:"🔌", txt:"Sisakan satu tembaga dan satu seng di ujung rangkaian", note:"Ujung rangkaian dihubungkan ke alat yang akan diuji." },
-          { id:"r4c5s8", emoji:"💡", txt:"Hubungkan kedua ujung rangkaian ke lampu LED", note:"LED membutuhkan arus listrik kecil untuk menyala." },
-          { id:"r4c5s9", emoji:"⚡", txt:"Asam sitrat bereaksi menghasilkan arus listrik", note:"Reaksi kimia antara logam dan asam menghasilkan listrik." },
-          { id:"r4c5s10", emoji:"✨", txt:"Lampu LED menyala berkat energi dari buah lemon", note:"Lemon terbukti dapat menghasilkan energi listrik kecil." }
-        ],
-        bugSwaps: [[3, 4]]
-      },
-      {
-        tag: "RONDE 4 · KASUS 6 (10 STEP)",
-        title: "🌋 Percobaan Gunung Meletus Mini",
-        mission: "Susun langkah percobaan reaksi kimia membuat model gunung meletus mini!",
-        startIcon: "🤖", goalIcon: "🌋",
-        steps: [
-          { id:"r4c6s1", emoji:"🏔️", txt:"Buat model gunung dari tanah liat/karton berlubang", note:"Lubang pada puncak akan menjadi tempat botol kecil." },
-          { id:"r4c6s2", emoji:"🍾", txt:"Masukkan botol kecil ke dalam lubang puncak", note:"Botol kecil menjadi wadah reaksi kimia di dalam gunung." },
-          { id:"r4c6s3", emoji:"🧂", txt:"Tuangkan soda kue ke dalam botol", note:"Soda kue (baking soda) berperan sebagai bahan basa." },
-          { id:"r4c6s4", emoji:"🎨", txt:"Tambahkan pewarna makanan merah", note:"Pewarna membuat busa terlihat menyerupai lava." },
-          { id:"r4c6s5", emoji:"🧼", txt:"Tambahkan sedikit sabun cuci piring", note:"Sabun membuat busa yang dihasilkan lebih banyak." },
-          { id:"r4c6s6", emoji:"🍶", txt:"Siapkan larutan cuka di wadah terpisah", note:"Cuka berperan sebagai bahan asam dalam reaksi." },
-          { id:"r4c6s7", emoji:"🥤", txt:"Tuangkan larutan cuka ke dalam botol berisi soda kue", note:"Pencampuran asam dan basa memicu reaksi kimia." },
-          { id:"r4c6s8", emoji:"💨", txt:"Reaksi cuka & soda kue menghasilkan gas CO2", note:"Gas karbondioksida inilah yang membentuk gelembung busa." },
-          { id:"r4c6s9", emoji:"🫧", txt:"Gelembung busa mendesak naik dengan cepat", note:"Tekanan gas mendorong busa keluar dari botol." },
-          { id:"r4c6s10", emoji:"🔴", txt:"Busa merah meluap dari puncak gunung mainan", note:"Luapan busa menyerupai letusan lava gunung berapi." }
-        ],
-        bugSwaps: [[4, 5]]
-      },
-      {
-        tag: "RONDE 4 · KASUS 7 (10 STEP)",
-        title: "🔭 Percobaan Membuat Periskop Sederhana",
-        mission: "Susun langkah percobaan membuat periskop sederhana dari kardus dan cermin!",
-        startIcon: "🤖", goalIcon: "🔭",
-        steps: [
-          { id:"r4c7s1", emoji:"📦", txt:"Siapkan kotak karton panjang/kardus pasta gigi", note:"Kotak ini akan menjadi badan utama periskop." },
-          { id:"r4c7s2", emoji:"⬛", txt:"Buat dua lubang persegi di ujung atas dan bawah", note:"Lubang ini menjadi jalur masuk dan keluar cahaya." },
-          { id:"r4c7s3", emoji:"📐", txt:"Buat dua celah miring 45 derajat di dalam kotak", note:"Sudut 45 derajat penting agar cahaya dipantulkan tepat." },
-          { id:"r4c7s4", emoji:"🪞", txt:"Siapkan dua cermin datar sesuai ukuran celah", note:"Cermin datar dipakai untuk memantulkan cahaya." },
-          { id:"r4c7s5", emoji:"1️⃣", txt:"Masukkan cermin pertama ke celah bagian atas", note:"Posisi cermin pertama menerima cahaya dari luar." },
-          { id:"r4c7s6", emoji:"👁️", txt:"Posisikan cermin pertama menghadap lubang atas", note:"Cermin pertama memantulkan cahaya ke bawah kotak." },
-          { id:"r4c7s7", emoji:"2️⃣", txt:"Masukkan cermin kedua ke celah bagian bawah", note:"Cermin kedua menerima pantulan dari cermin pertama." },
-          { id:"r4c7s8", emoji:"↕️", txt:"Posisikan cermin kedua sejajar cermin pertama", note:"Posisi sejajar penting agar cahaya sampai ke mata." },
-          { id:"r4c7s9", emoji:"💡", txt:"Cahaya dari lubang atas dipantulkan cermin pertama", note:"Pantulan pertama mengarahkan cahaya ke bawah." },
-          { id:"r4c7s10", emoji:"👀", txt:"Cahaya dipantulkan cermin kedua menuju mata pengamat", note:"Periskop kini bisa dipakai mengintip dari balik penghalang." }
-        ],
-        bugSwaps: [[5, 6]]
-      },
-      {
-        tag: "RONDE 4 · KASUS 8 (10 STEP)",
-        title: "📞 Percobaan Telepon Kaleng Sederhana",
-        mission: "Susun langkah percobaan IPA membuat telepon kaleng dari tali dan kaleng bekas!",
-        startIcon: "🤖", goalIcon: "📞",
-        steps: [
-          { id:"r4c8s1", emoji:"🥫", txt:"Siapkan dua kaleng bekas yang telah dibersihkan", note:"Kaleng bekas dijadikan corong penerima dan pengirim suara." },
-          { id:"r4c8s2", emoji:"🔨", txt:"Lubangi bagian dasar kedua kaleng dengan paku", note:"Lubang kecil dibutuhkan untuk memasukkan tali." },
-          { id:"r4c8s3", emoji:"🧵", txt:"Siapkan benang/tali senar yang cukup panjang", note:"Tali berfungsi menghantarkan getaran suara." },
-          { id:"r4c8s4", emoji:"➡️", txt:"Masukkan ujung tali ke lubang kaleng pertama", note:"Ujung tali dimasukkan dari bagian dalam kaleng." },
-          { id:"r4c8s5", emoji:"🪢", txt:"Ikat ujung tali dengan simpul agar tak lepas", note:"Simpul mencegah tali tertarik keluar saat digunakan." },
-          { id:"r4c8s6", emoji:"⬅️", txt:"Masukkan ujung tali lainnya ke lubang kaleng kedua", note:"Ujung tali kedua dipasang dengan cara yang sama." },
-          { id:"r4c8s7", emoji:"🪢", txt:"Ikat juga ujung tali kedua dengan simpul kuat", note:"Kedua ujung tali harus terikat kuat pada kaleng." },
-          { id:"r4c8s8", emoji:"🙋", txt:"Dua orang memegang kaleng masing-masing dan menjauh", note:"Jarak yang cukup diperlukan agar tali dapat tegang." },
-          { id:"r4c8s9", emoji:"➖", txt:"Tali direntangkan lurus dan kencang tanpa kendur", note:"Tali yang kendur tidak dapat menghantarkan getaran." },
-          { id:"r4c8s10", emoji:"🔊", txt:"Getaran suara merambat lewat tali ke kaleng lawan bicara", note:"Getaran suara berpindah dari udara ke tali lalu ke kaleng." }
-        ],
-        bugSwaps: [[6, 7]]
-      },
-      {
-        tag: "RONDE 4 · KASUS 9 (10 STEP)",
-        title: "🥤 Percobaan Pembiasan Cahaya (Koin dalam Gelas)",
-        mission: "Susun langkah percobaan membuktikan pembiasan cahaya menggunakan koin dan air!",
-        startIcon: "🤖", goalIcon: "🪙",
-        steps: [
-          { id:"r4c9s1", emoji:"🥛", txt:"Siapkan gelas bening kosong dan sebuah koin logam", note:"Gelas bening memudahkan pengamatan percobaan." },
-          { id:"r4c9s2", emoji:"🪙", txt:"Letakkan koin tepat di dasar gelas bening", note:"Posisi koin diletakkan di tengah dasar gelas." },
-          { id:"r4c9s3", emoji:"👀", txt:"Mundurkan posisi mata hingga koin tak terlihat", note:"Sudut pandang diatur agar koin tersembunyi dari mata." },
-          { id:"r4c9s4", emoji:"📍", txt:"Pertahankan posisi mata dan gelas tanpa bergeser", note:"Posisi tetap penting agar hasil percobaan akurat." },
-          { id:"r4c9s5", emoji:"💧", txt:"Tuangkan air bening perlahan ke dalam gelas", note:"Air dituang secara perlahan agar tidak menggeser koin." },
-          { id:"r4c9s6", emoji:"🌊", txt:"Air mengisi gelas hingga menutupi permukaan koin", note:"Air harus cukup tinggi untuk menutupi seluruh koin." },
-          { id:"r4c9s7", emoji:"↩️", txt:"Cahaya dari koin dibiaskan melewati permukaan air", note:"Pembiasan terjadi saat cahaya berpindah medium." },
-          { id:"r4c9s8", emoji:"🔀", txt:"Arah rambat cahaya berubah karena kepadatan berbeda", note:"Kepadatan air dan udara yang berbeda membelokkan cahaya." },
-          { id:"r4c9s9", emoji:"👁️", txt:"Mata menangkap bayangan koin yang telah dibiaskan", note:"Bayangan koin tampak berbeda posisi dari sebelumnya." },
-          { id:"r4c9s10", emoji:"✨", txt:"Koin yang tadinya tak terlihat kini tampak kembali", note:"Percobaan ini membuktikan adanya pembiasan cahaya." }
-        ],
-        bugSwaps: [[6, 7]]
-      },
-      {
-        tag: "RONDE 4 · KASUS 10 (10 STEP)",
-        title: "🔌 Percobaan Rangkaian Listrik Paralel",
-        mission: "Susun langkah praktikum IPA membuat rangkaian listrik paralel dengan dua lampu!",
-        startIcon: "🤖", goalIcon: "💡",
-        steps: [
-          { id:"r4c10s1", emoji:"🔋", txt:"Siapkan dua buah baterai dan dudukan baterai", note:"Baterai berfungsi sebagai sumber tegangan listrik." },
-          { id:"r4c10s2", emoji:"💡", txt:"Siapkan dua buah lampu bohlam beserta dudukannya", note:"Setiap lampu memiliki jalur listriknya sendiri." },
-          { id:"r4c10s3", emoji:"🔌", txt:"Siapkan kabel penghubung dan sebuah sakelar", note:"Sakelar berfungsi memutus dan menyambung arus listrik." },
-          { id:"r4c10s4", emoji:"➕", txt:"Hubungkan kutub positif baterai ke ujung sakelar", note:"Sambungan ini menjadi jalur awal arus listrik." },
-          { id:"r4c10s5", emoji:"🔀", txt:"Hubungkan ujung sakelar ke titik cabang kabel", note:"Titik cabang membagi arus ke masing-masing lampu." },
-          { id:"r4c10s6", emoji:"1️⃣", txt:"Sambungkan cabang tersebut ke lampu pertama", note:"Lampu pertama memiliki jalur listrik tersendiri." },
-          { id:"r4c10s7", emoji:"2️⃣", txt:"Sambungkan pula cabang ke lampu kedua jalur terpisah", note:"Jalur terpisah adalah ciri khas rangkaian paralel." },
-          { id:"r4c10s8", emoji:"🔗", txt:"Hubungkan ujung kedua lampu ke titik cabang lain", note:"Titik cabang ini mengumpulkan kembali arus listrik." },
-          { id:"r4c10s9", emoji:"➖", txt:"Hubungkan titik cabang ke kutub negatif baterai", note:"Sambungan ini melengkapi rangkaian tertutup." },
-          { id:"r4c10s10", emoji:"✨", txt:"Sakelar ditekan ON, kedua lampu menyala terang sama", note:"Pada rangkaian paralel, tiap lampu tetap menyala terang meski salah satu mati." }
-        ],
-        bugSwaps: [[5, 6]]
-      }
-    ],
+  // ==========================================
+  // RONDE 4 (10 SOAL)
+  // ==========================================
+  [
+    {
+      tag: "RONDE 4 · SOAL 1 (IPA)",
+      title: "🌌 Urutan Planet dari Matahari",
+      mission: "Urutkan planet Tata Surya dari posisi paling dekat ke Matahari!",
+      steps: [
+        { id:"r4_1_1", emoji:"☀️", txt:"Matahari (Pusat Tata Surya)", note:"Pusat." },
+        { id:"r4_1_2", emoji:"🪐", txt:"Merkurius (Planet ke-1)", note:"Ke-1." },
+        { id:"r4_1_3", emoji:"🪐", txt:"Venus (Planet ke-2)", note:"Ke-2." },
+        { id:"r4_1_4", emoji:"🌍", txt:"Bumi (Planet ke-3)", note:"Ke-3." },
+        { id:"r4_1_5", emoji:"🔴", txt:"Mars (Planet ke-4)", note:"Ke-4." },
+        { id:"r4_1_6", emoji:"🟠", txt:"Jupiter (Planet ke-5)", note:"Ke-5." },
+        { id:"r4_1_7", emoji:"🪐", txt:"Saturnus (Planet ke-6)", note:"Ke-6." },
+        { id:"r4_1_8", emoji:"🔵", txt:"Uranus (Planet ke-7)", note:"Ke-7." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    },
+    {
+      tag: "RONDE 4 · SOAL 2 (MATEMATIKA)",
+      title: "🔢 Susun Persamaan Matematika",
+      mission: "Urutkan kartu berikut agar membentuk persamaan yang benar!",
+      steps: [
+        { id:"r4_2_1", emoji:"", txt:"[", note:"[" },
+        { id:"r4_2_2", emoji:"", txt:"(", note:"(" },
+        { id:"r4_2_3", emoji:"", txt:"100", note:"100" },
+        { id:"r4_2_4", emoji:"", txt:"-", note:"-" },
+        { id:"r4_2_5", emoji:"", txt:"30", note:"30" },
+        { id:"r4_2_6", emoji:"", txt:")", note:")" },
+        { id:"r4_2_7", emoji:"", txt:"÷", note:"÷" },
+        { id:"r4_2_8", emoji:"", txt:"2", note:"2" },
+        { id:"r4_2_9", emoji:"", txt:"]", note:"]" },
+        { id:"r4_2_10", emoji:"", txt:"+", note:"+" },
+        { id:"r4_2_11", emoji:"", txt:"7", note:"7" },
+        { id:"r4_2_12", emoji:"", txt:"×", note:"×" },
+        { id:"r4_2_13", emoji:"", txt:"5", note:"5" },
+        { id:"r4_2_14", emoji:"", txt:"=", note:"=" },
+        { id:"r4_2_15", emoji:"", txt:"70", note:"70" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [6, 7], [9, 10]]
+    },
+    {
+      tag: "RONDE 4 · SOAL 3 (B. INGGRIS)",
+      title: "🍕 How to Make Homemade Pizza",
+      mission: "Order the instructions to make simple mini pizza!",
+      steps: [
+        { id:"r4_3_1", emoji:"🥣", txt:"Prepare pizza dough on a tray", note:"Prepare dough." },
+        { id:"r4_3_2", emoji:"🍅", txt:"Spread tomato sauce on dough", note:"Spread sauce." },
+        { id:"r4_3_3", emoji:"🧀", txt:"Sprinkle grated cheese on top", note:"Sprinkle cheese." },
+        { id:"r4_3_4", emoji:"🥩", txt:"Add sausage and mushroom slices", note:"Add toppings." },
+        { id:"r4_3_5", emoji:"🔥", txt:"Preheat oven to 180°C", note:"Preheat oven." },
+        { id:"r4_3_6", emoji:"👨‍🍳", txt:"Bake pizza in oven for 15 mins", note:"Bake pizza." },
+        { id:"r4_3_7", emoji:"🍽️", txt:"Take pizza out and slice it", note:"Slice pizza." },
+        { id:"r4_3_8", emoji:"😋", txt:"Delicious pizza is ready to serve", note:"Ready!" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    },
+    {
+      tag: "RONDE 4 · SOAL 4 (IPA)",
+      title: "🦗 Metamorfosis Belalang (Tidak Sempurna)",
+      mission: "Urutkan metamorfosis tidak sempurna belalang!",
+      steps: [
+        { id:"r4_4_1", emoji:"🦗", txt:"Belalang betina bertelur di tanah", note:"Bertelur." },
+        { id:"r4_4_2", emoji:"🥚", txt:"Telur menetas menjadi Nimfa 1", note:"Nimfa kecil." },
+        { id:"r4_4_3", emoji:"🌱", txt:"Nimfa 1 makan daun dan tumbuh", note:"Makan daun." },
+        { id:"r4_4_4", emoji:"👕", txt:"Nimfa berganti kulit (Molt 1)", note:"Ganti kulit 1." },
+        { id:"r4_4_5", emoji:"🦗", txt:"Nimfa 2 tumbuh makin besar", note:"Nimfa besar." },
+        { id:"r4_4_6", emoji:"👕", txt:"Nimfa berganti kulit (Molt 2)", note:"Ganti kulit 2." },
+        { id:"r4_4_7", emoji:"🪽", txt:"Tumbuh sayap sempurna", note:"Tumbuh sayap." },
+        { id:"r4_4_8", emoji:"🦗", txt:"Belalang Dewasa (Imago) siap bertelur", note:"Belalang dewasa." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    },
+    {
+      tag: "RONDE 4 · SOAL 5 (MATEMATIKA)",
+      title: "🔢 Susun Rumus Luas Gabungan",
+      mission: "Urutkan rumus luas gabungan persegi panjang (p × l) + segitiga (a × t ÷ 2)!",
+      steps: [
+        { id:"r4_5_1", emoji:"", txt:"(", note:"(" },
+        { id:"r4_5_2", emoji:"", txt:"p", note:"Panjang" },
+        { id:"r4_5_3", emoji:"", txt:"×", note:"Kali" },
+        { id:"r4_5_4", emoji:"", txt:"l", note:"Lebar" },
+        { id:"r4_5_5", emoji:"", txt:")", note:")" },
+        { id:"r4_5_6", emoji:"", txt:"+", note:"Tambah" },
+        { id:"r4_5_7", emoji:"", txt:"(", note:"(" },
+        { id:"r4_5_8", emoji:"", txt:"a", note:"Alas" },
+        { id:"r4_5_9", emoji:"", txt:"×", note:"Kali" },
+        { id:"r4_5_10", emoji:"", txt:"t", note:"Tinggi" },
+        { id:"r4_5_11", emoji:"", txt:"÷", note:"Bagi" },
+        { id:"r4_5_12", emoji:"", txt:"2", note:"2" },
+        { id:"r4_5_13", emoji:"", txt:")", note:")" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [6, 7], [8, 9]]
+    },
+    {
+      tag: "RONDE 4 · SOAL 6 (B. INGGRIS)",
+      title: "📱 How to Send an Email",
+      mission: "Order the correct procedure to send an email!",
+      steps: [
+        { id:"r4_6_1", emoji:"💻", txt:"Open web browser and open email app", note:"Open app." },
+        { id:"r4_6_2", emoji:"✍️", txt:"Click 'Compose' button to write new email", note:"Click Compose." },
+        { id:"r4_6_3", emoji:"📧", txt:"Type receiver's email address in 'To' field", note:"Type address." },
+        { id:"r4_6_4", emoji:"📝", txt:"Type email topic in 'Subject' line", note:"Type subject." },
+        { id:"r4_6_5", emoji:"💬", txt:"Write your message in main body box", note:"Write body." },
+        { id:"r4_6_6", emoji:"📎", txt:"Attach document file if necessary", note:"Attach file." },
+        { id:"r4_6_7", emoji:"📤", txt:"Click 'Send' button to deliver email", note:"Click Send." },
+        { id:"r4_6_8", emoji:"✅", txt:"Check sent folder to confirm delivery", note:"Confirmed!" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    },
+    {
+      tag: "RONDE 4 · SOAL 7 (IPA)",
+      title: "🫀 Peredaran Darah Besar",
+      mission: "Urutkan jalur peredaran darah besar (Jantung - Tubuh - Jantung)!",
+      steps: [
+        { id:"r4_7_1", emoji:"❤️", txt:"Bilik Kiri jantung memompa darah kaya Oksigen", note:"Bilik kiri." },
+        { id:"r4_7_2", emoji:"🔴", txt:"Darah mengalir ke pembuluh Aorta", note:"Ke aorta." },
+        { id:"r4_7_3", emoji:"🫀", txt:"Darah menyebar ke seluruh tubuh", note:"Seluruh tubuh." },
+        { id:"r4_7_4", emoji:"🔄", txt:"Sel tubuh menyerap Oksigen & melepas CO2", note:"Penyerapan." },
+        { id:"r4_7_5", emoji:"🩸", txt:"Darah kaya CO2 masuk ke pembuluh Vena", note:"Pembuluh vena." },
+        { id:"r4_7_6", emoji:"💖", txt:"Darah kembali ke Serambi Kanan jantung", note:"Serambi kanan." },
+        { id:"r4_7_7", emoji:"🫁", txt:"Siap dikirim ke paru-paru untuk dibersihkan", note:"Ke paru-paru." },
+        { id:"r4_7_8", emoji:"✅", txt:"Siklus Peredaran Darah Besar Selesai!", note:"Selesai." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    },
+    {
+      tag: "RONDE 4 · SOAL 8 (MATEMATIKA)",
+      title: "🔢 Susun Rumus Rata-Rata (Mean)",
+      mission: "Urutkan kartu berikut untuk membentuk rumus Rata-Rata = Jumlah Data ÷ Banyak Data!",
+      steps: [
+        { id:"r4_8_1", emoji:"", txt:"Rata-Rata", note:"Rata-rata" },
+        { id:"r4_8_2", emoji:"", txt:"=", note:"Sama dengan" },
+        { id:"r4_8_3", emoji:"", txt:"Jumlah", note:"Jumlah" },
+        { id:"r4_8_4", emoji:"", txt:"Data", note:"Data" },
+        { id:"r4_8_5", emoji:"", txt:"÷", note:"Bagi" },
+        { id:"r4_8_6", emoji:"", txt:"Banyak", note:"Banyak" },
+        { id:"r4_8_7", emoji:"", txt:"Data", note:"Data" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [1, 6]]
+    },
+    {
+      tag: "RONDE 4 · SOAL 9 (B. INGGRIS)",
+      title: "🏕️ How to Set Up a Tent",
+      mission: "Order the steps to build a camping tent!",
+      steps: [
+        { id:"r4_9_1", emoji:"🏞️", txt:"Find a flat and safe spot ground", note:"Find flat spot." },
+        { id:"r4_9_2", emoji:"⛺", txt:"Unfold the tent cloth on the ground", note:"Unfold tent." },
+        { id:"r4_9_3", emoji:"🦯", txt:"Assemble the tent poles together", note:"Assemble poles." },
+        { id:"r4_9_4", emoji:"🔀", txt:"Insert poles into tent cloth slots", note:"Insert poles." },
+        { id:"r4_9_5", emoji:"⬆️", txt:"Raise the tent frame upward", note:"Raise frame." },
+        { id:"r4_9_6", emoji:"🔨", txt:"Drive pegs into ground with hammer", note:"Drive pegs." },
+        { id:"r4_9_7", emoji:"🌧️", txt:"Put rainfly cover over the tent", note:"Put rainfly." },
+        { id:"r4_9_8", emoji:"⛺", txt:"Your camping tent is ready to use", note:"Tent ready!" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    },
+    {
+      tag: "RONDE 4 · SOAL 10 (IPA)",
+      title: "🧲 Pembuatan Magnet Cara Elektromagnet",
+      mission: "Urutkan langkah membuat magnet buatan dari arus listrik!",
+      steps: [
+        { id:"r4_10_1", emoji:"🔩", txt:"Siapkan paku besi besar yang bersih", note:"Siapkan paku." },
+        { id:"r4_10_2", emoji:"🧵", txt:"Siapkan kawat tembaga secukupnya", note:"Kawat tembaga." },
+        { id:"r4_10_3", emoji:"🌀", txt:"Lilitkan kawat pada paku dengan rapat", note:"Lilit kawat." },
+        { id:"r4_10_4", emoji:"🔋", txt:"Hubungkan kedua ujung kawat ke baterai", note:"Hubung baterai." },
+        { id:"r4_10_5", emoji:"⚡", txt:"Arus listrik mengalir pada lilitan", note:"Arus mengalir." },
+        { id:"r4_10_6", emoji:"🧲", txt:"Paku berubah menjadi magnet sementara", note:"Paku jadi magnet." },
+        { id:"r4_10_7", emoji:"📎", txt:"Paku dapat menarik klip kertas besi", note:"Menarik klip." },
+        { id:"r4_10_8", emoji:"❌", txt:"Sifat magnet hilang jika baterai dilepas", note:"Sifat sementara." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    }
+  ],
 
-    // RONDE 5 (12 STEP)
-    [
-      {
-        tag: "RONDE 5 · KASUS 1 (12 STEP)",
-        title: "🍂 Pembuatan Pupuk Kompos Organik",
-        mission: "Urutkan langkah ilmiah pembuatan pupuk kompos cair/padat dari sampah sisa sayuran!",
-        startIcon: "🤖", goalIcon: "🌱",
-        steps: [
-          { id:"r5c1s1", emoji:"🗑️", txt:"Mengumpulkan sampah sisa dapur/daun", note:"Kumpulkan bahan organik seperti daun gugur dan sisa sayuran." },
-          { id:"r5c1s2", emoji:"📦", txt:"Memisahkan dari plastik dan kaleng", note:"Pastikan bahan non-organik tidak ikut tercampur." },
-          { id:"r5c1s3", emoji:"✂️", txt:"Cacah daun & sayur hingga ukuran kecil", note:"Memotong bahan menjadi serpihan kecil mempercepat pembusukan." },
-          { id:"r5c1s4", emoji:"🪣", txt:"Siapkan tong komposter berlubang", note:"Wadah harus memiliki sirkulasi udara di bagian dasarnya." },
-          { id:"r5c1s5", emoji:"🪵", txt:"Masukan lapisan tanah subur di dasar tong", note:"Lapisan tanah mengandung mikroorganisme pengurai awal." },
-          { id:"r5c1s6", emoji:"🍂", txt:"Masukan cacahan sampah organik", note:"Ratakan cacahan sampah di atas lapisan tanah." },
-          { id:"r5c1s7", emoji:"🧪", txt:"Siram dengan larutan gula & EM4", note:"Larutan EM4 berisi bakteri baik pembercepat pembusukan." },
-          { id:"r5c1s8", emoji:"🟤", txt:"Tutup kembali dengan lapisan tanah", note:"Lapisan tanah atas mencegah bau menyengat dan lalat." },
-          { id:"r5c1s9", emoji:"🔒", txt:"Tutup tong komposter rapat-rapat", note:"Proses fermentasi anaerobik berlangsung dalam wadah tertutup." },
-          { id:"r5c1s10", emoji:"📅", txt:"Aduk adonan seminggu sekali", note:"Pengadukan menjaga kelembapan dan meratakan pembusukan." },
-          { id:"r5c1s11", emoji:"⏳", txt:"Tunggu pembusukan selama 4 minggu", note:"Kompos matang ditandai warna hitam seperti tanah dan tidak berbau." },
-          { id:"r5c1s12", emoji:"🌻", txt:"Sebarkan kompos ke tanaman di kebun", note:"Pupuk kompos kaya zat hara siap menyuburkan tanaman." }
-        ],
-        bugSwaps: [[0, 1]]
-      },
-      {
-        tag: "RONDE 5 · KASUS 2 (12 STEP)",
-        title: "📄 Daur Ulang Kertas Bekas Sekolah",
-        mission: "Eksperimen membuat lembaran kertas daur ulang baru dari koran/kertas bekas.",
-        startIcon: "🤖", goalIcon: "📜",
-        steps: [
-          { id:"r5c2s1", emoji:"📰", txt:"Kumpulkan kertas/koran bekas tidak terpakai", note:"Gunakan kertas bekas tulis yang tidak berlapis plastik." },
-          { id:"r5c2s2", emoji:"✂️", txt:"Cabut kawat staples dari kertas", note:"Pastikan kertas bersih dari isolat tembaga atau klip." },
-          { id:"r5c2s3", emoji:"🖐️", txt:"Sobek kertas menjadi potongan kecil 1 cm", note:"Menyobek kertas mempermudah penyerapan air." },
-          { id:"r5c2s4", emoji:"🪣", txt:"Rendam sobekan kertas di ember air 24 jam", note:"Perendaman melunakkan serat-serat kayu pada kertas." },
-          { id:"r5c2s5", emoji:"🌀", txt:"Blender kertas basah hingga menjadi bubur", note:"Haluskan rendaman kertas menggunakan blender menjadi bubur (pulp)." },
-          { id:"r5c2s6", emoji:"🎨", txt:"Tuang bubur kertas ke bak berisi air & pewarna", note:"Campurkan bubur kertas dalam bak air yang diberi pewarna makanan." },
-          { id:"r5c2s7", emoji:"🖼️", txt:"Masukkan bingkai skrin kasa ke dasar bak", note:"Gunakan bingkai cetakan kasa kain untuk menyaring." },
-          { id:"r5c2s8", emoji:"📐", txt:"Angkat bingkai kasa secara mendatar perlahan", note:"Ratakan adonan bubur kertas di atas jaring kasa." },
-          { id:"r5c2s9", emoji:"🧽", txt:"Tekan spons untuk menyerap sisa air", note:"Spons menyerap kelebihan air agar adonan kertas memadat." },
-          { id:"r5c2s10", emoji:"👕", txt:"Balikkan lembaran kertas ke atas kain papan", note:"Pindahkan cetakan kertas basah ke papan pengering." },
-          { id:"r5c2s11", emoji:"☀️", txt:"Jemur lembaran kertas di bawah matahari", note:"Keringkan lembaran di tempat berangin hingga kaku." },
-          { id:"r5c2s12", emoji:"📄", txt:"Lepaskan kertas daur ulang baru siap pakai", note:"Kertas baru siap digunakan untuk menulis atau melukis." }
-        ],
-        bugSwaps: [[10, 11]]
-      },
-      {
-        tag: "RONDE 5 · KASUS 3 (12 STEP)",
-        title: "🧼 Pembuatan Sabun Alami dari Minyak Jelantah",
-        mission: "Susun langkah-langkah pembuatan sabun alami dari minyak jelantah (minyak goreng bekas)!",
-        startIcon: "🤖", goalIcon: "🧼",
-        steps: [
-          { id:"r5c3s1", emoji:"🛢️", txt:"Kumpulkan minyak jelantah yang sudah dingin", note:"Minyak jelantah bekas menjadi bahan utama sabun." },
-          { id:"r5c3s2", emoji:"🧺", txt:"Saring minyak untuk memisahkan sisa kotoran", note:"Penyaringan menghasilkan minyak yang lebih bersih." },
-          { id:"r5c3s3", emoji:"🧪", txt:"Siapkan larutan soda api (NaOH) dalam air", note:"Soda api harus dilarutkan dengan hati-hati di air." },
-          { id:"r5c3s4", emoji:"➕", txt:"Campurkan larutan soda api ke minyak perlahan", note:"Pencampuran perlahan mencegah reaksi berlebihan." },
-          { id:"r5c3s5", emoji:"🥄", txt:"Aduk campuran searah secara terus-menerus", note:"Pengadukan searah membantu proses saponifikasi." },
-          { id:"r5c3s6", emoji:"🌸", txt:"Tambahkan pewangi/minyak esensial secukupnya", note:"Pewangi memberi aroma segar pada sabun." },
-          { id:"r5c3s7", emoji:"🍮", txt:"Lanjutkan mengaduk hingga adonan kental", note:"Kekentalan menandai adonan siap dicetak." },
-          { id:"r5c3s8", emoji:"🧊", txt:"Tuang adonan sabun ke dalam cetakan", note:"Cetakan memberi bentuk akhir pada sabun." },
-          { id:"r5c3s9", emoji:"⏳", txt:"Diamkan cetakan pada suhu ruang selama 24 jam", note:"Pendiaman membantu sabun mengeras sempurna." },
-          { id:"r5c3s10", emoji:"📤", txt:"Keluarkan sabun dari cetakan setelah mengeras", note:"Sabun yang sudah keras siap dilepas dari cetakan." },
-          { id:"r5c3s11", emoji:"🗄️", txt:"Simpan sabun di tempat kering 4-6 minggu (curing)", note:"Proses curing membuat sabun lebih lembut dan aman." },
-          { id:"r5c3s12", emoji:"🧼", txt:"Sabun alami siap digunakan setelah curing selesai", note:"Sabun alami kini siap dipakai untuk mandi/mencuci." }
-        ],
-        bugSwaps: [[4, 5]]
-      },
-      {
-        tag: "RONDE 5 · KASUS 4 (12 STEP)",
-        title: "🥬 Percobaan Menanam Hidroponik Sederhana",
-        mission: "Susun langkah-langkah membuat sistem hidroponik sederhana dari botol bekas!",
-        startIcon: "🤖", goalIcon: "🥬",
-        steps: [
-          { id:"r5c4s1", emoji:"🍾", txt:"Siapkan botol plastik bekas, potong jadi dua", note:"Botol bekas dimanfaatkan sebagai wadah hidroponik." },
-          { id:"r5c4s2", emoji:"🔩", txt:"Lubangi tutup botol untuk tempat sumbu kain", note:"Lubang ini menjadi jalur masuknya sumbu kain." },
-          { id:"r5c4s3", emoji:"🧵", txt:"Masukkan sumbu kain flanel lewat lubang tutup", note:"Sumbu kain menyerap nutrisi menuju akar tanaman." },
-          { id:"r5c4s4", emoji:"🔄", txt:"Balik bagian atas botol, pasang ke bagian bawah", note:"Bagian atas dipasang terbalik menyerupai corong." },
-          { id:"r5c4s5", emoji:"💧", txt:"Isi bagian bawah botol dengan larutan nutrisi", note:"Larutan AB Mix menjadi sumber makanan tanaman." },
-          { id:"r5c4s6", emoji:"🔽", txt:"Pastikan ujung sumbu menyentuh larutan nutrisi", note:"Sumbu harus terendam agar nutrisi dapat terserap." },
-          { id:"r5c4s7", emoji:"🧱", txt:"Siapkan rockwool sebagai media tanam benih", note:"Rockwool menjaga kelembapan benih yang disemai." },
-          { id:"r5c4s8", emoji:"🌱", txt:"Semai benih sayuran pada rockwool yang dibasahi", note:"Benih diletakkan di lubang kecil pada rockwool." },
-          { id:"r5c4s9", emoji:"⬆️", txt:"Letakkan rockwool berisi benih di bagian atas botol", note:"Bagian atas botol menahan rockwool tetap di tempat." },
-          { id:"r5c4s10", emoji:"☀️", txt:"Tempatkan rangkaian di tempat terkena matahari", note:"Cahaya matahari dibutuhkan untuk fotosintesis tanaman." },
-          { id:"r5c4s11", emoji:"🔍", txt:"Pantau & tambahkan larutan nutrisi secara berkala", note:"Nutrisi perlu ditambah agar tanaman terus tumbuh." },
-          { id:"r5c4s12", emoji:"🥬", txt:"Sayuran tumbuh subur dan siap dipanen", note:"Panen dapat dilakukan setelah beberapa minggu." }
-        ],
-        bugSwaps: [[5, 6]]
-      },
-      {
-        tag: "RONDE 5 · KASUS 5 (12 STEP)",
-        title: "♻️ Pembuatan Ecobrick dari Sampah Plastik",
-        mission: "Susun langkah-langkah membuat ecobrick dari sampah plastik yang dipadatkan!",
-        startIcon: "🤖", goalIcon: "🧱",
-        steps: [
-          { id:"r5c5s1", emoji:"🗑️", txt:"Kumpulkan sampah plastik bersih dan kering", note:"Plastik bersih memudahkan proses pemadatan." },
-          { id:"r5c5s2", emoji:"🚫", txt:"Pastikan plastik bebas sisa makanan dan air", note:"Sisa makanan dapat menimbulkan bau dan jamur." },
-          { id:"r5c5s3", emoji:"✂️", txt:"Potong/sobek plastik jadi ukuran kecil", note:"Ukuran kecil memudahkan plastik dipadatkan dalam botol." },
-          { id:"r5c5s4", emoji:"🍾", txt:"Siapkan botol plastik bekas bersih dan kering", note:"Botol menjadi wadah utama ecobrick." },
-          { id:"r5c5s5", emoji:"📥", txt:"Masukkan potongan plastik sedikit demi sedikit", note:"Pengisian bertahap mencegah rongga udara terbentuk." },
-          { id:"r5c5s6", emoji:"🪵", txt:"Padatkan plastik dengan tongkat kayu bertahap", note:"Tongkat kayu membantu menekan plastik lebih rapat." },
-          { id:"r5c5s7", emoji:"💪", txt:"Tekan plastik hingga padat tanpa rongga udara", note:"Kepadatan penting agar ecobrick kuat menahan beban." },
-          { id:"r5c5s8", emoji:"🔼", txt:"Lanjutkan mengisi hingga botol penuh dan padat", note:"Botol yang benar-benar padat menghasilkan ecobrick berkualitas." },
-          { id:"r5c5s9", emoji:"⚖️", txt:"Timbang botol untuk memastikan kepadatan sesuai", note:"Standar berat memastikan kekuatan ecobrick merata." },
-          { id:"r5c5s10", emoji:"🔒", txt:"Tutup rapat botol yang telah penuh", note:"Tutup rapat mencegah plastik di dalam mengembang lagi." },
-          { id:"r5c5s11", emoji:"🧱", txt:"Ecobrick yang jadi disusun menjadi satu unit", note:"Beberapa ecobrick digabung menjadi struktur lebih besar." },
-          { id:"r5c5s12", emoji:"🪑", txt:"Rangkaian ecobrick dimanfaatkan jadi kursi/meja", note:"Ecobrick membantu mengurangi sampah plastik sekaligus bermanfaat." }
-        ],
-        bugSwaps: [[6, 7]]
-      },
-      {
-        tag: "RONDE 5 · KASUS 6 (12 STEP)",
-        title: "🌿 Membuat Terarium Mini dalam Toples",
-        mission: "Susun langkah-langkah membuat terarium mini yang indah di dalam toples kaca!",
-        startIcon: "🤖", goalIcon: "🪴",
-        steps: [
-          { id:"r5c6s1", emoji:"🫙", txt:"Siapkan toples kaca bening bertutup/tanpa tutup", note:"Toples kaca memudahkan cahaya masuk ke tanaman." },
-          { id:"r5c6s2", emoji:"🧽", txt:"Cuci bersih toples dan keringkan hingga tak lembap", note:"Toples yang lembap dapat menimbulkan jamur." },
-          { id:"r5c6s3", emoji:"🪨", txt:"Masukkan lapisan kerikil kecil sebagai drainase", note:"Kerikil mencegah genangan air di dasar toples." },
-          { id:"r5c6s4", emoji:"⬛", txt:"Tambahkan lapisan arang aktif di atas kerikil", note:"Arang aktif menyerap bau dan menjaga kebersihan air." },
-          { id:"r5c6s5", emoji:"🟤", txt:"Tambahkan lapisan tanah subur di atas arang", note:"Tanah subur menjadi media tumbuh utama tanaman." },
-          { id:"r5c6s6", emoji:"🕳️", txt:"Buat sedikit lekukan pada tanah untuk menanam", note:"Lekukan memudahkan akar tanaman masuk ke tanah." },
-          { id:"r5c6s7", emoji:"🌵", txt:"Pilih tanaman kecil seperti kaktus/lumut hias", note:"Tanaman kecil cocok untuk ruang terbatas terarium." },
-          { id:"r5c6s8", emoji:"🌱", txt:"Tanam bibit dengan hati-hati di lekukan tanah", note:"Penanaman hati-hati menjaga akar tidak rusak." },
-          { id:"r5c6s9", emoji:"👐", txt:"Padatkan tanah di sekitar akar tanaman baru", note:"Pemadatan menjaga tanaman berdiri kokoh." },
-          { id:"r5c6s10", emoji:"💎", txt:"Tambahkan hiasan batu kecil/miniatur pajangan", note:"Hiasan membuat terarium terlihat lebih menarik." },
-          { id:"r5c6s11", emoji:"💦", txt:"Siram tanaman dengan sedikit air memakai semprotan", note:"Penyemprotan halus mencegah tanah terlalu basah." },
-          { id:"r5c6s12", emoji:"🪟", txt:"Letakkan terarium di tempat cahaya tidak langsung", note:"Cahaya tidak langsung mencegah tanaman terlalu panas." }
-        ],
-        bugSwaps: [[7, 8]]
-      },
-      {
-        tag: "RONDE 5 · KASUS 7 (12 STEP)",
-        title: "🐟 Budidaya Ikan Lele dalam Ember (Budikdamber)",
-        mission: "Susun langkah-langkah budidaya ikan lele dan kangkung dalam satu ember sekaligus!",
-        startIcon: "🤖", goalIcon: "🐟",
-        steps: [
-          { id:"r5c7s1", emoji:"🪣", txt:"Siapkan ember besar 80 liter yang bersih", note:"Ember menjadi wadah utama budidaya lele dan kangkung." },
-          { id:"r5c7s2", emoji:"💧", txt:"Isi ember dengan air bersih tiga perempat penuh", note:"Air yang cukup penting bagi pertumbuhan ikan lele." },
-          { id:"r5c7s3", emoji:"⏳", txt:"Diamkan air beberapa hari agar kaporit menguap", note:"Kaporit yang menguap membuat air aman bagi ikan." },
-          { id:"r5c7s4", emoji:"🧂", txt:"Tambahkan sedikit garam ikan untuk stabilkan air", note:"Garam ikan membantu menjaga kondisi air tetap stabil." },
-          { id:"r5c7s5", emoji:"🥤", txt:"Siapkan gelas plastik berlubang untuk tanaman", note:"Gelas berlubang menjadi wadah tanam kangkung." },
-          { id:"r5c7s6", emoji:"🎐", txt:"Letakkan gelas plastik mengapung di atas air", note:"Gelas mengapung memanfaatkan ruang di atas air ember." },
-          { id:"r5c7s7", emoji:"🐟", txt:"Tebar benih ikan lele ke dalam ember perlahan", note:"Penebaran perlahan mengurangi stres pada ikan." },
-          { id:"r5c7s8", emoji:"🍽️", txt:"Beri pakan ikan lele teratur dua kali sehari", note:"Pemberian pakan teratur mendukung pertumbuhan ikan." },
-          { id:"r5c7s9", emoji:"🌱", txt:"Tanam bibit kangkung pada gelas plastik", note:"Kangkung tumbuh memanfaatkan nutrisi dari air ember." },
-          { id:"r5c7s10", emoji:"🔍", txt:"Amati pertumbuhan akar kangkung menyerap nutrisi", note:"Akar kangkung membantu menjernihkan air ember." },
-          { id:"r5c7s11", emoji:"📈", txt:"Ikan lele tumbuh besar seiring kangkung tumbuh", note:"Sistem ini saling menguntungkan antara ikan dan tanaman." },
-          { id:"r5c7s12", emoji:"🎉", txt:"Panen ikan lele dan kangkung setelah masa panen tiba", note:"Panen dilakukan setelah keduanya cukup umur." }
-        ],
-        bugSwaps: [[8, 9]]
-      },
-      {
-        tag: "RONDE 5 · KASUS 8 (12 STEP)",
-        title: "🍞 Proses Pembuatan Roti Tawar Sederhana",
-        mission: "Susun langkah-langkah membuat roti tawar sederhana dari bahan dasar tepung terigu!",
-        startIcon: "🤖", goalIcon: "🍞",
-        steps: [
-          { id:"r5c8s1", emoji:"🌾", txt:"Campurkan tepung terigu, ragi instan, dan gula", note:"Campuran kering ini menjadi dasar adonan roti." },
-          { id:"r5c8s2", emoji:"💧", txt:"Tambahkan air hangat sedikit demi sedikit", note:"Air hangat membantu ragi bekerja lebih optimal." },
-          { id:"r5c8s3", emoji:"👐", txt:"Uleni adonan hingga kalis dan tak lengket", note:"Kalis menandakan gluten sudah terbentuk sempurna." },
-          { id:"r5c8s4", emoji:"🧈", txt:"Tambahkan margarin & garam, uleni kembali", note:"Margarin membuat tekstur roti lebih lembut." },
-          { id:"r5c8s5", emoji:"⚪", txt:"Bulatkan adonan, diamkan dalam wadah tertutup kain", note:"Wadah tertutup menjaga suhu adonan tetap hangat." },
-          { id:"r5c8s6", emoji:"⏳", txt:"Diamkan adonan 1 jam hingga mengembang dua kali", note:"Fermentasi ragi membuat adonan mengembang." },
-          { id:"r5c8s7", emoji:"👊", txt:"Kempiskan adonan dengan ditinju perlahan", note:"Proses ini mengeluarkan gas berlebih dari adonan." },
-          { id:"r5c8s8", emoji:"🍞", txt:"Bentuk adonan sesuai cetakan loyang roti tawar", note:"Bentuk adonan menentukan akhir roti." },
-          { id:"r5c8s9", emoji:"⏱️", txt:"Diamkan adonan dalam loyang selama 30-40 menit", note:"Fermentasi kedua membuat roti lebih mengembang." },
-          { id:"r5c8s10", emoji:"🔥", txt:"Panaskan oven terlebih dahulu sesuai suhu", note:"Oven yang panas membantu roti matang merata." },
-          { id:"r5c8s11", emoji:"🍞", txt:"Panggang roti dalam oven hingga matang keemasan", note:"Warna keemasan menandakan roti sudah matang sempurna." },
-          { id:"r5c8s12", emoji:"🧊", txt:"Dinginkan roti sebelum diiris dan disantap", note:"Pendinginan membuat roti lebih mudah diiris rapi." }
-        ],
-        bugSwaps: [[5, 6]]
-      },
-      {
-        tag: "RONDE 5 · KASUS 9 (12 STEP)",
-        title: "⚡ Percobaan Elektrolisis Air Sederhana",
-        mission: "Susun langkah-langkah percobaan elektrolisis air untuk membuktikan penyusun air!",
-        startIcon: "🤖", goalIcon: "⚡",
-        steps: [
-          { id:"r5c9s1", emoji:"🥛", txt:"Siapkan wadah berisi air dicampur sedikit garam", note:"Garam membantu air menghantarkan listrik lebih baik." },
-          { id:"r5c9s2", emoji:"✏️", txt:"Sediakan dua elektroda dari batang pensil/logam", note:"Elektroda berfungsi menyalurkan arus ke dalam air." },
-          { id:"r5c9s3", emoji:"🔋", txt:"Hubungkan kedua elektroda ke kutub baterai berbeda", note:"Satu elektroda ke kutub positif, satu ke negatif." },
-          { id:"r5c9s4", emoji:"💧", txt:"Celupkan kedua elektroda ke larutan air garam", note:"Elektroda harus terendam untuk memulai reaksi." },
-          { id:"r5c9s5", emoji:"↔️", txt:"Pastikan kedua elektroda tak saling bersentuhan", note:"Sentuhan elektroda dapat menyebabkan korsleting." },
-          { id:"r5c9s6", emoji:"⚡", txt:"Arus listrik dari baterai mulai mengalir di larutan", note:"Arus listrik memicu reaksi penguraian air." },
-          { id:"r5c9s7", emoji:"🫧", txt:"Gelembung gas mulai muncul di kedua elektroda", note:"Gelembung menandakan gas mulai terbentuk." },
-          { id:"r5c9s8", emoji:"➖", txt:"Gas hidrogen terbentuk di elektroda kutub negatif", note:"Hidrogen terbentuk lebih banyak dibanding oksigen." },
-          { id:"r5c9s9", emoji:"➕", txt:"Gas oksigen terbentuk di elektroda kutub positif", note:"Oksigen terbentuk dalam jumlah lebih sedikit." },
-          { id:"r5c9s10", emoji:"🧪", txt:"Kumpulkan gas dengan tabung reaksi terbalik", note:"Tabung terbalik menampung gas yang naik ke atas." },
-          { id:"r5c9s11", emoji:"📊", txt:"Amati gelembung hidrogen lebih banyak dari oksigen", note:"Perbandingan gas menunjukkan komposisi air H2O." },
-          { id:"r5c9s12", emoji:"✅", txt:"Percobaan membuktikan air tersusun dari hidrogen & oksigen", note:"Hasil ini sesuai rumus kimia air yaitu H2O." }
-        ],
-        bugSwaps: [[7, 8]]
-      },
-      {
-        tag: "RONDE 5 · KASUS 10 (12 STEP)",
-        title: "🍊 Pembuatan Pupuk Cair Eco-Enzyme dari Kulit Buah",
-        mission: "Susun langkah-langkah membuat pupuk cair eco-enzyme dari sisa kulit buah!",
-        startIcon: "🤖", goalIcon: "🍊",
-        steps: [
-          { id:"r5c10s1", emoji:"🍊", txt:"Kumpulkan kulit buah segar seperti jeruk/nanas", note:"Kulit buah segar menghasilkan eco-enzyme lebih baik." },
-          { id:"r5c10s2", emoji:"✂️", txt:"Potong-potong kulit buah jadi ukuran kecil", note:"Potongan kecil mempercepat proses fermentasi." },
-          { id:"r5c10s3", emoji:"🪣", txt:"Siapkan wadah plastik tertutup yang bersih", note:"Wadah plastik dipilih karena tahan reaksi asam." },
-          { id:"r5c10s4", emoji:"🍯", txt:"Masukkan gula merah/molase ke wadah lebih dulu", note:"Gula menjadi sumber makanan bagi mikroorganisme." },
-          { id:"r5c10s5", emoji:"💧", txt:"Tambahkan air bersih sesuai takaran yang sesuai", note:"Perbandingan air, gula, dan kulit buah harus tepat." },
-          { id:"r5c10s6", emoji:"🍋", txt:"Masukkan potongan kulit buah ke larutan gula air", note:"Kulit buah dicampur merata dengan larutan gula." },
-          { id:"r5c10s7", emoji:"🥄", txt:"Aduk seluruh bahan hingga tercampur merata", note:"Pengadukan memastikan fermentasi berjalan merata." },
-          { id:"r5c10s8", emoji:"🔓", txt:"Tutup wadah rapat namun sisakan celah untuk gas", note:"Celah mencegah wadah meledak akibat gas fermentasi." },
-          { id:"r5c10s9", emoji:"🌥️", txt:"Simpan wadah di tempat sejuk tanpa sinar matahari", note:"Suhu sejuk menjaga proses fermentasi tetap stabil." },
-          { id:"r5c10s10", emoji:"🌬️", txt:"Buka tutup sesekali untuk membuang gas fermentasi", note:"Pembuangan gas mencegah tekanan berlebih di wadah." },
-          { id:"r5c10s11", emoji:"⏳", txt:"Diamkan proses fermentasi selama kurang lebih 3 bulan", note:"Waktu fermentasi menentukan kualitas eco-enzyme." },
-          { id:"r5c10s12", emoji:"🧴", txt:"Saring cairan eco-enzyme yang sudah jadi", note:"Cairan hasil saringan siap dipakai sebagai pupuk cair." }
-        ],
-        bugSwaps: [[8, 9]]
-      }
-    ]
-  ];
+  // ==========================================
+  // RONDE 5 (10 SOAL)
+  // ==========================================
+  [
+    {
+      tag: "RONDE 5 · SOAL 1 (IPA)",
+      title: "🌿 Pembentukan Tanah dari Pelapukan Batuan",
+      mission: "Urutkan proses pembentukan tanah secara alami!",
+      steps: [
+        { id:"r5_1_1", emoji:"🪨", txt:"Batuan utuh keras di permukaan bumi", note:"Batuan induk." },
+        { id:"r5_1_2", emoji:"☀️", txt:"Terkena panas matahari dan hujan ekstrem", note:"Pelapukan fisika." },
+        { id:"r5_1_3", emoji:"💥", txt:"Batuan mulai retak dan pecah kecil", note:"Pecah kecil." },
+        { id:"r5_1_4", emoji:"🌱", txt:"Lumut mulai tumbuh di celah batuan", note:"Tumbuh lumut." },
+        { id:"r5_1_5", emoji:"🧪", txt:"Asam lumut melapukkan batuan (Kimia)", note:"Pelapukan kimia." },
+        { id:"r5_1_6", emoji:"🍂", txt:"Tumbuhan mati bercampur pecahan batu", note:"Bahan organik." },
+        { id:"r5_1_7", emoji:"🪱", txt:"Cacing tanah mengurai sisa organik", note:"Diurai cacing." },
+        { id:"r5_1_8", emoji:"🤎", txt:"Terbentuk lapisan humus yang subur", note:"Humus subur." },
+        { id:"r5_1_9", emoji:"🌱", txt:"Tanaman besar dapat tumbuh kokoh", note:"Tanaman tumbuh." },
+        { id:"r5_1_10", emoji:"🌍", txt:"Lapisan tanah utuh sempurna terbentuk", note:"Tanah sempurna." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    },
+    {
+      tag: "RONDE 5 · SOAL 2 (MATEMATIKA)",
+      title: "🔢 Susun Persamaan Matematika Kompleks",
+      mission: "Urutkan kartu berikut agar membentuk persamaan yang benar!",
+      steps: [
+        { id:"r5_2_1", emoji:"", txt:"200", note:"200" },
+        { id:"r5_2_2", emoji:"", txt:"-", note:"-" },
+        { id:"r5_2_3", emoji:"", txt:"{", note:"{" },
+        { id:"r5_2_4", emoji:"", txt:"[", note:"[" },
+        { id:"r5_2_5", emoji:"", txt:"(", note:"(" },
+        { id:"r5_2_6", emoji:"", txt:"15", note:"15" },
+        { id:"r5_2_7", emoji:"", txt:"+", note:"+" },
+        { id:"r5_2_8", emoji:"", txt:"5", note:"5" },
+        { id:"r5_2_9", emoji:"", txt:")", note:")" },
+        { id:"r5_2_10", emoji:"", txt:"×", note:"×" },
+        { id:"r5_2_11", emoji:"", txt:"3", note:"3" },
+        { id:"r5_2_12", emoji:"", txt:"]", note:"]" },
+        { id:"r5_2_13", emoji:"", txt:"÷", note:"÷" },
+        { id:"r5_2_14", emoji:"", txt:"2", note:"2" },
+        { id:"r5_2_15", emoji:"", txt:"}", note:"}" },
+        { id:"r5_2_16", emoji:"", txt:"=", note:"=" },
+        { id:"r5_2_17", emoji:"", txt:"170", note:"170" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [5, 6], [10, 11]]
+    },
+    {
+      tag: "RONDE 5 · SOAL 3 (B. INGGRIS)",
+      title: "✈️ Boarding Process at the Airport",
+      mission: "Order the complete steps to board an airplane!",
+      steps: [
+        { id:"r5_3_1", emoji:"🧳", txt:"Arrive at airport with luggage", note:"Arrive airport." },
+        { id:"r5_3_2", emoji:"🎫", txt:"Go to check-in counter to get boarding pass", note:"Check-in counter." },
+        { id:"r5_3_3", emoji:"📦", txt:"Drop heavy baggage at baggage counter", note:"Drop baggage." },
+        { id:"r5_3_4", emoji:"🔍", txt:"Pass security check X-ray scanner", note:"Security check." },
+        { id:"r5_3_5", emoji:"🛂", txt:"Show passport at immigration gate", note:"Immigration." },
+        { id:"r5_3_6", emoji:"🪑", txt:"Wait at assigned boarding gate area", note:"Boarding gate." },
+        { id:"r5_3_7", emoji:"📢", txt:"Listen to boarding announcement", note:"Announcement." },
+        { id:"r5_3_8", emoji:"🎫", txt:"Show boarding pass to airline staff", note:"Show pass." },
+        { id:"r5_3_9", emoji:"🚶‍♂️", txt:"Walk through jet bridge into airplane", note:"Enter airplane." },
+        { id:"r5_3_10", emoji:"💺", txt:"Find your seat and fasten seatbelt", note:"Fasten seatbelt." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    },
+    {
+      tag: "RONDE 5 · SOAL 4 (IPA)",
+      title: "🔌 Penyaluran Listrik dari Pembangkit ke Rumah",
+      mission: "Urutkan perjalanan energi listrik jarak jauh!",
+      steps: [
+        { id:"r5_4_1", emoji:"🏭", txt:"Pembangkit Listrik menghasilkan daya", note:"Pembangkit." },
+        { id:"r5_4_2", emoji:"⚡", txt:"Trafo Step-Up menaikkan tegangan tinggi", note:"Trafo naik." },
+        { id:"r5_4_3", emoji:"🗼", txt:"Listrik dialirkan lewat menara SUTET", note:"SUTET." },
+        { id:"r5_4_4", emoji:"🏢", txt:"Masuk Gardu Induk Utama daerah", note:"Gardu induk." },
+        { id:"r5_4_5", emoji:"⚡", txt:"Trafo menurunkan tegangan ke Menengah", note:"Tegangan menengah." },
+        { id:"r5_4_6", emoji:"🏭", txt:"Disalurkan ke pabrik-pabrik besar", note:"Ke pabrik." },
+        { id:"r5_4_7", emoji:"🏪", txt:"Masuk Gardu Distribusi lingkungan", note:"Gardu distribusi." },
+        { id:"r5_4_8", emoji:"⚡", txt:"Trafo menurunkan ke tegangan 220V", note:"Tegangan 220V." },
+        { id:"r5_4_9", emoji:"🔌", txt:"Disalurkan lewat tiang listrik jalan", note:"Tiang listrik." },
+        { id:"r5_4_10", emoji:"💡", txt:"Listrik menyalakan lampu di rumah", note:"Lampu rumah." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    },
+    {
+      tag: "RONDE 5 · SOAL 5 (MATEMATIKA)",
+      title: "🔢 Urutkan Angka Acak dari Terkecil",
+      mission: "Urutkan deret angka berikut dari nilai terkecil ke terbesar! (5, 5, 5, 6, 7, 8, 8, 9, 10)",
+      steps: [
+        { id:"r5_5_1", emoji:"", txt:"5", note:"5" },
+        { id:"r5_5_2", emoji:"", txt:"5", note:"5" },
+        { id:"r5_5_3", emoji:"", txt:"5", note:"5" },
+        { id:"r5_5_4", emoji:"", txt:"6", note:"6" },
+        { id:"r5_5_5", emoji:"", txt:"7", note:"7" },
+        { id:"r5_5_6", emoji:"", txt:"8", note:"8" },
+        { id:"r5_5_7", emoji:"", txt:"8", note:"8" },
+        { id:"r5_5_8", emoji:"", txt:"9", note:"9" },
+        { id:"r5_5_9", emoji:"", txt:"10", note:"10" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    },
+    {
+      tag: "RONDE 5 · SOAL 6 (B. INGGRIS)",
+      title: "📖 How to Research and Write an Essay",
+      mission: "Order the steps to write a good school essay!",
+      steps: [
+        { id:"r5_6_1", emoji:"📌", txt:"Choose an interesting essay topic", note:"Choose topic." },
+        { id:"r5_6_2", emoji:"📚", txt:"Read books and articles to gather info", note:"Gather info." },
+        { id:"r5_6_3", emoji:"📝", txt:"Make an outline of main arguments", note:"Make outline." },
+        { id:"r5_6_4", emoji:"✍️", txt:"Write introductory paragraph with thesis", note:"Introductory." },
+        { id:"r5_6_5", emoji:"📄", txt:"Write first body paragraph with facts", note:"Body 1." },
+        { id:"r5_6_6", emoji:"📄", txt:"Write second body paragraph with examples", note:"Body 2." },
+        { id:"r5_6_7", emoji:"💡", txt:"Write concluding paragraph to summarize", note:"Conclusion." },
+        { id:"r5_6_8", emoji:"🔍", txt:"Proofread essay to fix grammar errors", note:"Proofread." },
+        { id:"r5_6_9", emoji:"🖨️", txt:"Print essay or save as PDF file", note:"Print/save." },
+        { id:"r5_6_10", emoji:"👨‍🏫", txt:"Submit essay to your teacher", note:"Submit." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    },
+    {
+      tag: "RONDE 5 · SOAL 7 (IPA)",
+      title: "☀️ Fenomena Gerhana Matahari Total",
+      mission: "Urutkan posisi dan proses terjadinya gerhana matahari!",
+      steps: [
+        { id:"r5_7_1", emoji:"🌌", txt:"Matahari, Bulan, dan Bumi sejajar", note:"Sejajar." },
+        { id:"r5_7_2", emoji:"🌑", txt:"Bulan berada tepat di tengah-tengah", note:"Bulan di tengah." },
+        { id:"r5_7_3", emoji:"☀️", txt:"Sinar Matahari terhalang oleh Bulan", note:"Sinar terhalang." },
+        { id:"r5_7_4", emoji:"🌑", txt:"Bayangan Umbra Bulan jatuh ke Bumi", note:"Umbra jatuh." },
+        { id:"r5_7_5", emoji:"👀", txt:"Daerah Umbra mengalami siang jadi gelap", note:"Siang gelap." },
+        { id:"r5_7_6", emoji:"👑", txt:"Mahkota Korona Matahari terlihat jelas", note:"Korona terlihat." },
+        { id:"r5_7_7", emoji:"🌖", txt:"Bulan perlahan bergeser meninggalkan jalur", note:"Bulan bergeser." },
+        { id:"r5_7_8", emoji:"🌤️", txt:"Cahaya matahari mulai muncul kembali", note:"Cahaya muncul." },
+        { id:"r5_7_9", emoji:"☀️", txt:"Suasana bumi kembali terang benderang", note:"Terang kembali." },
+        { id:"r5_7_10", emoji:"✅", txt:"Fenomena Gerhana Matahari Selesai", note:"Selesai." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    },
+    {
+      tag: "RONDE 5 · SOAL 8 (MATEMATIKA)",
+      title: "🔢 Susun Alur Perhitungan Diskon & Pajak",
+      mission: "Urutkan alur perhitungan: Harga Awal - Diskon 20% = Harga Diskon + Pajak 10% = Total Bayar",
+      steps: [
+        { id:"r5_8_1", emoji:"", txt:"Harga Awal", note:"Rp 100.000" },
+        { id:"r5_8_2", emoji:"", txt:"-", note:"Dikurangi" },
+        { id:"r5_8_3", emoji:"", txt:"Diskon 20%", note:"Rp 20.000" },
+        { id:"r5_8_4", emoji:"", txt:"=", note:"Sama dengan" },
+        { id:"r5_8_5", emoji:"", txt:"Harga Diskon", note:"Rp 80.000" },
+        { id:"r5_8_6", emoji:"", txt:"+", note:"Ditambah" },
+        { id:"r5_8_7", emoji:"", txt:"Pajak 10%", note:"Rp 8.000" },
+        { id:"r5_8_8", emoji:"", txt:"=", note:"Sama dengan" },
+        { id:"r5_8_9", emoji:"", txt:"Total Bayar", note:"Rp 88.000" }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [5, 6], [1, 7]]
+    },
+    {
+      tag: "RONDE 5 · SOAL 9 (B. INGGRIS)",
+      title: "🚒 Emergency Response Procedure",
+      mission: "Order the steps when reporting a fire emergency!",
+      steps: [
+        { id:"r5_8_1_e", emoji:"🚨", txt:"Notice fire or smoke in building", note:"Notice fire." },
+        { id:"r5_8_2_e", emoji:"📢", txt:"Shout 'Fire!' to warn everyone", note:"Shout fire." },
+        { id:"r5_8_3_e", emoji:"🔔", txt:"Press fire alarm button on wall", note:"Press alarm." },
+        { id:"r5_8_4_e", emoji:"🚪", txt:"Evacuate building using emergency stairs", note:"Evacuate stairs." },
+        { id:"r5_8_5_e", emoji:"🚫", txt:"Do NOT use elevators during fire", note:"No elevator." },
+        { id:"r5_8_6_e", emoji:"📱", txt:"Call Fire Department emergency number", note:"Call 113." },
+        { id:"r5_8_7_e", emoji:"🗣️", txt:"Tell operator clear address and location", note:"Tell address." },
+        { id:"r5_8_8_e", emoji:"🌳", txt:"Gather at safe outdoor assembly point", note:"Assembly point." },
+        { id:"r5_8_9_e", emoji:"👨‍🚒", txt:"Wait for firefighters to extinguish fire", note:"Wait firefighters." },
+        { id:"r5_8_10_e", emoji:"✅", txt:"Return inside only when officers declare safe", note:"Declared safe." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    },
+    {
+      tag: "RONDE 5 · SOAL 10 (IPA)",
+      title: "🌋 Proses Letusan Gunung Berapi",
+      mission: "Urutkan proses vulkanisme letusan gunung berapi!",
+      steps: [
+        { id:"r5_10_1", emoji:"🌋", txt:"Magma terkumpul di dapur magma dalam bumi", note:"Dapur magma." },
+        { id:"r5_10_2", emoji:"🔥", txt:"Suhu dan tekanan gas meningkat sangat tinggi", note:"Tekanan naik." },
+        { id:"r5_10_3", emoji:"⬆️", txt:"Magma terdesak naik melalui pipa kepundan", note:"Magma naik." },
+        { id:"r5_10_4", emoji:"🫨", txt:"Terjadi gempa vulkanik lokal di sekitar gunung", note:"Gempa vulkanik." },
+        { id:"r5_10_5", emoji:"💨", txt:"Gas dan asap hitam menyembur keluar", note:"Asap hitam." },
+        { id:"r5_10_6", emoji:"💥", txt:"Letusan dahsyat (Erupsi) terjadi", note:"Erupsi." },
+        { id:"r5_10_7", emoji:"🪨", txt:"Awan panas dan bom vulkanik terlempar", note:"Awan panas." },
+        { id:"r5_10_8", emoji:"🌊", txt:"Lava pijar mengalir melimpah di lereng", note:"Lava mengalir." },
+        { id:"r5_10_9", emoji:"❄️", txt:"Lava mendingin perlahan menjadi batu batuan", note:"Lava membeku." },
+        { id:"r5_10_10", emoji:"🌱", txt:"Tanbah sekitar gunung menjadi sangat subur", note:"Tanah subur." }
+      ],
+      bugSwaps: [[0, 1], [2, 3], [4, 5], [6, 7]]
+    }
+  ]
+];
 
   /* ============================================================
      3. STATE GAME & TIMER REALTIME
@@ -1879,9 +1813,8 @@
   const timerDisplay = document.getElementById('timerDisplay');
   const timerBox = document.getElementById('timerBox');
 
-  /* ✨ FUNGSI UTAMA TIMER REAL-TIME (HANYA RESET WAKTU KETIKA GANTI RONDE, BUKAN GANTI KASUS) */
   function startRoundTimer() {
-    if (timerInterval) return; // Biarkan interval berjalan kontinyu melintasi kasus
+    if (timerInterval) return;
 
     updateTimerDisplay();
 
@@ -1896,7 +1829,6 @@
         timerBox.classList.remove('warning');
       }
 
-      /* ✨ JIKA WAKTU 10 MENIT HABIS DALAM RONDE TERSEBUT */
       if (timeLeft <= 0) {
         stopRoundTimer();
         if (!isSimulation) {
@@ -2144,7 +2076,7 @@
       const isLastCaseInRound = caseInRoundIndex === ROUNDS[roundIndex].length - 1;
       
       if (isLastCaseInRound) {
-        stopRoundTimer(); // Hentikan timer hanya ketika seluruh 10 soal dalam ronde selesai
+        stopRoundTimer();
         let roundTimeUsed = Math.floor((Date.now() - roundStartTime) / 1000);
         totalTimeSpent += roundTimeUsed;
         roundStartTime = 0;
@@ -2191,7 +2123,6 @@
     feedbackEl.appendChild(box);
   }
 
-  /* ✨ LOGIKA PETUNJUK (HINT) */
   document.getElementById('btnHint').addEventListener('click', () => {
     const kasus = currentKasus();
     const wrongPositions = currentOrder
@@ -2363,10 +2294,10 @@
     }, 900);
   }
 
-  /* ✨ SAAT MULAI RONDE BARU, RESET WAKTU KE 10 MENIT DAN JALANKAN TIMER KONTINYU */
   document.getElementById('btnStart').addEventListener('click', () => {
     triggerBigCountdown(() => {
-      timeLeft = ROUND_TIME_SECONDS; // Reset timer 10 menit khusus di awal ronde baru
+      timeLeft = ROUND_TIME_SECONDS;
+      roundStartTime = Date.now();
       startRoundTimer(); 
     });
   });
@@ -2397,17 +2328,19 @@
       alert("Masukkan nama kelompok terlebih dahulu!");
       return;
     }
-    if(confirm(`Apakah Anda yakin ingin MERESET skor ${namaInput} kembali menjadi 0?`)) {
+    if(confirm(`Apakah Anda yakin ingin MERESET total skor dan progres ${namaInput} kembali dari 0?`)) {
+      const cleanKey = namaInput.replace(/[\.\#\$\[\]]/g, '_');
+      
       localStorage.removeItem('score_' + namaInput);
-      totalScore = 0;
-      totalTimeSpent = 0;
-      roundStartTime = 0;
-      document.getElementById('scoreDisplay').textContent = "⭐ 0 Pts";
-      document.getElementById("tempScoreValue").textContent = "0 Pts";
       
-      sendToFirebase("Mereset Skor"); 
-      
-      alert(`Skor untuk ${namaInput} telah di-reset ke 0.`);
+      database.ref('game_scores/' + cleanKey).remove().then(() => {
+        totalScore = 0;
+        totalTimeSpent = 0;
+        roundStartTime = 0;
+        document.getElementById('scoreDisplay').textContent = "⭐ 0 Pts";
+        document.getElementById("tempScoreValue").textContent = "0 Pts";
+        alert(`✅ Skor dan progres untuk ${namaInput} telah berhasil di-reset bersih.`);
+      });
     }
   });
 
